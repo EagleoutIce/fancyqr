@@ -1,107 +1,13 @@
 \errorcontextlines999999
 \documentclass{article}
 
+\usepackage{tikz-qr}
+
 \usepackage[active,tightpage]{preview} % for presentation
 \setlength\PreviewBorder{15pt}
 
-\usepackage{tikz,qrcode}
-\makeatletter
-
-\def\QrColor(#1,#2)[#3,#4]#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\textcolor{purple!\gradient!teal}{#5}}
-
-% O 1 O
-% 2 X 3
-% O 4 O
-\def\GetPattern#1#2#3#4{%
-\ifcsname qcc@#1@#2@#3@#4\endcsname
-   \csname qcc@#1@#2@#3@#4\endcsname
-\else \textcolor{purple!20!white}{\rule{\qr@modulesize}{\qr@modulesize}}\fi%
-}
-\tikzset{qrrc/.style={rounded corners=.5\qr@modulesize}}
-
-% is larger to be compensated by overlaps
-\def\qrm{\qr@modulesize+.15\p@}
-\begingroup
-\long\def\newpattern#1#2#3#4#5{%
-\expandafter\gdef\csname qcc@#1@#2@#3@#4\endcsname{%
-   \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-0.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[fill] #5;}}}\relax
-}}
-
-% .
-\newpattern0000{[qrrc] (0,0) rectangle (\qrm,\qrm)}
-% | | - -
-\newpattern1000{(0,\qrm)[qrrc] -- (0,0)  -- (\qrm,0)[sharp corners] -- (\qrm,\qrm)  -- cycle}
-\newpattern0001{(0,0)[qrrc] -- (0,\qrm)  -- (\qrm,\qrm)[sharp corners] -- (\qrm,0)  -- cycle}
-\newpattern0100{(0,0)[qrrc] -- (\qrm,0)  -- (\qrm,\qrm)[sharp corners] -- (0,\qrm) -- cycle}
-\newpattern0010{(\qrm,0)[qrrc] -- (0,0)  -- (0,\qrm)[sharp corners] -- (\qrm,\qrm) -- cycle}
-% corners
-\newpattern1100{(\qrm,\qrm)[qrrc] -- (\qrm,0)[sharp corners] -- (0,0) -- (0,\qrm)  -- cycle}% top left
-\newpattern1010{(0,\qrm)[qrrc] -- (0,0)[sharp corners] -- (\qrm,0) -- (\qrm,\qrm)  -- cycle}% top right
-\newpattern0101{(0,\qrm)[qrrc] -- (\qrm,\qrm)[sharp corners] -- (\qrm,0) -- (0,0)  -- cycle}% bottom left
-\newpattern0011{(0,0)[qrrc] -- (0,\qrm)[sharp corners] -- (\qrm,\qrm) -- (\qrm,0)  -- cycle}% bottom right
-% straights | --
-\newpattern1001{(0,0) rectangle (\qrm,\qrm)}
-\newpattern0110{(0,0) rectangle (\qrm,\qrm)}
-% enclosed
-\newpattern1111{(0,0) rectangle (\qrm,\qrm)}
-% t's
-\newpattern0111{(0,0) rectangle (\qrm,\qrm)}
-\newpattern1011{(0,0) rectangle (\qrm,\qrm)}
-\newpattern1101{(0,0) rectangle (\qrm,\qrm)}
-\newpattern1110{(0,0) rectangle (\qrm,\qrm)}
-\endgroup
-
-
-% modify the getter so everything that is not defined is white:
-\def\qr@matrixentry#1#2#3{%
-\ifcsname #1@#2@#3\endcsname%
-% #1 = matrix name
-% #2 = row number
-% #3 = column number
-\csname #1@#2@#3\endcsname%
-\else\qr@white@format\fi%
-}%
-
-\def\qr@printmatrix#1{%
-   \edef\qr@white{0}\edef\qr@black{1}%
-   \let\qr@black@fixed\qr@black
-   \let\qr@white@fixed\qr@white
-   \let\qr@black@format\qr@black
-   \let\qr@white@format\qr@white
-  %Set module size
-  \setlength{\qr@modulesize}{\qr@desiredheight}%
-  \divide\qr@modulesize by \qr@size\relax%
-  %
-  \setlength{\qr@minipagewidth}{\qr@modulesize}%
-  \multiply\qr@minipagewidth by \qr@size\relax%
-  \ifqr@tight
-  \else
-    \advance\qr@minipagewidth by 8\qr@modulesize%
-  \fi
-\begin{minipage}{\qr@minipagewidth}%
-    \baselineskip=\qr@modulesize%
-    \ifqr@tight\else\rule{0pt}{4\qr@modulesize}\par\fi% %Blank space at top.
-    \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
-    \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
-    \qr@for \i = 1 to \@max@y by 1{%
-      \ifqr@tight\else\rule{4\qr@modulesize}{0pt}\fi% %Blank space at left.
-      \qr@for \j = 1 to \@max@x by 1{%
-         \edef\@mid{\qr@matrixentry{#1}{\the\i}{\the\j}}%
-         \ifnum\@mid=\qr@white
-            \rule{\qr@modulesize}{0pt}%
-         \else% if not white, get its pattern
-            \edef\@up{\qr@matrixentry{#1}{\the\numexpr\the\i-1}{\the\j}}%
-            \edef\@left{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j-1}}%
-            \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
-            \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
-            \QrColor(\the\j,\the\i)[\@max@y,\@max@x]{\GetPattern{\@up}{\@left}{\@right}{\@down}}%
-         \fi
-      }\par}%
-    \ifqr@tight\else\rule{0pt}{4\qr@modulesize}\par\fi%
-  \end{minipage}%
-}%
 \begin{document}
 \preview
-\qrcode[forget,height=5cm,level=H]{https://github.com/EagleoutIce}
+\fancyqr[height=5cm,level=H]{https://github.com/EagleoutIce}
 \endpreview
 \end{document}
