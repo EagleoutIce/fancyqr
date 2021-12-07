@@ -11,7 +11,7 @@ You can change the gradient by changing the designated colors:
 \colorlet{qr@fancy@gradient@br}{purple}
 ```
 
-If you do want to hide a center square (e.g, because you want to embed an image) you can use `\FancyQrDoNotPrintSquare{x}{y}` to hide a square with radius x and y set from the center.
+If you do want to hide a center square (e.g, because you want to embed an image) you can use `\FancyQrDoNotPrintSquare{x}{y}` to hide a rectangle with radius x and y set from the center. If you choose this option, the default `\FancyQrRoundCut` that rounds cut corners can be changed with `\FancyQrHardCut`.
 
 Example from [qr.tex](qr.tex):
 
