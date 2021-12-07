@@ -12,8 +12,7 @@
 % O 1 O
 % 2 X 3
 % O 4 O
-% we assume center is high
-\def\GetHighPattern#1#2#3#4{%
+\def\GetPattern#1#2#3#4{%
 \ifcsname qcc@#1@#2@#3@#4\endcsname
    \csname qcc@#1@#2@#3@#4\endcsname
 \else \textcolor{purple!20!white}{\rule{\qr@modulesize}{\qr@modulesize}}\fi%
@@ -95,7 +94,7 @@
             \edef\@left{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j-1}}%
             \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
             \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
-            \QrColor(\the\j,\the\i)[\@max@y,\@max@x]{\GetHighPattern{\@up}{\@left}{\@right}{\@down}}%
+            \QrColor(\the\j,\the\i)[\@max@y,\@max@x]{\GetPattern{\@up}{\@left}{\@right}{\@down}}%
          \fi
       }\par}%
     \ifqr@tight\else\rule{0pt}{4\qr@modulesize}\par\fi%
