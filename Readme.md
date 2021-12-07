@@ -12,4 +12,5 @@ You can change the gradient by changing the designated colors:
 ```
 
 Example from [qr.tex](qr.tex):
+
 [<img src="https://github.com/EagleoutIce/tikz-qr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](https://media.githubusercontent.com/media/EagleoutIce/tikz-qr/gh-pages/qr.pdf)
