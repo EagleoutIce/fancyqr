@@ -1,6 +1,9 @@
 \errorcontextlines999999
 \documentclass{article}
 
+\usepackage[active,tightpage]{preview} % for presentation
+\setlength\PreviewBorder{15pt}
+
 \usepackage{tikz,qrcode}
 \makeatletter
 
@@ -99,5 +102,7 @@
   \end{minipage}%
 }%
 \begin{document}
+\preview
 \qrcode[forget,height=5cm,level=H]{https://github.com/EagleoutIce}
+\endpreview
 \end{document}
