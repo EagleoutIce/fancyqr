@@ -60,7 +60,7 @@
 \else\qr@white@format\fi%
 }%
 
-\def\FancyQrDoNotPrintSquare#1#2{\def\fancy@qr@donotprint@center@x{#1}\def\fancy@qr@donotprint@center@y{#1}}
+\def\FancyQrDoNotPrintSquare#1#2{\def\fancy@qr@donotprint@center@x{#1}\def\fancy@qr@donotprint@center@y{#2}}
 \FancyQrDoNotPrintSquare{0}{0}
 
 \newif\iffancy@qr@do@print@
@@ -93,7 +93,7 @@
       \ifqr@tight\else\rule{4\qr@modulesize}{0pt}\fi% %Blank space at left.
       \qr@for \j = 1 to \@max@x by 1{%
          \fancy@qr@do@print@true
-         \ifnum\i>\@do@y@min\relax \ifnum\i<\@do@y@max\relax \ifnum\j>\@do@y@min\relax \ifnum\j<\@do@y@max\relax \fancy@qr@do@print@false \fi\fi\fi\fi
+         \ifnum\i>\@do@y@min\relax \ifnum\i<\@do@y@max\relax \ifnum\j>\@do@x@min\relax \ifnum\j<\@do@x@max\relax \fancy@qr@do@print@false \fi\fi\fi\fi
          \iffancy@qr@do@print@
          \edef\@mid{\qr@matrixentry{#1}{\the\i}{\the\j}}%
          \ifnum\@mid=\qr@white
