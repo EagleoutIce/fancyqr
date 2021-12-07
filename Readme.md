@@ -7,9 +7,11 @@ You may use `\fancyqr` just like the normal `\qrcode`.
 You can change the gradient by changing the designated colors:
 
 ```latex
-\colorlet{qr@gradient@tl}{teal}
-\colorlet{qr@gradient@br}{purple}
+\colorlet{qr@fancy@gradient@tl}{teal}
+\colorlet{qr@fancy@gradient@br}{purple}
 ```
+
+If you do want to hide a center square (e.g, because you want to embed an image) you can use `\DoNotPrintSquare{x}{y}` to hide a square with radius x and y set from the center.
 
 Example from [qr.tex](qr.tex):
 

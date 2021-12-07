@@ -2,10 +2,10 @@
 \ProvidesPackage{\filename}[2021/12/07 version v1.0 Fancy QR-Codes]
 \RequirePackage{tikz,qrcode}
 
-\colorlet{qr@gradient@tl}{teal}
-\colorlet{qr@gradient@br}{purple}
+\colorlet{qr@fancy@gradient@tl}{teal}
+\colorlet{qr@fancy@gradient@br}{purple}
 
-\def\QrColor(#1,#2)[#3,#4]#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\textcolor{qr@gradient@br!\gradient!qr@gradient@tl}{#5}}
+\def\QrColor(#1,#2)[#3,#4]#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\textcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#5}}
 
 % O 1 O
 % 2 X 3
@@ -60,6 +60,10 @@
 \else\qr@white@format\fi%
 }%
 
+\def\DoNotPrintSquare#1#2{\def\fancy@qr@donotprint@center@x{#1}\def\fancy@qr@donotprint@center@y{#1}}
+\DoNotPrintSquare{0}{0}
+
+\newif\iffancy@qr@do@print@
 \def\fancy@qr@printmatrix#1{%
    \edef\qr@white{0}\edef\qr@black{1}%
    \let\qr@black@fixed\qr@black
@@ -81,9 +85,16 @@
     \ifqr@tight\else\rule{0pt}{4\qr@modulesize}\par\fi% %Blank space at top.
     \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
     \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
+    \pgfmathsetmacro\@do@x@min{int(\@max@x/2-\fancy@qr@donotprint@center@x)}%
+    \pgfmathsetmacro\@do@x@max{int(\@max@x/2+\fancy@qr@donotprint@center@x)}%
+    \pgfmathsetmacro\@do@y@min{int(\@max@y/2-\fancy@qr@donotprint@center@y + 1)}%
+    \pgfmathsetmacro\@do@y@max{int(\@max@y/2+\fancy@qr@donotprint@center@y + 1)}%
     \qr@for \i = 1 to \@max@y by 1{%
       \ifqr@tight\else\rule{4\qr@modulesize}{0pt}\fi% %Blank space at left.
       \qr@for \j = 1 to \@max@x by 1{%
+         \fancy@qr@do@print@true
+         \ifnum\i>\@do@y@min\relax \ifnum\i<\@do@y@max\relax \ifnum\j>\@do@y@min\relax \ifnum\j<\@do@y@max\relax \fancy@qr@do@print@false \fi\fi\fi\fi
+         \iffancy@qr@do@print@
          \edef\@mid{\qr@matrixentry{#1}{\the\i}{\the\j}}%
          \ifnum\@mid=\qr@white
             \rule{\qr@modulesize}{0pt}%
@@ -93,7 +104,7 @@
             \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
             \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
             \QrColor(\the\j,\the\i)[\@max@y,\@max@x]{\GetPattern{\@up}{\@left}{\@right}{\@down}}%
-         \fi
+         \fi\else \rule{\qr@modulesize}{0pt}\fi
       }\par}%
     \ifqr@tight\else\rule{0pt}{4\qr@modulesize}\par\fi%
   \end{minipage}%
