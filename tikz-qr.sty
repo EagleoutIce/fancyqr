@@ -22,31 +22,31 @@
 \begingroup
 \long\def\newpattern#1#2#3#4#5{%
 \expandafter\gdef\csname qcc#1#2#3#4\endcsname{%
-   \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-0.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[fill] #5;}}}\relax
+   \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[fill] #5;}}}\relax
 }}
 
 % .
-\newpattern0000{[qrrc] (0,0) rectangle (\qrm,\qrm)}
+\newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm)}
 % | | - -
-\newpattern1000{(0,\qrm)[qrrc] -- (0,0)  -- (\qrm,0)[sharp corners] -- (\qrm,\qrm)  -- cycle}
-\newpattern0001{(0,0)[qrrc] -- (0,\qrm)  -- (\qrm,\qrm)[sharp corners] -- (\qrm,0)  -- cycle}
-\newpattern0100{(0,0)[qrrc] -- (\qrm,0)  -- (\qrm,\qrm)[sharp corners] -- (0,\qrm) -- cycle}
-\newpattern0010{(\qrm,0)[qrrc] -- (0,0)  -- (0,\qrm)[sharp corners] -- (\qrm,\qrm) -- cycle}
+\newpattern1000{(0,\qrm)[qrrc] -- (0,0) -- (\qrm,0)[sharp corners] -- (\qrm,\qrm) -- cycle}
+\newpattern0001{(0,0)[qrrc] -- (0,\qrm) -- (\qrm,\qrm)[sharp corners] -- (\qrm,0) -- cycle}
+\newpattern0100{(0,0)[qrrc] -- (\qrm,0) -- (\qrm,\qrm)[sharp corners] -- (0,\qrm) -- cycle}
+\newpattern0010{(\qrm,0)[qrrc] -- (0,0) -- (0,\qrm)[sharp corners] -- (\qrm,\qrm) -- cycle}
 % corners
-\newpattern1100{(\qrm,\qrm)[qrrc] -- (\qrm,0)[sharp corners] -- (0,0) -- (0,\qrm)  -- cycle}% top left
-\newpattern1010{(0,\qrm)[qrrc] -- (0,0)[sharp corners] -- (\qrm,0) -- (\qrm,\qrm)  -- cycle}% top right
-\newpattern0101{(0,\qrm)[qrrc] -- (\qrm,\qrm)[sharp corners] -- (\qrm,0) -- (0,0)  -- cycle}% bottom left
-\newpattern0011{(0,0)[qrrc] -- (0,\qrm)[sharp corners] -- (\qrm,\qrm) -- (\qrm,0)  -- cycle}% bottom right
+\newpattern1100{(\qrm,\qrm)[qrrc] -- (\qrm,0)[sharp corners] -- (0,0) -- (0,\qrm) -- cycle}% top left
+\newpattern1010{(0,\qrm)[qrrc] -- (0,0)[sharp corners] -- (\qrm,0) -- (\qrm,\qrm) -- cycle}% top right
+\newpattern0101{(0,\qrm)[qrrc] -- (\qrm,\qrm)[sharp corners] -- (\qrm,0) -- (0,0) -- cycle}% bottom left
+\newpattern0011{(0,0)[qrrc] -- (0,\qrm)[sharp corners] -- (\qrm,\qrm) -- (\qrm,0) -- cycle}% bottom right
 % straights | --
-\newpattern1001{(0,0) rectangle (\qrm,\qrm)}
-\newpattern0110{(0,0) rectangle (\qrm,\qrm)}
+\newpattern1001{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0110{(0,0)rectangle(\qrm,\qrm)}
 % enclosed
-\newpattern1111{(0,0) rectangle (\qrm,\qrm)}
+\newpattern1111{(0,0)rectangle(\qrm,\qrm)}
 % t's
-\newpattern0111{(0,0) rectangle (\qrm,\qrm)}
-\newpattern1011{(0,0) rectangle (\qrm,\qrm)}
-\newpattern1101{(0,0) rectangle (\qrm,\qrm)}
-\newpattern1110{(0,0) rectangle (\qrm,\qrm)}
+\newpattern0111{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1011{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1101{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1110{(0,0)rectangle(\qrm,\qrm)}
 \endgroup
 
 
