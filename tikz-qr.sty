@@ -11,8 +11,8 @@
 % 2 X 3
 % O 4 O
 \def\GetPattern#1#2#3#4{%
-\ifcsname qcc@#1@#2@#3@#4\endcsname
-   \csname qcc@#1@#2@#3@#4\endcsname
+\ifcsname qcc#1#2#3#4\endcsname
+   \csname qcc#1#2#3#4\endcsname
 \else \textcolor{purple!20!white}{\rule{\qr@modulesize}{\qr@modulesize}}\fi%
 }
 \tikzset{qrrc/.style={rounded corners=.5\qr@modulesize}}
@@ -21,7 +21,7 @@
 \def\qrm{\qr@modulesize+.15\p@}
 \begingroup
 \long\def\newpattern#1#2#3#4#5{%
-\expandafter\gdef\csname qcc@#1@#2@#3@#4\endcsname{%
+\expandafter\gdef\csname qcc#1#2#3#4\endcsname{%
    \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-0.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[fill] #5;}}}\relax
 }}
 
