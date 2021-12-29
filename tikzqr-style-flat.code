@@ -1,0 +1,22 @@
+% .
+\newpattern0000{(0,0)rectangle(\qrm,\qrm)}
+% | | - -
+\newpattern1000{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0001{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0100{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0010{(0,0)rectangle(\qrm,\qrm)}
+% corners
+\newpattern1100{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1010{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0101{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0011{(0,0)rectangle(\qrm,\qrm)}
+% straights | --
+\newpattern1001{(0,0)rectangle(\qrm,\qrm)}
+\newpattern0110{(0,0)rectangle(\qrm,\qrm)}
+% enclosed
+\newpattern1111{(0,0)rectangle(\qrm,\qrm)}
+% t's
+\newpattern0111{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1011{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1101{(0,0)rectangle(\qrm,\qrm)}
+\newpattern1110{(0,0)rectangle(\qrm,\qrm)}

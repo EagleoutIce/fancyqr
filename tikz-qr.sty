@@ -15,13 +15,13 @@
    \csname qcc#1#2#3#4\endcsname
 \else \textcolor{purple!20!white}{\rule{\qr@modulesize}{\qr@modulesize}}\fi%
 }
-\tikzset{qrrc/.style={rounded corners=.5\qr@modulesize}}
+\tikzset{qrrc/.style={rounded corners=.5\qr@modulesize},qrrd/.style={fill}}
 
 % is larger to be compensated by overlaps
-\def\qrm{\qr@modulesize+.15\p@}
+\def\qrm{\dimexpr\qr@modulesize+.15\p@\relax}
 \long\def\qr@newpattern#1#2#3#4#5{%
 \expandafter\def\csname qcc#1#2#3#4\endcsname{%
-   \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[fill] #5;}}}\relax
+   \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd] #5;}}}\relax
 }}
 
 % .
@@ -46,6 +46,8 @@
 \qr@newpattern1011{(0,0)rectangle(\qrm,\qrm)}
 \qr@newpattern1101{(0,0)rectangle(\qrm,\qrm)}
 \qr@newpattern1110{(0,0)rectangle(\qrm,\qrm)}
+
+\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\input{tikzqr-style-#1.code}\let\newpattern\@tmp\let\@tmp\relax}
 
 
 % modify the getter so everything that is not defined is white:
