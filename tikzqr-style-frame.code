@@ -1,0 +1,25 @@
+\tikzset{qrrd/.style={draw,line width=1.25pt}}
+\def\qrframesuffix{; \path[fill,qrrc,fill opacity=.995] (-.1pt,-.1pt) rectangle (\qrm+.1pt,\qrm+.1pt)}
+\def\qrfillring{circle[radius=.625pt]}
+% .
+\newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm); \path[fill,fill opacity=.965] (\qrm/2,\qrm/2) circle[radius=\qrm/3]}
+% | | - -
+\newpattern1000{(0,\qrm)[qrrc] -- (0,0) -- (\qrm,0) -- (\qrm,\qrm)\qrframesuffix}
+\newpattern0001{(0,0)[qrrc] -- (0,\qrm) -- (\qrm,\qrm) -- (\qrm,0)\qrframesuffix}
+\newpattern0100{(0,0)[qrrc] -- (\qrm,0) -- (\qrm,\qrm) -- (0,\qrm)\qrframesuffix}
+\newpattern0010{(\qrm,0)[qrrc] -- (0,0) -- (0,\qrm) -- (\qrm,\qrm)\qrframesuffix}
+% corners; the good injections to cover loose lines
+\newpattern1100{(\qrm,\qrm)[qrrc] -- (\qrm,0) -- (0,0); \path[fill] (0,\qrm) \qrfillring\qrframesuffix}% top left
+\newpattern1010{(0,\qrm)[qrrc] -- (0,0) -- (\qrm,0); \path[fill] (\qrm,\qrm) \qrfillring\qrframesuffix}% top right
+\newpattern0101{(0,\qrm)[qrrc] -- (\qrm,\qrm) -- (\qrm,0); \path[fill] (0,0) \qrfillring\qrframesuffix}% bottom left
+\newpattern0011{(\qrm,\qrm)[qrrc] -- (0,\qrm) -- (0,0) (\qrm,0); \path[fill] (\qrm,0) \qrfillring\qrframesuffix}% bottom right
+% straights | --
+\newpattern1001{(0,0)--(0,\qrm) (\qrm,0)--(\qrm,\qrm)\qrframesuffix}
+\newpattern0110{(0,0)--(\qrm,0) (0,\qrm)--(\qrm,\qrm)\qrframesuffix}
+% enclosed
+\newpattern1111{; \path[fill] (0,0) \qrfillring; \path[fill] (0,\qrm) \qrfillring; \path[fill] (\qrm,0) \qrfillring; \path[fill] (\qrm,\qrm) \qrfillring\qrframesuffix}
+% t's
+\newpattern0111{(0,\qrm)--(\qrm,\qrm); \path[fill] (0,0) \qrfillring; \path[fill] (\qrm,0) \qrfillring\qrframesuffix} % -,-
+\newpattern1011{(0,\qrm)--(0,0); \path[fill] (\qrm,0) \qrfillring; \path[fill] (\qrm,\qrm)\qrfillring\qrframesuffix}
+\newpattern1101{(\qrm,\qrm)--(\qrm,0); \path[fill] (0,0) \qrfillring; \path[fill] (0,\qrm)\qrfillring\qrframesuffix}
+\newpattern1110{(0,0)--(\qrm,0); \path[fill] (0,\qrm) \qrfillring; \path[fill] (\qrm,\qrm) \qrfillring\qrframesuffix} % -'-
