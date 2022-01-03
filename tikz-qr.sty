@@ -100,16 +100,16 @@
   \else
     \advance\qr@minipagewidth by 8\qr@modulesize%
   \fi
-\begin{minipage}{\qr@minipagewidth}%
-    \baselineskip=\qr@modulesize%
-    \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi% %Blank space at top.
-    \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
-    \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
-    \pgfmathsetmacro\@do@x@min{int(\@max@x/2-\fancy@qr@donotprint@center@x + 1)}%
-    \pgfmathsetmacro\@do@x@max{int(\@max@x/2+\fancy@qr@donotprint@center@x + 1)}%
-    \pgfmathsetmacro\@do@y@min{int(\@max@y/2-\fancy@qr@donotprint@center@y + 1)}%
-    \pgfmathsetmacro\@do@y@max{int(\@max@y/2+\fancy@qr@donotprint@center@y + 1)}%
-    \qr@for \i = 1 to \@max@y by 1{%
+   \begin{minipage}{\qr@minipagewidth}%
+      \baselineskip=\qr@modulesize%
+      \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi% %Blank space at top.
+      \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
+      \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
+      \pgfmathsetmacro\@do@x@min{int(\@max@x/2-\fancy@qr@donotprint@center@x + 1)}%
+      \pgfmathsetmacro\@do@x@max{int(\@max@x/2+\fancy@qr@donotprint@center@x + 1)}%
+      \pgfmathsetmacro\@do@y@min{int(\@max@y/2-\fancy@qr@donotprint@center@y + 1)}%
+      \pgfmathsetmacro\@do@y@max{int(\@max@y/2+\fancy@qr@donotprint@center@y + 1)}%
+      \qr@for \i = 1 to \@max@y by 1{%
       \ifqr@tight\else\rule{4\qr@modulesize}\z@\fi% %Blank space at left.
       \qr@for \j = 1 to \@max@x by 1{%
          \qr@fancy@updateif{\i}{\j}%
@@ -126,12 +126,12 @@
             \QrColor(\the\j,\the\i)[\@max@y,\@max@x]{\GetPattern{\@up}{\@left}{\@right}{\@down}}%
          \fi\else \rule\qr@modulesize\z@\fi
       }\par}%
-    \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi%
-  \end{minipage}%
+      \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi%
+   \end{minipage}%
 }%
 
 \def\@fancyqr@wrap#1{{\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix#1}}
 \def\fancyqr{\@ifstar\@fancyqr\@@fancyqr}
-\newcommand*{\@fancyqr}[2][]{\@fancyqr@wrap{\qrcode*[forget,#1]{#2}}}
-\newcommand*{\@@fancyqr}[2][]{\@fancyqr@wrap{\qrcode[forget,#1]{#2}}}
+\newcommand*\@fancyqr[2][]{\@fancyqr@wrap{\qrcode*[#1]{#2}}}
+\newcommand*\@@fancyqr[2][]{\@fancyqr@wrap{\qrcode[#1]{#2}}}
 \endinput
