@@ -130,7 +130,44 @@
    \end{minipage}%
 }%
 
-\def\@fancyqr@wrap#1{{\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix#1}}
+\def\fancy@qr@setup#1{%
+   \qr@createsquareblankmatrix{#1}{\qr@size}%
+   \qr@placefinderpatterns{#1}%
+   \qr@placetimingpatterns{#1}%
+   \qr@placealignmentpatterns{#1}%
+   \qr@placedummyformatpatterns{#1}%
+   \qr@placedummyversionpatterns{#1}%
+}
+
+\newcount\c@fancy@a
+\newcount\c@fancy@b
+% the normal data is... well...
+\def\fancy@qr@writedata#1#2{%
+  % #1 = name of a matrix that has been prepared with finder patterns, timing patterns, etc.
+  % #2 = a string consisting of 0's and 1's to write into the matrix.
+  \expandafter\c@fancy@a\the\numexpr\qr@numberofrowsinmatrix{#1}\relax
+  \expandafter\c@fancy@b\the\numexpr\qr@numberofcolsinmatrix{#1}\relax
+  \edef\qr@datatowrite{#2\relax}%
+  \c@qr@i0
+  \@whilenum\c@qr@i<\c@fancy@a\do{%
+      \c@qr@j0 \stepcounter{qr@i}\relax
+      \@whilenum\c@qr@j<\c@fancy@b\do{%
+         \stepcounter{qr@j}\relax
+         \expandafter\qr@writebit\expandafter(\qr@datatowrite){#1}%
+      }
+  }%
+}%
+
+\def\fancy@qr@printsavedbinarymatrix#1{%
+\typeout{Printing: #1}
+\def\qr@binarystring{#1\relax\relax}%
+\fancy@qr@setup{@tmp}%
+\fancy@qr@writedata{@tmp}{\qr@binarystring}%
+\fancy@qr@printmatrix{@tmp}%
+}%
+
+
+\def\@fancyqr@wrap#1{{\let\qr@printsavedbinarymatrix\fancy@qr@printsavedbinarymatrix\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix#1}}
 \def\fancyqr{\@ifstar\@fancyqr\@@fancyqr}
 \newcommand*\@fancyqr[2][]{\@fancyqr@wrap{\qrcode*[#1]{#2}}}
 \newcommand*\@@fancyqr[2][]{\@fancyqr@wrap{\qrcode[#1]{#2}}}
