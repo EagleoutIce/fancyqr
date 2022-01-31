@@ -5,7 +5,7 @@
 \colorlet{qr@fancy@gradient@tl}{teal}
 \colorlet{qr@fancy@gradient@br}{purple}
 
-\def\QrColor#1#2#3#4#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\textcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#5}}
+\def\QrColor#1#2#3#4#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#5}}
 
 % O 1 O
 % 2 X 3
