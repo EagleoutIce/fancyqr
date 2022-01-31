@@ -20,9 +20,9 @@
 % is larger to be compensated by overlaps
 \def\qrm{\dimexpr\qr@modulesize+.15\p@\relax}
 \long\def\qr@newpattern#1#2#3#4#5{%
-\expandafter\def\csname qcc#1#2#3#4\endcsname{%
-   \parbox[b][\qr@modulesize]\qr@modulesize{\kern-.075\p@\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd]#5;}}}%
-}}
+\expandafter\newsavebox\csname @qcc#1#2#3#4\endcsname
+\expandafter\savebox\csname @qcc#1#2#3#4\endcsname{\parbox[b][\qr@modulesize]\qr@modulesize{\kern-.075\p@\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd]#5;}}}}
+\expandafter\def\csname qcc#1#2#3#4\endcsname{\expandafter\usebox\csname @qcc#1#2#3#4\endcsname}}
 
 % .
 \qr@newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm)}
