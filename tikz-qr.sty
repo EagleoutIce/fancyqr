@@ -5,7 +5,7 @@
 \colorlet{qr@fancy@gradient@tl}{teal}
 \colorlet{qr@fancy@gradient@br}{purple}
 
-\def\QrColor(#1,#2)[#3,#4]#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\textcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#5}}
+\def\QrColor#1#2#3#4#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\textcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#5}}
 
 % O 1 O
 % 2 X 3
@@ -13,7 +13,7 @@
 \def\GetPattern#1#2#3#4{%
 \ifcsname qcc#1#2#3#4\endcsname
    \csname qcc#1#2#3#4\endcsname
-\else \textcolor{purple!20!white}{\rule{\qr@modulesize}{\qr@modulesize}}\fi%
+\else\rule\qr@modulesize\z@\fi
 }
 \tikzset{qrrc/.style={rounded corners=.5\qr@modulesize},qrrd/.style={fill}}
 
@@ -21,7 +21,7 @@
 \def\qrm{\dimexpr\qr@modulesize+.15\p@\relax}
 \long\def\qr@newpattern#1#2#3#4#5{%
 \expandafter\def\csname qcc#1#2#3#4\endcsname{%
-   \parbox[b][\qr@modulesize]{\qr@modulesize}{\hskip-.08\p@\relax\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd] #5;}}}\relax
+   \parbox[b][\qr@modulesize]\qr@modulesize{\kern-.075\p@\smash{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd]#5;}}}%
 }}
 
 % .
@@ -52,12 +52,12 @@
 
 % modify the getter so everything that is not defined is white:
 \def\fancy@qr@matrixentry#1#2#3{%
-\ifcsname #1@#2@#3\endcsname%
+\ifcsname #1@#2@#3\endcsname
 % #1 = matrix name
 % #2 = row number
 % #3 = column number
-\csname #1@#2@#3\endcsname%
-\else\qr@white@format\fi%
+\csname #1@#2@#3\endcsname
+\else\qr@white@format\fi
 }%
 
 \def\FancyQrDoNotPrintSquare#1#2{\def\fancy@qr@donotprint@center@x{#1}\def\fancy@qr@donotprint@center@y{#2}}
@@ -85,49 +85,45 @@
 }
 
 \def\fancy@qr@printmatrix#1{%
-   \edef\qr@white{0}\edef\qr@black{1}%
+   \def\qr@white{0}\def\qr@black{1}%
    \let\qr@black@fixed\qr@black
    \let\qr@white@fixed\qr@white
    \let\qr@black@format\qr@black
    \let\qr@white@format\qr@white
   %Set module size
-  \setlength{\qr@modulesize}{\qr@desiredheight}%
-  \divide\qr@modulesize by \qr@size\relax%
-  %
-  \setlength{\qr@minipagewidth}{\qr@modulesize}%
-  \multiply\qr@minipagewidth by \qr@size\relax%
-  \ifqr@tight
-  \else
-    \advance\qr@minipagewidth by 8\qr@modulesize%
-  \fi
-   \begin{minipage}{\qr@minipagewidth}%
+  \qr@modulesize=\qr@desiredheight
+  \divide\qr@modulesize by \qr@size\relax
+  \qr@minipagewidth=\qr@modulesize
+  \multiply\qr@minipagewidth by \qr@size\relax
+  \ifqr@tight \else \advance\qr@minipagewidth by 8\qr@modulesize \fi
+   \minipage{\qr@minipagewidth}%
       \baselineskip=\qr@modulesize%
       \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi% %Blank space at top.
       \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
       \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
-      \pgfmathsetmacro\@do@x@min{int(\@max@x/2-\fancy@qr@donotprint@center@x + 1)}%
-      \pgfmathsetmacro\@do@x@max{int(\@max@x/2+\fancy@qr@donotprint@center@x + 1)}%
-      \pgfmathsetmacro\@do@y@min{int(\@max@y/2-\fancy@qr@donotprint@center@y + 1)}%
-      \pgfmathsetmacro\@do@y@max{int(\@max@y/2+\fancy@qr@donotprint@center@y + 1)}%
-      \qr@for \i = 1 to \@max@y by 1{%
+      \edef\@do@x@min{\the\numexpr\@max@x/2-\fancy@qr@donotprint@center@x+1}%
+      \edef\@do@x@max{\the\numexpr\@max@x/2+\fancy@qr@donotprint@center@x+1}%
+      \edef\@do@y@min{\the\numexpr\@max@y/2-\fancy@qr@donotprint@center@y+1}%
+      \edef\@do@y@max{\the\numexpr\@max@y/2+\fancy@qr@donotprint@center@y+1}%
+      \qr@for \i=1 to \@max@y by 1{%
       \ifqr@tight\else\rule{4\qr@modulesize}\z@\fi% %Blank space at left.
-      \qr@for \j = 1 to \@max@x by 1{%
-         \qr@fancy@updateif{\i}{\j}%
+      \qr@for \j=1 to \@max@x by 1{%
+         \qr@fancy@updateif\i\j
          \iffancy@qr@do@print@
          \edef\@mid{\qr@matrixentry{#1}{\the\i}{\the\j}}%
          \ifnum\@mid=\qr@white
             \rule\qr@modulesize\z@
          \else% if not white, get its pattern
-            \iffancy@qr@roundcut@\qr@fancy@clear@surround{#1}{\the\i}{\the\j}\fi%
+            \iffancy@qr@roundcut@\qr@fancy@clear@surround{#1}{\the\i}{\the\j}\fi
             \edef\@up{\qr@matrixentry{#1}{\the\numexpr\the\i-1}{\the\j}}%
             \edef\@left{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j-1}}%
             \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
             \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
-            \QrColor(\the\j,\the\i)[\@max@y,\@max@x]{\GetPattern{\@up}{\@left}{\@right}{\@down}}%
+            \QrColor{\the\j}{\the\i}\@max@y\@max@x{\GetPattern\@up\@left\@right\@down}%
          \fi\else \rule\qr@modulesize\z@\fi
       }\par}%
-      \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi%
-   \end{minipage}%
+      \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi
+   \endminipage
 }%
 
 \def\fancy@qr@setup#1{%
