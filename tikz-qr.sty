@@ -13,8 +13,8 @@
 \def\GetPattern#1#2#3#4{%
 \ifcsname qcc#1#2#3#4\endcsname
    \csname qcc#1#2#3#4\endcsname
-\else\rule\qr@modulesize\z@\fi
-}
+\else\rule\qr@modulesize\z@\fi}
+
 \tikzset{qrrc/.style={rounded corners=.5\qr@modulesize},qrrd/.style={fill}}
 
 % is larger to be compensated by overlaps
@@ -52,12 +52,12 @@
 
 % modify the getter so everything that is not defined is white:
 \def\fancy@qr@matrixentry#1#2#3{%
-\ifcsname #1@#2@#3\endcsname
-% #1 = matrix name
-% #2 = row number
-% #3 = column number
-\csname #1@#2@#3\endcsname
-\else\qr@white@format\fi
+   \ifcsname #1@#2@#3\endcsname
+   % #1 = matrix name
+   % #2 = row number
+   % #3 = column number
+   \csname #1@#2@#3\endcsname
+   \else\qr@white@format\fi
 }%
 
 \def\FancyQrDoNotPrintSquare#1#2{\def\fancy@qr@donotprint@center@x{#1}\def\fancy@qr@donotprint@center@y{#2}}
@@ -74,14 +74,14 @@
 
 % clear plus if not to be printed
 \def\qr@fancy@clear@surround#1#2#3{%
-\qr@fancy@updateif{\the\numexpr#2-1}{#3}%
-\iffancy@qr@do@print@\else \expandafter\let\csname #1@\the\numexpr#2-1 @#3\endcsname\@undefined \fi
-\qr@fancy@updateif{\the\numexpr#2+1}{#3}%
-\iffancy@qr@do@print@\else \expandafter\let\csname #1@\the\numexpr#2+1 @#3\endcsname\@undefined \fi
-\qr@fancy@updateif{#2}{\the\numexpr#3-1}%
-\iffancy@qr@do@print@\else \expandafter\let\csname #1@#2@\the\numexpr#3-1\endcsname\@undefined \fi
-\qr@fancy@updateif{#2}{\the\numexpr#3+1}%
-\iffancy@qr@do@print@\else \expandafter\let\csname #1@#2@\the\numexpr#3+1\endcsname\@undefined \fi
+   \qr@fancy@updateif{\the\numexpr#2-1}{#3}%
+   \iffancy@qr@do@print@\else \expandafter\let\csname #1@\the\numexpr#2-1 @#3\endcsname\@undefined \fi
+   \qr@fancy@updateif{\the\numexpr#2+1}{#3}%
+   \iffancy@qr@do@print@\else \expandafter\let\csname #1@\the\numexpr#2+1 @#3\endcsname\@undefined \fi
+   \qr@fancy@updateif{#2}{\the\numexpr#3-1}%
+   \iffancy@qr@do@print@\else \expandafter\let\csname #1@#2@\the\numexpr#3-1\endcsname\@undefined \fi
+   \qr@fancy@updateif{#2}{\the\numexpr#3+1}%
+   \iffancy@qr@do@print@\else \expandafter\let\csname #1@#2@\the\numexpr#3+1\endcsname\@undefined \fi
 }
 
 \def\fancy@qr@printmatrix#1{%
@@ -154,10 +154,10 @@
 }
 
 \def\fancy@qr@printsavedbinarymatrix#1{%
-\def\qr@binarystring{#1\relax\relax}%
-\fancy@qr@setup{@tmp}%
-\fancy@qr@writedata{@tmp}{\qr@binarystring}%
-\fancy@qr@printmatrix{@tmp}%
+   \def\qr@binarystring{#1\relax\relax}%
+   \fancy@qr@setup{@tmp}%
+   \fancy@qr@writedata{@tmp}{\qr@binarystring}%
+   \fancy@qr@printmatrix{@tmp}%
 }%
 
 
