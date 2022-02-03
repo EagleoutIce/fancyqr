@@ -127,12 +127,13 @@
 }%
 
 \def\fancy@qr@setup#1{%
-   \qr@createsquareblankmatrix{#1}{\qr@size}%
+   \qr@creatematrix{#1}%
+   \expandafter\gdef\csname #1@numrows\endcsname{\qr@size}%
+   \expandafter\gdef\csname #1@numcols\endcsname{\qr@size}%
+   % we do not need to create blank because we store all
    \qr@placefinderpatterns{#1}%
    \qr@placetimingpatterns{#1}%
    \qr@placealignmentpatterns{#1}%
-   \qr@placedummyformatpatterns{#1}%
-   \qr@placedummyversionpatterns{#1}%
 }
 
 \newcount\c@fancy@a \newcount\c@fancy@b
