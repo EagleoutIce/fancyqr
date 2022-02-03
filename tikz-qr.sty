@@ -146,13 +146,27 @@
   \edef\qr@datatowrite{#2\relax}%
   \c@qr@i0\relax
   \@whilenum\c@qr@i<\c@fancy@a\do{%
-      \c@qr@j0 \stepcounter{qr@i}\relax
+      \c@qr@j0 \advance\c@qr@i\@ne
       \@whilenum\c@qr@j<\c@fancy@b\do{%
-         \stepcounter{qr@j}\relax
-         \expandafter\qr@writebit\expandafter(\qr@datatowrite){#1}%
+         \advance\c@qr@j\@ne
+         \expandafter\fancy@qr@writebit\qr@datatowrite:{#1}%
       }%
   }%
 }
+
+\def\fancy@qr@writebit#1#2:#3{%
+  % #3 = matrix name
+  % (qr@i,qr@j) = position to write in (LaTeX counters)
+  % #1 = bit to be written
+  % #2 = remaining bits plus '\relax' as an end-of-file marker
+  \edef\qr@datatowrite{#2}%
+  \ifnum#1=1
+    \qr@storetomatrix{#3}{\number\c@qr@i}{\number\c@qr@j}{\qr@black}%
+  \else
+    \qr@storetomatrix{#3}{\number\c@qr@i}{\number\c@qr@j}{\qr@white}%
+  \fi
+}%
+
 
 \def\fancy@qr@printsavedbinarymatrix#1{%
    \def\qr@binarystring{#1\relax\relax}%
