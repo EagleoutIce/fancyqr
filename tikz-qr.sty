@@ -181,8 +181,8 @@
 \savebox0{#1}\relax
 \savebox\@tempboxa{#2}\relax % without cutout
 % Identify width and height
-\pgfmathsetmacro\@x{int((.5\wd0)/\fancyqr@modsize+1)}%
-\pgfmathsetmacro\@y{int((.5\ht0+.5\dp0)/\fancyqr@modsize+1)}%
+\pgfmathsetmacro\@x{int(ceil((.5\wd0)/\fancyqr@modsize))}%
+\pgfmathsetmacro\@y{int(ceil((.5\ht0+.5\dp0)/\fancyqr@modsize))}%
 \FancyQrDoNotPrintSquare\@x\@y
 #2\llap{\parbox{\wd\@tempboxa}{\centering\usebox0}}\relax
 }
