@@ -4,18 +4,28 @@
 
 Simple package to create fancy qr codes with the help of the [`qrcode`](https://www.ctan.org/pkg/qrcode)-package.
 You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`).
-You can change the gradient by changing the designated colors:
-
-```latex
-\colorlet{qr@fancy@gradient@tl}{teal}
-\colorlet{qr@fancy@gradient@br}{purple}
-```
 
 If you do want to hide a center square (e.g, because you want to embed an image) you can use `\FancyQrDoNotPrintSquare{<x>}{<y>}` to hide a rectangle with radius x and y set from the center. If you choose this option, the default `\FancyQrRoundCut` that rounds cut corners can be changed with `\FancyQrHardCut`.
 At the moment, there are two other styles `flat` and `frame` that you can load (locally) by using `\FancyQrLoad{<name>}`.
 
-Using `\fancyqrimage[<qr-options>]{<url>}{<image>}` the package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to make sure the, the qr code still has enough information to readable).
+There are the following extra qr-options (you can set all of them with `\fancyqrset{<keys>}`):
+| Option               | Type    | Default  | Explanation                                                |
+| -------------------- | ------- | :------: | ---------------------------------------------------------- |
+| `image`              | LaTeX   |          | Automatically canter an image.[^1]                         |
+| `image padding`      | number  |          | Additionally hide blocks (x & y) around the image.         |
+| `image x padding`    | number  |   `0`    | Additionally hide blocks (x) around the image.             |
+| `image y padding`    | number  |   `0`    | Additionally hide blocks (y) around the image.             |
+| `gradient`           | boolean |   true   | Toggle the color gradient                                  |
+| `color`              | color   |          | Disables the `gradient` and sets the qr color accordingly. |
+| `tl color`           | color   |  `teal`  | Set the top left gradient color.                           |
+| `top left color`     | color   |          | Alias for `tl color`.                                      |
+| `br color`           | color   | `purple` | Set the bottom right gradient color.                       |
+| `bottom right color` | color   |          | Alias for `br color`.                                      |
+| `gradient angle`     | angle   |   `0`    | Change the gradient angle (currently WIP).                 |
 
 Example from [qr.tex](qr.tex):
 
 [<img src="https://github.com/EagleoutIce/tikz-qr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](https://media.githubusercontent.com/media/EagleoutIce/tikz-qr/gh-pages/qr.pdf)
+
+
+[^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to make sure the, the qr code still has enough information to readable).
