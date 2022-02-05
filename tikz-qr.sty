@@ -2,16 +2,19 @@
 \ProvidesPackage{\filename}[2021/12/07 version v1.0 Fancy QR-Codes]
 \RequirePackage{tikz,qrcode}
 
-\colorlet{qr@fancy@gradient@tl}{teal}
-\colorlet{qr@fancy@gradient@br}{purple}
+% NOTE: currently only named so for compatibility reasons tl is right and br is left!
+% \colorlet{qr@fancy@gradient@tl}{teal}
+% \colorlet{qr@fancy@gradient@br}{purple}
 
 % x | y | w | h | element
 \def\FancyQrColor#1#2#3#4#5{\if@fancyqr@gradient
+\pgfmathsetmacro\angle{Mod(\fancyqr@gradient@angle+225,360)}% rotate to align 0 to the right
 \pgfmathsetmacro\gradient{%
-   #1/#3% rel x [0,1]
-      *(Mod(\fancyqr@gradient@angle+180,360)/360*100)% 225 offset for -45 rotation
-   +#2/#4% rel y [0,1]
-      *((360-Mod(\fancyqr@gradient@angle+180,360))/360*100)%
+   % we do rotate the x and y points before color drawing by
+   % Mod(\fancyqr@gradient@angle,360) with the shifted origin
+   % #3/2 #4/2
+   ((#1-#3/2)*cos(\angle) - (#2-#4/2)*sin(\angle) + #3/2)/#3 * 50% rel x [0,1]
+   + ((#1-#3/2)*sin(\angle) + (#2-#4/2)*cos(\angle) + #4/2)/#4 * 50% rel y [0,1]
    }\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}\else\@declaredcolor{qr@fancy@gradient@tl}\fi{#5}}
 
 % O 1 O
@@ -197,15 +200,15 @@
 \define@key{fancyqr}{image padding}{\def\fancyqr@img@padding@x{#1}\def\fancyqr@img@padding@y{#1}}
 \define@key{fancyqr}{image}{\@fancyqr@image@true\savebox\fancyqr@imgbox{#1}}
 \define@key{fancyqr}{color}{\@fancyqr@gradientfalse\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{top left color}{\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{tl color}{\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{bottom right color}{\colorlet{qr@fancy@gradient@br}{#1}}
-\define@key{fancyqr}{br color}{\colorlet{qr@fancy@gradient@br}{#1}}
+\define@key{fancyqr}{left color}{\colorlet{qr@fancy@gradient@br}{#1}}
+\define@key{fancyqr}{l color}{\colorlet{qr@fancy@gradient@br}{#1}}
+\define@key{fancyqr}{right color}{\colorlet{qr@fancy@gradient@tl}{#1}}
+\define@key{fancyqr}{r color}{\colorlet{qr@fancy@gradient@tl}{#1}}
 \define@key{fancyqr}{gradient angle}{\def\fancyqr@gradient@angle{#1}}
 \define@boolkey{fancyqr}[@fancyqr@]{gradient}[true]{}% if@fancyqr@gradient
 
 \def\fancyqrset#1{\setkeys{qr,fancyqr}{#1}}
-\fancyqrset{image padding=0, gradient=true, gradient angle=0}
+\fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
 
 \def\@fancyqr@init{\let\qr@printsavedbinarymatrix\fancy@qr@printsavedbinarymatrix\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix}
 \def\fancyqr{\@ifstar\s@fancyqr\ns@fancyqr}
