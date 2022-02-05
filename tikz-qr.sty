@@ -84,6 +84,8 @@
    \iffancy@qr@do@print@\else \expandafter\let\csname #1@#2@\the\numexpr#3+1\endcsname\@undefined \fi
 }
 
+\newif\if@fancyqr@image@
+
 \def\fancy@qr@printmatrix#1{%
    \def\qr@white{0}\def\qr@black{1}%
    \let\qr@black@fixed\qr@black
@@ -93,8 +95,12 @@
   %Set module size
   \qr@modulesize=\qr@desiredheight
   \divide\qr@modulesize by \qr@size\relax
-  \xdef\fancyqr@modsize{\the\qr@modulesize}\relax
   \qr@minipagewidth=\qr@modulesize
+  \if@fancyqr@image@% image is in \@tempboxa
+   \pgfmathsetmacro\@x{int(ceil((.5\wd\@tempboxa)/\qr@modulesize))}%
+   \pgfmathsetmacro\@y{int(ceil((.5\ht\@tempboxa+.5\dp\@tempboxa)/\qr@modulesize))}%
+   \FancyQrDoNotPrintSquare\@x\@y
+  \fi
   \multiply\qr@minipagewidth by \qr@size\relax
   \ifqr@tight \else \advance\qr@minipagewidth by 8\qr@modulesize \fi
    \minipage{\qr@minipagewidth}%
@@ -178,13 +184,10 @@
 
 % image | qr
 \def\fancyqr@image#1#2{%
-\savebox0{#1}\relax
-\savebox\@tempboxa{#2}\relax % without cutout
+\savebox\@tempboxa{#1}% store for image
+\@fancyqr@image@true
 % Identify width and height
-\pgfmathsetmacro\@x{int(ceil((.5\wd0)/\fancyqr@modsize))}%
-\pgfmathsetmacro\@y{int(ceil((.5\ht0+.5\dp0)/\fancyqr@modsize))}%
-\FancyQrDoNotPrintSquare\@x\@y
-#2\llap{\parbox{\wd\@tempboxa}{\centering\usebox0}}\relax
+\savebox0{#2}\mbox{\usebox0\llap{\parbox{\wd0}{\centering\usebox\@tempboxa}}}%
 }
 
 \def\@fancyqr@wrap#1{{\let\qr@printsavedbinarymatrix\fancy@qr@printsavedbinarymatrix\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix#1}}
