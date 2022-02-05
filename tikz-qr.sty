@@ -5,7 +5,7 @@
 \colorlet{qr@fancy@gradient@tl}{teal}
 \colorlet{qr@fancy@gradient@br}{purple}
 
-\def\QrColor#1#2#3#4#5{\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#5}}
+\def\FancyQrColor#1#2#3#4#5{\if@fancyqr@gradient\pgfmathsetmacro\gradient{#1/#3*50+#2/#4*50}\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}\fi{#5}}
 
 % O 1 O
 % 2 X 3
@@ -97,8 +97,8 @@
   \divide\qr@modulesize by \qr@size\relax
   \qr@minipagewidth=\qr@modulesize
   \if@fancyqr@image@% image is in \@tempboxa
-   \pgfmathsetmacro\@x{int(ceil((.5\wd\@tempboxa)/\qr@modulesize))}%
-   \pgfmathsetmacro\@y{int(ceil((.5\ht\@tempboxa+.5\dp\@tempboxa)/\qr@modulesize))}%
+   \pgfmathsetmacro\@x{int(ceil((.5\wd\@tempboxa)/\qr@modulesize)+\fancyqr@img@padding@x)}%
+   \pgfmathsetmacro\@y{int(ceil((.5\ht\@tempboxa+.5\dp\@tempboxa)/\qr@modulesize)+\fancyqr@img@padding@y)}%
    \FancyQrDoNotPrintSquare\@x\@y
   \fi
   \multiply\qr@minipagewidth by \qr@size\relax
@@ -126,7 +126,7 @@
             \edef\@left{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j-1}}%
             \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
             \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
-            \QrColor{\the\j}{\the\i}\@max@y\@max@x{\GetPattern\@up\@left\@right\@down}%
+            \FancyQrColor{\the\j}{\the\i}\@max@y\@max@x{\GetPattern\@up\@left\@right\@down}%
          \fi\else \rule\qr@modulesize\z@\fi
       }\par}%
       \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi
@@ -190,11 +190,19 @@
 \savebox0{#2}\mbox{\usebox0\llap{\parbox{\wd0}{\centering\usebox\@tempboxa}}}%
 }
 
+\define@key{fancyqr}{image x padding}{\def\fancyqr@img@padding@x{#1}}
+\define@key{fancyqr}{image y padding}{\def\fancyqr@img@padding@y{#1}}
+\define@key{fancyqr}{image padding}{\def\fancyqr@img@padding@x{#1}\def\fancyqr@img@padding@y{#1}}
+\define@boolkey{fancyqr}[@fancyqr@]{gradient}[true]{}% if@fancyqr@gradient
+\def\fancyqrset#1{\setkeys{qr,fancyqr}{#1}}
+\fancyqrset{image padding=0, gradient=true}
+
 \def\@fancyqr@wrap#1{{\let\qr@printsavedbinarymatrix\fancy@qr@printsavedbinarymatrix\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix#1}}
 \def\fancyqr{\@ifstar\@fancyqr\@@fancyqr}
-\newcommand*\@fancyqr[2][]{\@fancyqr@wrap{\qrcode*[#1]{#2}}}
-\newcommand*\@@fancyqr[2][]{\@fancyqr@wrap{\qrcode[#1]{#2}}}
+% we rebuild some parts of qrcode to allow this macro to extend the keys while keeping the wrapper
+\newcommand*\@fancyqr[2][]{\@fancyqr@wrap{\fancyqrset{#1}\qrcode*[#1]{#2}}}
+\newcommand*\@@fancyqr[2][]{\@fancyqr@wrap{\fancyqrset{#1}\qrcode[#1]{#2}}}
 \def\fancyqrimage{\@ifstar\@fancyqr@img\@@fancyqr@img}
-\newcommand*\@fancyqr@img[3][]{\@fancyqr@wrap{\fancyqr@image{#3}{\qrcode*[#1]{#2}}}}
-\newcommand*\@@fancyqr@img[3][]{\@fancyqr@wrap{\fancyqr@image{#3}{\qrcode[#1]{#2}}}}
+\newcommand*\@fancyqr@img[3][]{\@fancyqr@wrap{\fancyqr@image{#3}{\fancyqrset{#1}\qrcode*[#1]{#2}}}}
+\newcommand*\@@fancyqr@img[3][]{\@fancyqr@wrap{\fancyqr@image{#3}{\fancyqrset{#1}\qrcode[#1]{#2}}}}
 \endinput
