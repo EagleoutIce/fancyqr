@@ -18,9 +18,9 @@ There are the following extra qr-options (you can set all of them with `\fancyqr
 | `gradient`        | boolean |   true   | Toggle the color gradient                                  |
 | `color`           | color   |          | Disables the `gradient` and sets the qr color accordingly. |
 | `l color`         | color   | `purple` | Set the top left gradient color.                           |
-| `left color`      | color   |          | Alias for `tl color`.                                      |
+| `left color`      | color   |          | Alias for `l color`.                                       |
 | `r color`         | color   |  `teal`  | Set the bottom right gradient color.                       |
-| `right color`     | color   |          | Alias for `br color`.                                      |
+| `right color`     | color   |          | Alias for `r color`.                                       |
 | `gradient angle`  | angle   |  `135`   | Change the gradient angle.                                 |
 
 The defaults are set like this:
