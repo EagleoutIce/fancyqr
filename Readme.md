@@ -6,7 +6,7 @@ Simple package to create fancy qr codes with the help of the [`qrcode`](https://
 You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`).
 
 If you do want to hide a center square (e.g, because you want to embed an image) you can use `\FancyQrDoNotPrintSquare{<x>}{<y>}` to hide a rectangle with radius x and y set from the center. If you choose this option, the default `\FancyQrRoundCut` that rounds cut corners can be changed with `\FancyQrHardCut`.
-At the moment, there are three other styles `flat`, `frame`, and `dots`, that you can load (locally) by using `\FancyQrLoad{<name>}`. The default style is named `default` and can be 'reset' by `\FancyQrLoad{default}` or `\FancyLoadDefault`.
+At the moment, there are four other styles `flat`, `frame`, `blob` and `dots`, that you can load (locally) by using `\FancyQrLoad{<name>}`. The default style is named `default` and can be 'reset' by `\FancyQrLoad{default}` or `\FancyLoadDefault`.
 
 There are the following extra qr-options (you can set all of them with `\fancyqrset{<keys>}`):
 | Option            | Type    | Default  | Explanation                                                |

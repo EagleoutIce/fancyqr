@@ -1,0 +1,24 @@
+\usetikzlibrary{decorations.pathmorphing}%
+\def\@tikz@fancy@qr@blobb{[rounded corners=.085*\qrm] (0,0) +(0:.4*\qrm+.35*\qrm*rnd) foreach \a in {30,60,...,360} {-- +(\a:.4*\qrm+.35*\qrm*rnd)} -- cycle}%
+% .
+\newpattern0000{\@tikz@fancy@qr@blobb}%
+% | | - -
+\newpattern1000{\@tikz@fancy@qr@blobb}%
+\newpattern0001{\@tikz@fancy@qr@blobb}%
+\newpattern0100{\@tikz@fancy@qr@blobb}%
+\newpattern0010{\@tikz@fancy@qr@blobb}%
+% corners
+\newpattern1100{\@tikz@fancy@qr@blobb}%
+\newpattern1010{\@tikz@fancy@qr@blobb}%
+\newpattern0101{\@tikz@fancy@qr@blobb}%
+\newpattern0011{\@tikz@fancy@qr@blobb}%
+% straights | --
+\newpattern1001{\@tikz@fancy@qr@blobb}%
+\newpattern0110{\@tikz@fancy@qr@blobb}%
+% enclosed
+\newpattern1111{\@tikz@fancy@qr@blobb}%
+% t's
+\newpattern0111{\@tikz@fancy@qr@blobb}%
+\newpattern1011{\@tikz@fancy@qr@blobb}%
+\newpattern1101{\@tikz@fancy@qr@blobb}%
+\newpattern1110{\@tikz@fancy@qr@blobb}%
