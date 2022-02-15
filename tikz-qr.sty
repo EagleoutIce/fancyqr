@@ -57,7 +57,7 @@
 \qr@newpattern1101{(0,0)rectangle(\qrm,\qrm)}
 \qr@newpattern1110{(0,0)rectangle(\qrm,\qrm)}
 
-\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\input{tikzqr-style-#1.code}\let\newpattern\@tmp\let\@tmp\relax}
+\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\input{tikzqr-style-#1.code}\@esphack\let\newpattern\@tmp\let\@tmp\relax}
 
 
 % modify the getter so everything that is not defined is white:
