@@ -34,30 +34,34 @@
    \parbox[b][\qr@modulesize]\qr@modulesize{\kern-.075\p@\smash{\clap{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd]#5;}}}}%
 }}
 
+\def\FancyLoadDefault{%
 % .
-\qr@newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm)}
+\qr@newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm)}%
 % | | - -
-\qr@newpattern1000{(0,\qrm)[qrrc]--(0,0)--(\qrm,0)[sharp corners]--(\qrm,\qrm)--cycle}
-\qr@newpattern0001{(0,0)[qrrc]--(0,\qrm)--(\qrm,\qrm)[sharp corners]--(\qrm,0)--cycle}
-\qr@newpattern0100{(0,0)[qrrc]--(\qrm,0)--(\qrm,\qrm)[sharp corners]--(0,\qrm)--cycle}
-\qr@newpattern0010{(\qrm,0)[qrrc]--(0,0)--(0,\qrm)[sharp corners]--(\qrm,\qrm)--cycle}
+\qr@newpattern1000{(0,\qrm)[qrrc]--(0,0)--(\qrm,0)[sharp corners]--(\qrm,\qrm)--cycle}%
+\qr@newpattern0001{(0,0)[qrrc]--(0,\qrm)--(\qrm,\qrm)[sharp corners]--(\qrm,0)--cycle}%
+\qr@newpattern0100{(0,0)[qrrc]--(\qrm,0)--(\qrm,\qrm)[sharp corners]--(0,\qrm)--cycle}%
+\qr@newpattern0010{(\qrm,0)[qrrc]--(0,0)--(0,\qrm)[sharp corners]--(\qrm,\qrm)--cycle}%
 % corners
 \qr@newpattern1100{(\qrm,\qrm)[qrrc]--(\qrm,0)[sharp corners]--(0,0)--(0,\qrm)--cycle}% top left
 \qr@newpattern1010{(0,\qrm)[qrrc]--(0,0)[sharp corners]--(\qrm,0)--(\qrm,\qrm)--cycle}% top right
 \qr@newpattern0101{(0,\qrm)[qrrc]--(\qrm,\qrm)[sharp corners]--(\qrm,0)--(0,0)--cycle}% bottom left
 \qr@newpattern0011{(0,0)[qrrc]--(0,\qrm)[sharp corners]--(\qrm,\qrm)--(\qrm,0)--cycle}% bottom right
 % straights | --
-\qr@newpattern1001{(0,0)rectangle(\qrm,\qrm)}
-\qr@newpattern0110{(0,0)rectangle(\qrm,\qrm)}
+\qr@newpattern1001{(0,0)rectangle(\qrm,\qrm)}%
+\qr@newpattern0110{(0,0)rectangle(\qrm,\qrm)}%
 % enclosed
-\qr@newpattern1111{(0,0)rectangle(\qrm,\qrm)}
+\qr@newpattern1111{(0,0)rectangle(\qrm,\qrm)}%
 % t's
-\qr@newpattern0111{(0,0)rectangle(\qrm,\qrm)}
-\qr@newpattern1011{(0,0)rectangle(\qrm,\qrm)}
-\qr@newpattern1101{(0,0)rectangle(\qrm,\qrm)}
-\qr@newpattern1110{(0,0)rectangle(\qrm,\qrm)}
+\qr@newpattern0111{(0,0)rectangle(\qrm,\qrm)}%
+\qr@newpattern1011{(0,0)rectangle(\qrm,\qrm)}%
+\qr@newpattern1101{(0,0)rectangle(\qrm,\qrm)}%
+\qr@newpattern1110{(0,0)rectangle(\qrm,\qrm)}%
+}
+\FancyLoadDefault % allows to reset the style after other loads
+\def\@fancy@qr@default@name{default}
 
-\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\input{tikzqr-style-#1.code}\@esphack\let\newpattern\@tmp\let\@tmp\relax}
+\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyLoadDefault\else\input{tikzqr-style-#1.code}\fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
 
 
 % modify the getter so everything that is not defined is white:
