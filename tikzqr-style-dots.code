@@ -1,22 +1,22 @@
 % .
-\newpattern0000{(0,0)circle[radius=.475*\qrm]}
+\newpattern0000{(0,0)circle[radius=.475*\qrm]}%
 % | | - -
-\newpattern1000{(0,0)circle[radius=.475*\qrm]}
-\newpattern0001{(0,0)circle[radius=.475*\qrm]}
-\newpattern0100{(0,0)circle[radius=.475*\qrm]}
-\newpattern0010{(0,0)circle[radius=.475*\qrm]}
+\newpattern1000{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0001{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0100{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0010{(0,0)circle[radius=.475*\qrm]}%
 % corners
-\newpattern1100{(0,0)circle[radius=.475*\qrm]}
-\newpattern1010{(0,0)circle[radius=.475*\qrm]}
-\newpattern0101{(0,0)circle[radius=.475*\qrm]}
-\newpattern0011{(0,0)circle[radius=.475*\qrm]}
+\newpattern1100{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1010{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0101{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0011{(0,0)circle[radius=.475*\qrm]}%
 % straights | --
-\newpattern1001{(0,0)circle[radius=.475*\qrm]}
-\newpattern0110{(0,0)circle[radius=.475*\qrm]}
+\newpattern1001{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0110{(0,0)circle[radius=.475*\qrm]}%
 % enclosed
-\newpattern1111{(0,0)circle[radius=.475*\qrm]}
+\newpattern1111{(0,0)circle[radius=.475*\qrm]}%
 % t's
-\newpattern0111{(0,0)circle[radius=.475*\qrm]}
-\newpattern1011{(0,0)circle[radius=.475*\qrm]}
-\newpattern1101{(0,0)circle[radius=.475*\qrm]}
-\newpattern1110{(0,0)circle[radius=.475*\qrm]}
+\newpattern0111{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1011{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1101{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1110{(0,0)circle[radius=.475*\qrm]}%
