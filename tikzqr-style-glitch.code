@@ -1,4 +1,4 @@
-\def\@tikz@fancy@qr@blobb{[qrrc] (0,0) +(0:.35*\qrm+.25*\qrm*rnd) foreach \a in {20,40,...,350} {-- +(\a:.35*\qrm+.25*\qrm*rnd)} -- cycle}%
+\def\@tikz@fancy@qr@blobb{[qrrc] (0,0) +(0:.35*\qrm+.25*\qrm*rnd) foreach \a in {20,40,...,359} {-- +(\a:.35*\qrm+.2*\qrm*rnd)} -- cycle}%
 % .
 \newpattern0000{\@tikz@fancy@qr@blobb}%
 % | | - -
