@@ -1,5 +1,5 @@
 \usetikzlibrary{decorations.pathmorphing}%
-\def\@tikz@fancy@qr@blobb{[rounded corners=.085*\qrm] (0,0) +(0:.4*\qrm+.35*\qrm*rnd) foreach \a in {30,60,...,360} {-- +(\a:.4*\qrm+.35*\qrm*rnd)} -- cycle}%
+\def\@tikz@fancy@qr@blobb{[rounded corners=.08*\qrm] (0,0) +(0:.3*\qrm+.515*\qrm*rnd) foreach \a in {30,60,...,360} {-- +(\a:.3*\qrm+.515*\qrm*rnd)} -- cycle}%
 % .
 \newpattern0000{\@tikz@fancy@qr@blobb}%
 % | | - -
