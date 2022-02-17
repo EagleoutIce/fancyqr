@@ -61,7 +61,12 @@
 \FancyLoadDefault % allows to reset the style after other loads
 \def\@fancy@qr@default@name{default}
 
-\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyLoadDefault\else\input{tikzqr-style-#1.code}\fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
+\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyLoadDefault\else
+\expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
+\catcode`\@=11\relax
+\input{tikzqr-style-#1.code}
+\catcode`\@=\csname pingu@lib@#1@atcode\endcsname
+\fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
 
 
 % modify the getter so everything that is not defined is white:
