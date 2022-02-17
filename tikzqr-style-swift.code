@@ -1,3 +1,5 @@
+\def\fancy@qrbound{;\pgfresetboundingbox\path(0,0)rectangle(\qrm,\qrm)}%
+% note: the expansion with two seems to be problematic, therefore i use cordinate
 % .
 \newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm)}%
 % | | - -
@@ -6,10 +8,10 @@
 \newpattern0100{(0,0)[qrrc]--(\qrm,0)--(\qrm,\qrm)[sharp corners]--(0,\qrm)--cycle}%
 \newpattern0010{(\qrm,0)[qrrc]--(0,0)--(0,\qrm)[sharp corners]--(\qrm,\qrm)--cycle}%
 % corners
-\newpattern1100{coordinate (@) (\qrm,0) (\qrm,\qrm) to[bend left=10] (@) to[bend right=10] (0,0)--(0,\qrm)--cycle}% top left
-\newpattern1010{(0,\qrm)[qrrc]--(0,0)[sharp corners]--(\qrm,0)--(\qrm,\qrm)--cycle}% top right
-\newpattern0101{(0,\qrm)[qrrc]--(\qrm,\qrm)[sharp corners]--(\qrm,0)--(0,0)--cycle}% bottom left
-\newpattern0011{(0,0)[qrrc]--(0,\qrm)[sharp corners]--(\qrm,\qrm)--(\qrm,0)--cycle}% bottom right
+\newpattern1100{(1.1*\qrm,-.1*\qrm)coordinate(@)(\qrm,\qrm)to[out=271,in=105](@)to[out=155,in=-1](0,0)--(0,\qrm)--(\qrm,\qrm)\fancy@qrbound}%
+\newpattern1010{(-.1*\qrm,-.1*\qrm)coordinate(@)(\qrm,0)coordinate(@b)(0,\qrm)to[out=269,in=75](@)to[out=25,in=181](@b)--(\qrm,\qrm)--(0,\qrm)\fancy@qrbound}%
+\newpattern0101{(\qrm+.1*\qrm,\qrm+.1*\qrm)coordinate(@)(0,\qrm)coordinate(@b)(@b) |- (\qrm,0) to[out=89,in=255](@)to[out=205,in=1](@b)\fancy@qrbound}%
+\newpattern0011{(-.1*\qrm,\qrm+.1*\qrm)coordinate(@)(0,0)coordinate(@b)(@b) -| (\qrm,\qrm) to[out=179,in=335](@)to[out=285,in=91](@b)\fancy@qrbound}%
 % straights | --
 \newpattern1001{(0,0)rectangle(\qrm,\qrm)}%
 \newpattern0110{(0,0)rectangle(\qrm,\qrm)}%
