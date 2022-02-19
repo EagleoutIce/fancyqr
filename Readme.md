@@ -31,4 +31,4 @@ The defaults are set like this:
 \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
 ```
 
-[^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to make sure the, the qr code still has enough information to readable). Therefore, the image will not scale with the qr code.
+[^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to make sure the, the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.
