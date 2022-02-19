@@ -2,6 +2,8 @@
 
 [![compile qr](https://github.com/EagleoutIce/tikz-qr/actions/workflows/compile.yaml/badge.svg)](https://github.com/EagleoutIce/tikz-qr/actions/workflows/compile.yaml)
 
+[<img src="https://github.com/EagleoutIce/tikz-qr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](qr.tex)
+
 Simple package to create fancy qr codes with the help of the [`qrcode`](https://www.ctan.org/pkg/qrcode)-package.
 You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`).
 
@@ -28,9 +30,5 @@ The defaults are set like this:
 ```LateX
 \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
 ```
-
-Example from [qr.tex](qr.tex):
-
-[<img src="https://github.com/EagleoutIce/tikz-qr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](https://media.githubusercontent.com/media/EagleoutIce/tikz-qr/gh-pages/qr.pdf)
 
 [^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to make sure the, the qr code still has enough information to readable). Therefore, the image will not scale with the qr code.
