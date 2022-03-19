@@ -6,23 +6,25 @@
 % \colorlet{qr@fancy@gradient@tl}{teal}
 % \colorlet{qr@fancy@gradient@br}{purple}
 
-% x | y | w | h | element
-\def\FancyQrColor#1#2#3#4#5{\if@fancyqr@gradient
+% element
+% x: {\the\j}; y: {\the\i} | \@max@x \@max@y
+\def\FancyQrColor#1{\if@fancyqr@gradient
 \pgfmathsetmacro\angle{Mod(\fancyqr@gradient@angle+225,360)}% rotate to align 0 to the right
 \pgfmathsetmacro\gradient{%
    % we do rotate the x and y points before color drawing by
    % Mod(\fancyqr@gradient@angle,360) with the shifted origin
-   % #3/2 #4/2
-   ((#1-#3/2)*cos(\angle) - (#2-#4/2)*sin(\angle) + #3/2)/#3 * 50% rel x [0,1]
-   + ((#1-#3/2)*sin(\angle) + (#2-#4/2)*cos(\angle) + #4/2)/#4 * 50% rel y [0,1]
-   }\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}\else\@declaredcolor{qr@fancy@gradient@tl}\fi{#5}}
+   % Old: #3/2 #4/2
+   ((\the\j-\@max@x/2)*cos(\angle) - (\the\i-\@max@y/2)*sin(\angle) + \@max@x/2)/\@max@x * 50% rel x [0,1]
+   + ((\the\j-\@max@x/2)*sin(\angle) + (\the\i-\@max@y/2)*cos(\angle) + \@max@y/2)/\@max@y * 50% rel y [0,1]
+   }\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}\else\@declaredcolor{qr@fancy@gradient@tl}\fi{#1}}
 
 % O 1 O
 % 2 X 3
 % O 4 O
-\def\GetPattern#1#2#3#4{%
-\ifcsname qcc#1#2#3#4\endcsname
-   \csname qcc#1#2#3#4\endcsname
+% uses \@up\@left\@right\@down
+\def\GetPattern{%
+\ifcsname qcc\@up\@left\@right\@down\endcsname
+   \csname qcc\@up\@left\@right\@down\endcsname
 \else\rule\qr@modulesize\z@\fi}
 
 \tikzset{qrrc/.style={rounded corners=.5\qr@modulesize},qrrd/.style={fill}}
@@ -145,7 +147,7 @@
             \edef\@left{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j-1}}%
             \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
             \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
-            \FancyQrColor{\the\j}{\the\i}\@max@y\@max@x{\GetPattern\@up\@left\@right\@down}%
+            \FancyQrColor{\GetPattern}%
          \fi\else \rule\qr@modulesize\z@\fi
       }\par}%
       \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi
