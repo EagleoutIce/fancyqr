@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[parskip=half,english,numbers=noenddot,footnotes=nomultiple,oneside]{scrartcl}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -7,20 +7,29 @@
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 
+\usepackage{lmodern}
+\usepackage{array,booktabs}
+\usepackage{footnote}
+\usepackage{fontawesome}
+
 \usepackage{fancyqr}
-
+\usepackage{xcolor}
 \usepackage[tex]{listings}
-\lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\bfseries,moretexcs=[1]{fancyqr,qrcode,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyLoadDefault,fancyqrset}}
-\lstMakeShortInline[language={[LaTeX]TeX}]|
+
+\lstdefinelanguage{ltx}{
+	language={[LaTeX]TeX},
+	moretexcs=[1]{fancyqr,qrcode,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyLoadDefault,fancyqrset,faGithub}
+}
+\lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\color{purple}\bfseries,language=ltx}
+\lstMakeShortInline|
+\def\ltx#1{\lstinline/#1/}
 
 
-\def\TikZ{Ti\textit{k}Z}
-\def\tikzqr{\TikZ qr}
 
-\title{The \texorpdfstring{\tikzqr}{fancyqr} package}
+\title{The \texttt{fancyqr} package}
 \author{%
-	\texorpdfstring{Florian Sihler\\*
-		\url{https://github.com/EagleoutIce/fancyqr}
+	\texorpdfstring{Florian Sihler\medskip\\*
+		\fancyqr{https://github.com/EagleoutIce/fancyqr}
 	}{Florian Sihler}}
 \date{Version v0.0 \textendash\ 2022/08/18}
 
@@ -29,33 +38,47 @@
    \maketitle
 
 
-	\tikzqr\ is a simple package to create fancy qr codes with the help of the \href{https://www.ctan.org/pkg/qrcode}{qrcode}-package.
-	You may use |\fancyqr| just like the normal |\qrcode| (|\fancyqr[<qr-options>]{<url>}|).
+	\texttt{fancyqr} is a simple package to create fancy qr codes with the help of the \textit{\href{https://www.ctan.org/pkg/qrcode}{qrcode}}-package.
+	You can use the |\fancyqr|-macro just like the normal |\qrcode|.\footnote{\ltx{\\fancyqr[<qr-options>]\{<url>\}}}
 
 	If you do want to hide a center square (e.g, because you want to embed an image) you can use |\FancyQrDoNotPrintSquare{<x>}{<y>}| to hide a rectangle with radius x and y set from the center. If you choose this option, the default |\FancyQrRoundCut| that rounds cut corners can be changed with |\FancyQrHardCut|.
-	At the moment, there are six other styles |flat|, |frame|, |blob|, |glitch|, |swift|, and |dots|, that you can load (locally) by using |\FancyQrLoad{<name>}|. The default style is named |default| and can be 'reset' by |\FancyQrLoad{default}| or |\FancyLoadDefault|.
+	At the moment, there are six other styles for the qr-code |flat|, |frame|, |blob|, |glitch|, |swift|, and |dots|, that you can load (locally) by using |\FancyQrLoad{<name>}|. The default style is named |default| and can be 'reset' by |\FancyQrLoad{default}| or |\FancyLoadDefault|.
 
-	There are the following extra qr-options (you can set all of them with |\fancyqrset{<keys>}|):
-	% | Option            | Type    | Default  | Explanation                                                |
-	% | ----------------- | ------- | :------: | ---------------------------------------------------------- |
-	% | `image`           | LaTeX   |          | Automatically canter an image.[^1]                         |
-	% | `image padding`   | number  |          | Additionally hide blocks (x & y) around the image.         |
-	% | `image x padding` | number  |   `0`    | Additionally hide blocks (x) around the image.             |
-	% | `image y padding` | number  |   `0`    | Additionally hide blocks (y) around the image.             |
-	% | `gradient`        | boolean |   true   | Toggle the color gradient                                  |
-	% | `color`           | color   |          | Disables the `gradient` and sets the qr color accordingly. |
-	% | `l color`         | color   | `purple` | Set the top left gradient color.                           |
-	% | `left color`      | color   |          | Alias for `l color`.                                       |
-	% | `r color`         | color   |  `teal`  | Set the bottom right gradient color.                       |
-	% | `right color`     | color   |          | Alias for `r color`.                                       |
-	% | `gradient angle`  | angle   |  `135`   | Change the gradient angle.                                 |
+	All of the extra qr-options (you can set all of them with |\fancyqrset{<keys>}|) are showcased in \autoref{tbl:extra-keys}.
+	The defaults are set like this:
+\begin{lstlisting}
+\fancyqrset{image padding=0,gradient=true,
+	gradient angle=135,r color=teal,l color=purple}
+\end{lstlisting}
+	Consider the following example (uses \href{https://www.ctan.org/pkg/fontawesome}{fontawesome} for the symbol, but you can use include images,~\ldots):
+\begin{lstlisting}
+\fancyqr[image=\huge\faGithub,image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}
+\end{lstlisting}
 
-	% The defaults are set like this:
+	\parbox[c]{.3\linewidth}{Which produces:}\hfill\parbox[c]{.4\linewidth}{\raggedleft\fancyqr[image=\Huge\faGithub,image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}}\par
 
-	% ```LateX
-	% \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
-	% ```
-
-	% [^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to make sure the, the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.
+	\begin{savenotes}
+	\begin{table}
+		\centering\begin{tabular}{>{\ttfamily}ll>{\ttfamily}cp{.5\linewidth}}
+			\toprule
+			\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
+			\midrule
+			image           & \LaTeX   &          & Automatically center an image.\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure the, the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.} \\
+			image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
+			image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
+			image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
+			gradient        & boolean &   true   & Toggle the color gradient                                    \\
+			color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
+			l color         & color   & purple   & Set the top left gradient color.                             \\
+			left color      & color   &          & Alias for |l color|.                                         \\
+			r color         & color   &  teal    & Set the bottom right gradient color.                         \\
+			right color     & color   &          & Alias for |r color|.                                         \\
+			gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
+			\bottomrule
+		\end{tabular}
+		\caption{Overview of special qr-options.}
+		\label{tbl:extra-keys}
+	\end{table}
+	\end{savenotes}
 
 \end{document}
