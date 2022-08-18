@@ -14,7 +14,9 @@ jobs:
     - name: 📄 Compile Examples
       uses: xu-cheng/latex-action@v2
       with:
-        root_file: qr-example.tex
+        root_file: |
+          qr-example.tex
+          fancyqr-doc.tex
     - name: Install poppler-utils for previews
       run: |
         sudo apt install poppler-utils
@@ -24,7 +26,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -f "build/qr-example.pdf" "preview-1.png"
+        git add -f "build/qr-example.pdf" "build/fancyqr-doc.pdf" "preview-1.png"
         git commit -m "Newly compiled data"
     - name: Push changes
       uses: ad-m/github-push-action@master
