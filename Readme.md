@@ -1,6 +1,6 @@
 # fancyqr
 
-[![made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/) [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![compile qr](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml/badge.svg)](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml)
+[![made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/) [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/GPL-3.0) [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![compile qr](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml/badge.svg)](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml)
 
 [<img src="https://github.com/EagleoutIce/fancyqr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](qr-example.tex)
 
