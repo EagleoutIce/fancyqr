@@ -1,11 +1,11 @@
 # fancyqr
 
-[![compile qr](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml/badge.svg)](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml)
+[![made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg)](https://www.latex-project.org/) [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com) [![compile qr](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml/badge.svg)](https://github.com/EagleoutIce/fancyqr/actions/workflows/compile.yaml)
 
 [<img src="https://github.com/EagleoutIce/fancyqr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](qr-example.tex)
 
 Simple package to create fancy qr codes with the help of the [`qrcode`](https://www.ctan.org/pkg/qrcode)-package.
-You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`). See the [documentation](https://github.com/EagleoutIce/fancyqr/blob/gh-pages/build/fancyqr-doc.pdf).
+You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`). See the [documentation](https://media.githubusercontent.com/media/EagleoutIce/fancyqr/blob/gh-pages/build/fancyqr-doc.pdf).
 
 If you do want to hide a center square (e.g, because you want to embed an image) you can use `\FancyQrDoNotPrintSquare{<x>}{<y>}` to hide a rectangle with radius x and y set from the center. If you choose this option, the default `\FancyQrRoundCut` that rounds cut corners can be changed with `\FancyQrHardCut`.
 At the moment, there are six other styles `flat`, `frame`, `blob`, `glitch`, `swift`, and `dots`, that you can load (locally) by using `\FancyQrLoad{<name>}`. The default style is named `default` and can be 'reset' by `\FancyQrLoad{default}` or `\FancyLoadDefault`.
