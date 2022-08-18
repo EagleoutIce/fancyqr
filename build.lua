@@ -91,9 +91,9 @@ uploadconfig = {
     summary = "Fancy QR-Codes in LaTeX",
     ctanPath = "/graphics/pgf/contrib/" .. ctanpkg,
     repository = "https://github.com/EagleoutIce/" .. module,
+    home = "https://github.com/EagleoutIce/" .. module,
     note = [[Uploaded automatically by l3build...]],
     bugtracker = "https://github.com/EagleoutIce/" .. module .. "/issues",
-    support = "https://github.com/EagleoutIce/" .. module .. "/issues",
     announcement_file = "announcement.txt"
 }
 
