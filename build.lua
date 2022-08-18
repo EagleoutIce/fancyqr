@@ -65,7 +65,7 @@ function tag_hook(tagname)
 end
 
 -- collecting files for ctan =========================================
-docfiles = { module .. "-doc.tex", "build/" .. module .. "-doc.pdf"}
+typesetfiles = { module .. "-doc.tex" }
 
 textfiles = {"README.md"}
 ctanreadme = "README.md"
