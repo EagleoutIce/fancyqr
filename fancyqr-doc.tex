@@ -26,7 +26,7 @@
 \lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\color{purple}\bfseries,language=ltx}
 \lstMakeShortInline|
 \def\ltx#1{\lstinline/#1/}
-
+\interfootnotelinepenalty=10000
 
 
 \title{The \texttt{fancyqr} package}
@@ -66,7 +66,7 @@
 			\toprule
 			\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
 			\midrule
-			image           & \LaTeX   &          & Automatically center an image.\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure the, the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.} \\
+			image           & \LaTeX   &          & Automatically center an image.\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.} \\
 			image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
 			image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
 			image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
