@@ -4,7 +4,6 @@ name: compile qr
     branches:
     - master
     - main
-    - 4-create-a-documentation
 
 jobs:
   build:
