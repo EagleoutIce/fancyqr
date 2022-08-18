@@ -7,7 +7,7 @@
 -- l3build clean
 -- Settings ==========================================================
 bundle = ""
-module = "tikz-qr"
+module = "fancyqr"
 ctanpkg = module
 builddir = os.getenv("TMPDIR")
 
