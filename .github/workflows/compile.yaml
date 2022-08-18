@@ -9,29 +9,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout git repository
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: 📄 Compile Examples
+      uses: xu-cheng/latex-action@v2
       with:
-        lfs: true
-        submodules: true
-    - name: Setup Python environment for sltx
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-    - name: Setup and run sltx-install (and pu)
+        root_file: |
+          qr-example.tex
+          fancyqr-doc.tex
+    - name: Install poppler-utils for previews
       run: |
         sudo apt install poppler-utils
-        pip install sltx
-        echo "tx-default" | sltx docker
-    - name: 'Compile the documents and generate previews'
-      run: |
-        sltx compile --root --profile "tx-default" "qr.tex"
-        pdftoppm -png -r 300 -f 1 -l 1 ./qr.pdf preview
+    - name: 'Generate previews'
+      run: pdftoppm -png -r 300 -f 1 -l 1 ./build/qr-example.pdf preview
     - name: Commit
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -f "qr.pdf" "preview-1.png"
+        git add -f "build/qr-example.pdf" "build/fancyqr-doc.pdf" "preview-1.png"
         git commit -m "Newly compiled data"
     - name: Push changes
       uses: ad-m/github-push-action@master

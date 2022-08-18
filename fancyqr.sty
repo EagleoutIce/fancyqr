@@ -1,10 +1,6 @@
-\def\filename{tikz-qr}
+\def\filename{fancyqr}
 \ProvidesPackage{\filename}[2021/12/07 version v1.0 Fancy QR-Codes]
-\RequirePackage{tikz,qrcode}
-
-% NOTE: currently only named so for compatibility reasons tl is right and br is left!
-% \colorlet{qr@fancy@gradient@tl}{teal}
-% \colorlet{qr@fancy@gradient@br}{purple}
+\RequirePackage{tikz, qrcode}
 
 % element
 % x: {\the\j}; y: {\the\i} | \@max@x \@max@y
@@ -66,7 +62,7 @@
 \def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyLoadDefault\else
 \expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
 \catcode`\@=11\relax
-\input{tikzqr-style-#1.code}
+\input{fancyqr-style-#1.code}
 \catcode`\@=\csname pingu@lib@#1@atcode\endcsname
 \fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
 
