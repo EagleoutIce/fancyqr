@@ -19,12 +19,12 @@ jobs:
       run: |
         sudo apt install poppler-utils
     - name: 'Generate previews'
-      run: pdftoppm -png -r 300 -f 1 -l 1 ./qr-example.pdf preview
+      run: pdftoppm -png -r 300 -f 1 -l 1 ./build/qr-example.pdf preview
     - name: Commit
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -f "qr-example.pdf" "preview-1.png"
+        git add -f "build/qr-example.pdf" "preview-1.png"
         git commit -m "Newly compiled data"
     - name: Push changes
       uses: ad-m/github-push-action@master
