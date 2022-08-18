@@ -25,13 +25,13 @@ jobs:
         echo "tx-default" | sltx docker
     - name: 'Compile the documents and generate previews'
       run: |
-        sltx compile --root --profile "tx-default" "qr.tex"
-        pdftoppm -png -r 300 -f 1 -l 1 ./qr.pdf preview
+        sltx compile --root --profile "tx-default" "qr-example.tex"
+        pdftoppm -png -r 300 -f 1 -l 1 ./qr-example.pdf preview
     - name: Commit
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add -f "qr.pdf" "preview-1.png"
+        git add -f "qr-example.pdf" "preview-1.png"
         git commit -m "Newly compiled data"
     - name: Push changes
       uses: ad-m/github-push-action@master
