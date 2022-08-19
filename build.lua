@@ -70,7 +70,7 @@ typesetfiles = { module .. "-doc.tex" }
 textfiles = {"README.md"}
 ctanreadme = "README.md"
 
-installfiles = {"*.sty", "*.tex"}
+installfiles = {"*.sty", "*.tex", "*.code"}
 sourcefiles = installfiles
 unpackfiles = {}
 
