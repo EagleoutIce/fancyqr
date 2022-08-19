@@ -60,9 +60,11 @@ function tag_hook(tagname)
     git("add", "*-doc.tex")
     git("commit -m 'step version " .. packageversion .. "'")
     git("tag", packageversion)
+    git("push")
     os.execute("github_changelog_generator --user EagleoutIce --project \"" .. module .. "\" --token \"" .. token .. "\"")
     git("add", "CHANGELOG.md")
     git("commit -m 'update changelog " .. packageversion .. "'")
+    git("push")
 end
 
 -- collecting files for ctan =========================================
