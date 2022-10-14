@@ -125,6 +125,7 @@
   \ifqr@tight \else \advance\qr@minipagewidth by 8\qr@modulesize \fi
    \minipage\qr@minipagewidth
       \baselineskip=\qr@modulesize
+      \lineskiplimit=\z@ \lineskip=\z@ \parskip=\z@
       \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi% %Blank space at top.
       \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
       \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
