@@ -236,9 +236,9 @@
 \def\ns@fancyqr{\qr@starinvokedfalse\@@fancyqr}
 \newcommand\@@fancyqr[1][]{\begingroup\@fancyqr@init
 \ifqr@starinvoked\qr@hyperlinkfalse\fi
-\setkeys{qr,fancyqr}{#1}
+\setkeys{qr,fancyqr}{#1}%
 \if@fancyqr@randomcolor@%
-\pgfmathdeclarerandomlist{@@fancyqr@@randomcol}{\@fancyqr@random@colors} \let\FancyQrColor\@@fancyqr@color@random\else\if@fancyqr@gradient\let\FancyQrColor\@@fancyqr@color@gradient\fi\fi
+\pgfmathdeclarerandomlist{@@fancyqr@@randomcol}{\@fancyqr@random@colors}\let\FancyQrColor\@@fancyqr@color@random\else\if@fancyqr@gradient\let\FancyQrColor\@@fancyqr@color@gradient\fi\fi
 \bgroup\qr@verbatimcatcodes\qr@setescapedspecials\qrcode@in}
 \endinput
 
