@@ -7,15 +7,18 @@
 
 % element
 % x: {\the\j}; y: {\the\i} | \@max@x \@max@y
-\def\FancyQrColor#1{\if@fancyqr@gradient
-\pgfmathsetmacro\angle{Mod(\fancyqr@gradient@angle+225,360)}% rotate to align 0 to the right
+\def\@@fancyqr@color@gradient#1{\pgfmathsetmacro\angle{Mod(\fancyqr@gradient@angle+225,360)}% rotate to align 0 to the right
 \pgfmathsetmacro\gradient{%
    % we do rotate the x and y points before color drawing by
    % Mod(\fancyqr@gradient@angle,360) with the shifted origin
    % Old: #3/2 #4/2
    ((\the\j-\@max@x/2)*cos(\angle) - (\the\i-\@max@y/2)*sin(\angle) + \@max@x/2)/\@max@x * 50% rel x [0,1]
    + ((\the\j-\@max@x/2)*sin(\angle) + (\the\i-\@max@y/2)*cos(\angle) + \@max@y/2)/\@max@y * 50% rel y [0,1]
-   }\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}\else\@declaredcolor{qr@fancy@gradient@tl}\fi{#1}}
+   }\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#1}}
+\def\@@fancyqr@color@default#1{\@declaredcolor{qr@fancy@gradient@tl}{#1}}
+\def\@@fancyqr@color@random#1{\pgfmathrandomitem{\@fancyqr@random@c@l@r}{@@fancyqr@@randomcol}\@declaredcolor{\@fancyqr@random@c@l@r}{#1}}
+\let\FancyQrColor\@@fancyqr@color@default
+
 
 % O 1 O
 % 2 X 3
@@ -209,17 +212,19 @@
 }%
 
 \newsavebox\fancyqr@imgbox
+\newif\if@fancyqr@randomcolor@
 \define@key{fancyqr}{image x padding}{\def\fancyqr@img@padding@x{#1}}
 \define@key{fancyqr}{image y padding}{\def\fancyqr@img@padding@y{#1}}
 \define@key{fancyqr}{image padding}{\def\fancyqr@img@padding@x{#1}\def\fancyqr@img@padding@y{#1}}
 \define@key{fancyqr}{image}{\@fancyqr@image@true\savebox\fancyqr@imgbox{#1}}
-\define@key{fancyqr}{color}{\@fancyqr@gradientfalse\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{left color}{\colorlet{qr@fancy@gradient@br}{#1}}
-\define@key{fancyqr}{l color}{\colorlet{qr@fancy@gradient@br}{#1}}
-\define@key{fancyqr}{right color}{\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{r color}{\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{gradient angle}{\def\fancyqr@gradient@angle{#1}}
+\define@key{fancyqr}{color}{\@fancyqr@randomcolor@false\@fancyqr@gradientfalse\colorlet{qr@fancy@gradient@tl}{#1}}
+\define@key{fancyqr}{left color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@br}{#1}}
+\define@key{fancyqr}{l color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@br}{#1}}
+\define@key{fancyqr}{right color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@tl}{#1}}
+\define@key{fancyqr}{r color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@tl}{#1}}
+\define@key{fancyqr}{gradient angle}{\@fancyqr@randomcolor@false\def\fancyqr@gradient@angle{#1}}
 \define@boolkey{fancyqr}[@fancyqr@]{gradient}[true]{}% if@fancyqr@gradient
+\define@key{fancyqr}{random color}{\@fancyqr@randomcolor@true\def\@fancyqr@random@colors{#1}}
 
 \def\fancyqrset#1{\setkeys{qr,fancyqr}{#1}}
 \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
@@ -231,8 +236,10 @@
 \def\ns@fancyqr{\qr@starinvokedfalse\@@fancyqr}
 \newcommand\@@fancyqr[1][]{\begingroup\@fancyqr@init
 \ifqr@starinvoked\qr@hyperlinkfalse\fi
-\setkeys{qr,fancyqr}{#1}\bgroup
-\qr@verbatimcatcodes\qr@setescapedspecials\qrcode@in}
+\setkeys{qr,fancyqr}{#1}
+\if@fancyqr@randomcolor@%
+\pgfmathdeclarerandomlist{@@fancyqr@@randomcol}{\@fancyqr@random@colors} \let\FancyQrColor\@@fancyqr@color@random\else\if@fancyqr@gradient\let\FancyQrColor\@@fancyqr@color@gradient\fi\fi
+\bgroup\qr@verbatimcatcodes\qr@setescapedspecials\qrcode@in}
 \endinput
 
 % TODO: NEGATIVE PATTERNS IF MIDDLE IS 0
