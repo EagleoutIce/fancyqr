@@ -26,6 +26,7 @@ There are the following extra qr-options (you can set all of them with `\fancyqr
 | `r color`         | color   |  `teal`  | Set the bottom right gradient color.                       |
 | `right color`     | color   |          | Alias for `r color`.                                       |
 | `gradient angle`  | angle   |  `135`   | Change the gradient angle.                                 |
+| `random color`    | colors  |          | Allow to set a random color pool to pick from.             |
 
 The defaults are set like this:
 
