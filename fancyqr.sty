@@ -41,7 +41,7 @@
    \parbox[b][\qr@modulesize]\qr@modulesize{\kern-.075\p@\smash{\fancyqr@clap{\tikz[x=\qrm,y=\qrm,inner sep=\z@,outer sep=\z@]{\path[qrrd]#5;}}}}%
 }}
 
-\def\FancyLoadDefault{%
+\def\FancyQrLoadDefault{%
 % .
 \qr@newpattern0000{[qrrc](0,0)rectangle(\qrm,\qrm)}%
 % | | - -
@@ -65,10 +65,10 @@
 \qr@newpattern1101{(0,0)rectangle(\qrm,\qrm)}%
 \qr@newpattern1110{(0,0)rectangle(\qrm,\qrm)}%
 }
-\FancyLoadDefault % allows to reset the style after other loads
+\FancyQrLoadDefault % allows to reset the style after other loads
 \def\@fancy@qr@default@name{default}
 
-\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyLoadDefault\else
+\def\FancyQrLoad#1{\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
 \expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
 \catcode`\@=11\relax
 \input{fancyqr-style-#1.code}

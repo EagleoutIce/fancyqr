@@ -21,7 +21,7 @@
 
 \lstdefinelanguage{ltx}{
 	language={[LaTeX]TeX},
-	moretexcs=[1]{fancyqr,qrcode,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyLoadDefault,fancyqrset,faGithub}
+	moretexcs=[1]{fancyqr,qrcode,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyQrLoadDefault,fancyqrset,faGithub}
 }
 \lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\color{purple}\bfseries,language=ltx}
 \lstMakeShortInline|
@@ -45,7 +45,7 @@
 	You can use the |\fancyqr|-macro just like the normal |\qrcode|.\footnote{\ltx{\\fancyqr[<qr-options>]\{<url>\}}}
 
 	If you do want to hide a center square (e.g, because you want to embed an image) you can use |\FancyQrDoNotPrintSquare{<x>}{<y>}| to hide a rectangle with radius x and y set from the center. If you choose this option, the default |\FancyQrRoundCut| that rounds cut corners can be changed with |\FancyQrHardCut|.
-	At the moment, there are six other styles for the qr-code |flat|, |frame|, |blob|, |glitch|, |swift|, and |dots|, that you can load (locally) by using |\FancyQrLoad{<name>}|. The default style is named |default| and can be 'reset' by |\FancyQrLoad{default}| or |\FancyLoadDefault|.
+	At the moment, there are six other styles for the qr-code |flat|, |frame|, |blob|, |glitch|, |swift|, and |dots|, that you can load (locally) by using |\FancyQrLoad{<name>}|. The default style is named |default| and can be 'reset' by |\FancyQrLoad{default}| or |\FancyQrLoadDefault|.
 
 	All of the extra qr-options (you can set all of them with |\fancyqrset{<keys>}|) are showcased in \autoref{tbl:extra-keys}.
 	The defaults are set like this:
