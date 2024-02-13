@@ -60,29 +60,31 @@
 
 	\parbox[c]{.3\linewidth}{Which produces:}\hfill\parbox[c]{.4\linewidth}{\raggedleft\fancyqr[image=\Huge\faGithub,image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}}\par
 
-	\begin{savenotes}
-	\begin{table}
-		\centering\begin{tabular}{>{\ttfamily}ll>{\ttfamily}cp{.5\linewidth}}
-			\toprule
-			\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
-			\midrule
-			image           & \LaTeX   &          & Automatically center an image.\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.} \\
-			image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
-			image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
-			image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
-			gradient        & boolean &   true   & Toggle the color gradient                                    \\
-			color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
-			l color         & color   & purple   & Set the top left gradient color.                             \\
-			left color      & color   &          & Alias for |l color|.                                         \\
-			r color         & color   &  teal    & Set the bottom right gradient color.                         \\
-			right color     & color   &          & Alias for |r color|.                                         \\
-			gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
-			random color    & colors  &          & Allow to set a random color pool to pick from.               \\
-			\bottomrule
-		\end{tabular}
-		\caption{Overview of special qr-options.}
-		\label{tbl:extra-keys}
-	\end{table}
-	\end{savenotes}
+\begin{savenotes}
+\begin{table}
+	\centering\begin{tabular}{>{\ttfamily}ll>{\ttfamily}cp{.5\linewidth}}
+		\toprule
+		\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
+		\midrule
+		image           & \LaTeX   &          & Automatically center an image.\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.} \\
+		image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
+		image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
+		image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
+		gradient        & boolean &   true   & Toggle the color gradient                                    \\
+		color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
+		l color         & color   & purple   & Set the top left gradient color.                             \\
+		left color      & color   &          & Alias for |l color|.                                         \\
+		r color         & color   &  teal    & Set the bottom right gradient color.                         \\
+		right color     & color   &          & Alias for |r color|.                                         \\
+		gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
+		random color    & colors  &          & Allow to set a random color pool to pick from.               \\
+		width           & length  &          & Alias for |qrcode|'s |height| option.                        \\
+		size            & length  &          & Alias for |qrcode|'s |height| option.                        \\
+		\bottomrule
+	\end{tabular}
+	\caption{Overview of special qr-options.}
+	\label{tbl:extra-keys}
+\end{table}
+\end{savenotes}
 
 \end{document}
