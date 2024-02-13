@@ -4,7 +4,7 @@
 
 [<img src="https://github.com/EagleoutIce/fancyqr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](qr-example.tex)
 
-A simple package to create fancy qr-codes with the help of the [`qrcode`](https://www.ctan.org/pkg/qrcode)-package.
+A simple package to create fancy qr-codes with the help of the [`qrcode`][qrcode]-package.
 You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`). See the [documentation](https://media.githubusercontent.com/media/EagleoutIce/fancyqr/gh-pages/build/fancyqr-doc.pdf).
 
 *fancyqr* is actively developed by *Florian Sihler* (contact me at: <florian.sihler@uni-ulm.de>) under the [GPLv3 License](LICENSE). I am very happy about every contribution (see [CONTRIBUTING.md](CONTRIBUTING.md)). You can find it on CTAN (<https://www.ctan.org/pkg/fancyqr>).
@@ -27,6 +27,8 @@ There are the following extra qr-options (you can set all of them with `\fancyqr
 | `right color`     | color   |          | Alias for `r color`.                                       |
 | `gradient angle`  | angle   |  `135`   | Change the gradient angle.                                 |
 | `random color`    | colors  |          | Allow to set a random color pool to pick from.             |
+| `width`           | length  |          | Alias for [`qrcode`'s][qrcode] `height` option.            |
+| `size`            | length  |          | Alias for [`qrcode`'s][qrcode] `height` option.            |
 
 The defaults are set like this:
 
@@ -34,4 +36,6 @@ The defaults are set like this:
 \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
 ```
 
-[^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to ensure that the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.
+[^1]: The package will automatically calculate the required `\FancyQrDoNotPrintSquare` (you have to ensure that the qr-code still has enough information to be readable). Therefore, the image will not scale with the qr-code.
+
+[qrcode]: https://www.ctan.org/pkg/qrcode

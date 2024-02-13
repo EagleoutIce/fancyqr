@@ -225,6 +225,8 @@
 \define@key{fancyqr}{gradient angle}{\@fancyqr@randomcolor@false\def\fancyqr@gradient@angle{#1}}
 \define@boolkey{fancyqr}[@fancyqr@]{gradient}[true]{}% if@fancyqr@gradient
 \define@key{fancyqr}{random color}{\@fancyqr@randomcolor@true\def\@fancyqr@random@colors{#1}}
+\define@key{fancyqr}{width}{\setkeys{qr}{height=#1}}
+\define@key{fancyqr}{size}{\setkeys{qr}{height=#1}}
 
 \def\fancyqrset#1{\setkeys{qr,fancyqr}{#1}}
 \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
