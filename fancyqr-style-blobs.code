@@ -1,23 +1,36 @@
-\def\@tikz@fancy@qr@blobb{[rounded corners=.08*\qrm] (0,0) +(0:.3*\qrm+.515*\qrm*rnd) foreach \a in {30,60,...,360} {-- +(\a:.3*\qrm+.515*\qrm*rnd)} -- cycle}%
+% with pict2e and polar coordinate translation
+\def\@fancy@qr@blobb{%
+\@tempcnta=\z@
+\roundjoin
+\roundcap
+\moveto(0,0)
+\loop
+\advance\@tempcnta by 30
+\edef\rad{\fpeval{.2*\qr@modulesize+.115*\qr@modulesize*abs(rand())}}% fixed rand for both
+\lineto(\fpeval{cos(\@tempcnta)*\rad},\fpeval{sin(\@tempcnta)*\rad})
+\ifnum\@tempcnta<360\relax
+\repeat
+\fillpath
+}%
 % .
-\newpattern0000{\@tikz@fancy@qr@blobb}%
+\newpattern0000{\@fancy@qr@blobb}%
 % | | - -
-\newpattern1000{\@tikz@fancy@qr@blobb}%
-\newpattern0001{\@tikz@fancy@qr@blobb}%
-\newpattern0100{\@tikz@fancy@qr@blobb}%
-\newpattern0010{\@tikz@fancy@qr@blobb}%
+\newpattern1000{\@fancy@qr@blobb}%
+\newpattern0001{\@fancy@qr@blobb}%
+\newpattern0100{\@fancy@qr@blobb}%
+\newpattern0010{\@fancy@qr@blobb}%
 % corners
-\newpattern1100{\@tikz@fancy@qr@blobb}%
-\newpattern1010{\@tikz@fancy@qr@blobb}%
-\newpattern0101{\@tikz@fancy@qr@blobb}%
-\newpattern0011{\@tikz@fancy@qr@blobb}%
+\newpattern1100{\@fancy@qr@blobb}%
+\newpattern1010{\@fancy@qr@blobb}%
+\newpattern0101{\@fancy@qr@blobb}%
+\newpattern0011{\@fancy@qr@blobb}%
 % straights | --
-\newpattern1001{\@tikz@fancy@qr@blobb}%
-\newpattern0110{\@tikz@fancy@qr@blobb}%
+\newpattern1001{\@fancy@qr@blobb}%
+\newpattern0110{\@fancy@qr@blobb}%
 % enclosed
-\newpattern1111{\@tikz@fancy@qr@blobb}%
+\newpattern1111{\@fancy@qr@blobb}%
 % t's
-\newpattern0111{\@tikz@fancy@qr@blobb}%
-\newpattern1011{\@tikz@fancy@qr@blobb}%
-\newpattern1101{\@tikz@fancy@qr@blobb}%
-\newpattern1110{\@tikz@fancy@qr@blobb}%
+\newpattern0111{\@fancy@qr@blobb}%
+\newpattern1011{\@fancy@qr@blobb}%
+\newpattern1101{\@fancy@qr@blobb}%
+\newpattern1110{\@fancy@qr@blobb}%
