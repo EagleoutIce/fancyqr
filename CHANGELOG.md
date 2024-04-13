@@ -2,7 +2,45 @@
 
 ## [Unreleased](https://github.com/EagleoutIce/fancyqr/tree/HEAD)
 
-[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.0...HEAD)
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.0...HEAD)
+
+**Implemented enhancements:**
+
+- Remove tikz dependency [\#22](https://github.com/EagleoutIce/fancyqr/pull/22) ([EagleoutIce](https://github.com/EagleoutIce))
+- Random colors [\#13](https://github.com/EagleoutIce/fancyqr/pull/13) ([EagleoutIce](https://github.com/EagleoutIce))
+
+**Merged pull requests:**
+
+- feat: `width` and `size` as alias for `height` [\#20](https://github.com/EagleoutIce/fancyqr/pull/20) ([EagleoutIce](https://github.com/EagleoutIce))
+- Small typo in the documentation: the name of the style is `blobs`, not `blob` [\#18](https://github.com/EagleoutIce/fancyqr/pull/18) ([jejust](https://github.com/jejust))
+- provide fallback for clap [\#12](https://github.com/EagleoutIce/fancyqr/pull/12) ([EagleoutIce](https://github.com/EagleoutIce))
+
+## [v2.0](https://github.com/EagleoutIce/fancyqr/tree/v2.0) (2024-04-13)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.2...v2.0)
+
+## [v1.2](https://github.com/EagleoutIce/fancyqr/tree/v1.2) (2024-04-13)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.1...v1.2)
+
+**Implemented enhancements:**
+
+- Width Alias for qrcode Height [\#19](https://github.com/EagleoutIce/fancyqr/issues/19)
+
+**Fixed bugs:**
+
+- QR code seems to be off-center sometimes [\#16](https://github.com/EagleoutIce/fancyqr/issues/16)
+- No `\clap` on older texlive versions \(2020-\) [\#11](https://github.com/EagleoutIce/fancyqr/issues/11)
+- Rounded Edge Bug? [\#2](https://github.com/EagleoutIce/fancyqr/issues/2)
+
+**Closed issues:**
+
+- Drop tikz [\#21](https://github.com/EagleoutIce/fancyqr/issues/21)
+- True tikz mode [\#15](https://github.com/EagleoutIce/fancyqr/issues/15)
+
+## [v1.1](https://github.com/EagleoutIce/fancyqr/tree/v1.1) (2022-08-19)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.0...v1.1)
 
 **Closed issues:**
 
