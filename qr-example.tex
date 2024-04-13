@@ -16,7 +16,7 @@
 \usepackage[active,tightpage]{preview} % for presentation
 \setlength\PreviewBorder{15pt}
 
-\fancyqrset{size=3.25cm,level=H}
+\fancyqrset{size=3.25cm,level=H, padding}
 
 \errorcontextlines=9999
 
@@ -24,8 +24,8 @@
 \preview
 % \FancyQrDoNotPrintSquare{8}{9}
 % \FancyQrHardCut
-\mbox{% \FancyQrLoad{blobs}
-\fbox{\fancyqr[image=\scalebox{2.9}{\faGithub},image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}}
+\mbox{\FancyQrLoad{blobs}
+\fancyqr[image=\scalebox{2.9}{\faGithub},image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}
 \FancyQrLoad{default}
 \fancyqr{https://github.com/EagleoutIce/fancyqr}
 \FancyQrLoad{dots}\fancyqr[image={\textsf{\textbf{\textcolor{gray}{fancy}qr}}}, image padding=1, random color={@Red}{@Pink}{@Purple}{@DeepPurple}{@Indigo}{@Blue}{@LightBlue}{@Cyan}{@Teal}{@Green}{@LightGreen}{@Lime}{@Yellow}{@Amber}{@Orange}{@DeepOrange}{@Brown}]{https://github.com/EagleoutIce/fancyqr}
