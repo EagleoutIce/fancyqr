@@ -191,8 +191,9 @@
    \endminipage
    \if@fancyqr@image@\nobreak
    \llap{\parbox\qr@minipagewidth{\centering\usebox\fancyqr@imgbox}%
-      % if the width is even, offset by half a module width, done by centering
-      \ifodd\fancy@qr@donotprint@center@x\else\kern.5\qr@modulesize\fi
+      % if half the width is odd, offset by half a module width, done by centering
+      \edef\@halfcheck{\fpeval{round(\fancy@qr@donotprint@center@x/2)}}%
+      \ifodd\@halfcheck \kern.5\qr@modulesize\fi
    }\fi
 }%
 
