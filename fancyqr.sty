@@ -15,8 +15,8 @@
    % we do rotate the x and y points before color drawing by
    % Mod(\fancyqr@gradient@angle,360) with the shifted origin
    % Old: #3/2 #4/2
-   ((\the\j-\@max@x/2)*cos(\angle) - (\the\i-\@max@y/2)*sin(\angle) + \@max@x/2)/\@max@x * 50% rel x [0,1]
-   + ((\the\j-\@max@x/2)*sin(\angle) + (\the\i-\@max@y/2)*cos(\angle) + \@max@y/2)/\@max@y * 50% rel y [0,1]
+   ((\the\j-\@half@max@x)*cos(\angle) - (\the\i-\@half@max@y)*sin(\angle) + \@half@max@x)/\@max@x * 50% rel x [0,1]
+   + ((\the\j-\@half@max@x)*sin(\angle) + (\the\i-\@half@max@y)*cos(\angle) + \@half@max@y)/\@max@y * 50% rel y [0,1]
    }}\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#1}}
 \def\@@fancyqr@color@default#1{\@declaredcolor{qr@fancy@gradient@tl}{#1}}
 \def\@@fancyqr@color@random#1{\pgfmathrandomitem{\@fancyqr@random@c@l@r}{@@fancyqr@@randomcol}\@declaredcolor{\@fancyqr@random@c@l@r}{#1}}
@@ -144,6 +144,7 @@
 
 \def\fancy@qr@printmatrix#1{%
    \def\qr@white{0}\def\qr@black{1}%
+   \protected@edef\fancyqr@currprint{#1}%
    \let\qr@black@fixed\qr@black
    \let\qr@white@fixed\qr@white
    \let\qr@black@format\qr@black
@@ -164,26 +165,26 @@
       \baselineskip=\qr@modulesize
       \lineskiplimit=\z@ \lineskip=\z@ \parskip=\z@
       \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi% %Blank space at top.
-      \edef\@max@x{\qr@numberofrowsinmatrix{#1}}%
-      \edef\@max@y{\qr@numberofcolsinmatrix{#1}}%
-      \edef\@do@x@min{\the\numexpr\@max@x/2-\fancy@qr@donotprint@center@x-\@ne}%
-      \edef\@do@x@max{\the\numexpr\@max@x/2+\fancy@qr@donotprint@center@x+\@ne}%
-      \edef\@do@y@min{\the\numexpr\@max@y/2-\fancy@qr@donotprint@center@y-\@ne}%
-      \edef\@do@y@max{\the\numexpr\@max@y/2+\fancy@qr@donotprint@center@y+\@ne}%
+      \edef\@max@x{\qr@numberofrowsinmatrix\fancyqr@currprint}\edef\@half@max@x{\the\numexpr\@max@x/2}%
+      \edef\@max@y{\qr@numberofcolsinmatrix\fancyqr@currprint}\edef\@half@max@y{\the\numexpr\@max@y/2}%
+      \edef\@do@x@min{\the\numexpr\@half@max@x-\fancy@qr@donotprint@center@x-\@ne}%
+      \edef\@do@x@max{\the\numexpr\@half@max@x+\fancy@qr@donotprint@center@x+\@ne}%
+      \edef\@do@y@min{\the\numexpr\@half@max@y-\fancy@qr@donotprint@center@y-\@ne}%
+      \edef\@do@y@max{\the\numexpr\@half@max@y+\fancy@qr@donotprint@center@y+\@ne}%
       \qr@for \i=\@ne to \@max@y by \@ne{%
-      \ifqr@tight\else \rule{4\qr@modulesize}\z@\fi% %Blank space at left.
+      \ifqr@tight\else\rule{4\qr@modulesize}\z@\fi% %Blank space at left.
       \qr@for \j=\@ne to \@max@x by \@ne{%
          \qr@fancy@updateif\i\j
          \iffancy@qr@do@print@
-         \edef\@mid{\qr@matrixentry{#1}{\the\i}{\the\j}}%
+         \edef\@mid{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\j}}%
          \ifnum\@mid=\qr@white
             \rule\qr@modulesize\z@
          \else% if not white, get its pattern
-            \iffancy@qr@roundcut@\qr@fancy@clear@surround{#1}{\the\i}{\the\j}\fi
-            \edef\@up{\qr@matrixentry{#1}{\the\numexpr\the\i-1}{\the\j}}%
-            \edef\@left{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j-1}}%
-            \edef\@right{\qr@matrixentry{#1}{\the\i}{\the\numexpr\the\j+1}}%
-            \edef\@down{\qr@matrixentry{#1}{\the\numexpr\the\i+1}{\the\j}}%
+            \iffancy@qr@roundcut@\qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi
+            \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-1}{\the\j}}%
+            \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-1}}%
+            \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+1}}%
+            \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+1}{\the\j}}%
             \FancyQrColor{\GetPattern}%
          \fi\else \rule\qr@modulesize\z@\fi
       }\par}%
