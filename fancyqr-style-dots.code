@@ -1,22 +1,23 @@
+\def\fancyqr@dots@circle{\put(.5,.5){\circle*{\@ne}}}
 % .
-\newpattern0000{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0000{\fancyqr@dots@circle}%
 % | | - -
-\newpattern1000{(0,0)circle[radius=.475*\qrm]}%
-\newpattern0001{(0,0)circle[radius=.475*\qrm]}%
-\newpattern0100{(0,0)circle[radius=.475*\qrm]}%
-\newpattern0010{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1000{\fancyqr@dots@circle}%
+\newpattern0001{\fancyqr@dots@circle}%
+\newpattern0100{\fancyqr@dots@circle}%
+\newpattern0010{\fancyqr@dots@circle}%
 % corners
-\newpattern1100{(0,0)circle[radius=.475*\qrm]}%
-\newpattern1010{(0,0)circle[radius=.475*\qrm]}%
-\newpattern0101{(0,0)circle[radius=.475*\qrm]}%
-\newpattern0011{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1100{\fancyqr@dots@circle}%
+\newpattern1010{\fancyqr@dots@circle}%
+\newpattern0101{\fancyqr@dots@circle}%
+\newpattern0011{\fancyqr@dots@circle}%
 % straights | --
-\newpattern1001{(0,0)circle[radius=.475*\qrm]}%
-\newpattern0110{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1001{\fancyqr@dots@circle}%
+\newpattern0110{\fancyqr@dots@circle}%
 % enclosed
-\newpattern1111{(0,0)circle[radius=.475*\qrm]}%
+\newpattern1111{\fancyqr@dots@circle}%
 % t's
-\newpattern0111{(0,0)circle[radius=.475*\qrm]}%
-\newpattern1011{(0,0)circle[radius=.475*\qrm]}%
-\newpattern1101{(0,0)circle[radius=.475*\qrm]}%
-\newpattern1110{(0,0)circle[radius=.475*\qrm]}%
+\newpattern0111{\fancyqr@dots@circle}%
+\newpattern1011{\fancyqr@dots@circle}%
+\newpattern1101{\fancyqr@dots@circle}%
+\newpattern1110{\fancyqr@dots@circle}%

@@ -1,22 +1,23 @@
+\def\fancyqr@flat@rect{\moveto(0,0)\lineto(0,1)\lineto(1,1)\lineto(1,0)\lineto(0,0)\fillpath}
 % .
-\newpattern0000{(0,0)rectangle(\qrm,\qrm)}%
+\newpattern0000{\fancyqr@flat@rect}%
 % | | - -
-\newpattern1000{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern0001{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern0100{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern0010{(0,0)rectangle(\qrm,\qrm)}%
+\newpattern1000{\fancyqr@flat@rect}%
+\newpattern0001{\fancyqr@flat@rect}%
+\newpattern0100{\fancyqr@flat@rect}%
+\newpattern0010{\fancyqr@flat@rect}%
 % corners
-\newpattern1100{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern1010{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern0101{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern0011{(0,0)rectangle(\qrm,\qrm)}%
+\newpattern1100{\fancyqr@flat@rect}%
+\newpattern1010{\fancyqr@flat@rect}%
+\newpattern0101{\fancyqr@flat@rect}%
+\newpattern0011{\fancyqr@flat@rect}%
 % straights | --
-\newpattern1001{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern0110{(0,0)rectangle(\qrm,\qrm)}%
+\newpattern1001{\fancyqr@flat@rect}%
+\newpattern0110{\fancyqr@flat@rect}%
 % enclosed
-\newpattern1111{(0,0)rectangle(\qrm,\qrm)}%
+\newpattern1111{\fancyqr@flat@rect}%
 % t's
-\newpattern0111{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern1011{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern1101{(0,0)rectangle(\qrm,\qrm)}%
-\newpattern1110{(0,0)rectangle(\qrm,\qrm)}%
+\newpattern0111{\fancyqr@flat@rect}%
+\newpattern1011{\fancyqr@flat@rect}%
+\newpattern1101{\fancyqr@flat@rect}%
+\newpattern1110{\fancyqr@flat@rect}%

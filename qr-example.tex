@@ -5,21 +5,30 @@
 
 \usepackage{fontawesome}
 \usepackage{fancyqr}
-\usepackage[prefix=@]{xcolor-material}% for showcase of random colors
+
+% for showcase of random colors
+\usepackage{pgfmath}
+\usepackage[prefix=@]{xcolor-material}
+
+% to showcase scalebox
+\usepackage{graphicx}
 
 \usepackage[active,tightpage]{preview} % for presentation
 \setlength\PreviewBorder{15pt}
 
-\fancyqrset{size=3.25cm,level=H,padding}
+\fancyqrset{size=3.25cm,level=H}
+
+\errorcontextlines=9999
 
 \begin{document}
 \preview
 % \FancyQrDoNotPrintSquare{8}{9}
 % \FancyQrHardCut
-\mbox{\FancyQrLoad{blobs}
-\fancyqr[image=\scalebox{2.9}{\faGithub\kern1pt},image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}
+\mbox{% \FancyQrLoad{blobs}
+\fbox{\fancyqr[image=\scalebox{2.9}{\faGithub},image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}}
 \FancyQrLoad{default}
 \fancyqr{https://github.com/EagleoutIce/fancyqr}
-\FancyQrLoad{dots}\fancyqr[image={\kern-1pt\tikz\node[align=center,draw]{\huge Ha\\Huhu};\kern1pt},random color={@Red}{@Pink}{@Purple}{@DeepPurple}{@Indigo}{@Blue}{@LightBlue}{@Cyan}{@Teal}{@Green}{@LightGreen}{@Lime}{@Yellow}{@Amber}{@Orange}{@DeepOrange}{@Brown}]{https://github.com/EagleoutIce/fancyqr}}%
+\FancyQrLoad{dots}\fancyqr[image={\textsf{\textbf{\textcolor{gray}{fancy}qr}}}, image padding=1, random color={@Red}{@Pink}{@Purple}{@DeepPurple}{@Indigo}{@Blue}{@LightBlue}{@Cyan}{@Teal}{@Green}{@LightGreen}{@Lime}{@Yellow}{@Amber}{@Orange}{@DeepOrange}{@Brown}]{https://github.com/EagleoutIce/fancyqr}
+}%
 \endpreview
 \end{document}
