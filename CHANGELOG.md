@@ -1,8 +1,12 @@
 # Changelog
 
+
 ## [Unreleased](https://github.com/EagleoutIce/fancyqr/tree/HEAD)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.0...HEAD)
+
+
+## [v2.0](https://github.com/EagleoutIce/fancyqr/tree/v2.0) (2024-04-13)
 
 **Implemented enhancements:**
 
@@ -14,8 +18,6 @@
 - feat: `width` and `size` as alias for `height` [\#20](https://github.com/EagleoutIce/fancyqr/pull/20) ([EagleoutIce](https://github.com/EagleoutIce))
 - Small typo in the documentation: the name of the style is `blobs`, not `blob` [\#18](https://github.com/EagleoutIce/fancyqr/pull/18) ([jejust](https://github.com/jejust))
 - provide fallback for clap [\#12](https://github.com/EagleoutIce/fancyqr/pull/12) ([EagleoutIce](https://github.com/EagleoutIce))
-
-## [v2.0](https://github.com/EagleoutIce/fancyqr/tree/v2.0) (2024-04-13)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.2...v2.0)
 
