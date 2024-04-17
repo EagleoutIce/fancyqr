@@ -162,11 +162,8 @@
   \fi
   % TODO: new style with edges rotated by 90%
   \qr@minipagewidth=\qr@desiredheight
-  \ifqr@tight\else
-   \advance\qr@minipagewidth by 8\qr@modulesize\relax
-  \fi
-  \minipage\qr@minipagewidth%
-      \hfuzz=\qr@modulesize \baselineskip=\qr@modulesize \lineskiplimit=\z@ \lineskip=\z@ \parskip=\z@
+  \ifqr@tight\else \advance\qr@minipagewidth by 8\qr@modulesize\relax \fi
+  \begingroup
       \edef\@max@x{\qr@numberofrowsinmatrix\fancyqr@currprint}\edef\@half@max@x{\the\numexpr\@max@x/2}%
       \edef\@max@y{\qr@numberofcolsinmatrix\fancyqr@currprint}\edef\@half@max@y{\the\numexpr\@max@y/2}%
       \edef\@do@x@min{\the\numexpr\@half@max@x-\fancy@qr@donotprint@center@x-\@ne}%
@@ -188,14 +185,18 @@
                \FancyQrColor{\GetPattern}%
          \fi\fi
       }}%
+      \if@fancyqr@image@
+         % floating point mid
+         \put(\fpeval{.5*\@max@x+.5},\fpeval{.5*\@max@y}){%
+            \edef\@halfcheck{\fpeval{round(\fancy@qr@donotprint@center@x/2)}}%
+            \raisebox{-.5\height}{\clap{% TODO: remove this offset
+               \ifodd\@halfcheck \else\kern\qr@modulesize\fi
+               \usebox\fancyqr@imgbox
+            }}%
+         }%
+      \fi
       \endpicture
-   \endminipage
-   \if@fancyqr@image@\nobreak
-   \llap{\parbox\qr@minipagewidth{\centering\usebox\fancyqr@imgbox}%
-      % if half the width is odd, offset by half a module width, done by centering
-      \edef\@halfcheck{\fpeval{round(\fancy@qr@donotprint@center@x/2)}}%
-      \ifodd\@halfcheck \kern.5\qr@modulesize\fi
-   }\fi
+   \endgroup
 }%
 
 \def\fancy@qr@setup#1{%
