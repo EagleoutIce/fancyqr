@@ -29,24 +29,26 @@
 % 2 X 3
 % O 4 O
 % uses \@up\@left\@right\@down
-\def\GetPattern{%
-\ifcsname qcc\@up\@left\@right\@down\endcsname
-   \csname qcc\@up\@left\@right\@down\endcsname
-\fi}
-
+% \ifcsname qcc\@up\@left\@right\@down\endcsname
+\def\GetPattern{\csname qcc\@up\@left\@right\@down\endcsname}
+\def\GetNegativePattern{\csname qcc@neg@\@up\@left\@right\@down\endcsname}
 % backwards compatibility
 \def\fancyqr@clap#1{\hb@xt@\z@{\hss#1\hss}}
 \newdimen\fancyqr@edge@compensate \fancyqr@edge@compensate=.15\p@
 
 % is larger to be compensated by overlaps
 \def\qrm{\dimexpr\qr@modulesize+\fancyqr@edge@compensate\relax}
-\long\def\qr@newpattern#1#2#3#4#5{%
-\expandafter\def\csname qcc#1#2#3#4\endcsname{% scaling happens implicitly by the unitlength
+\def\fancyqr@draw#1{% scaling happens implicitly by the unitlength
    \put(\the\j,\the\numexpr\@max@y-\the\i){%
-      \advance\unitlength by \fancyqr@edge@compensate
-      #5%
-   }}%
+      \advance\unitlength by\fancyqr@edge@compensate\relax
+      #1%
+   }%
 }
+% #1-#4 are the bits of the surrounding tiles, #5 is the drawing code
+\long\def\qr@newpattern#1#2#3#4#5{\expandafter\def\csname qcc#1#2#3#4\endcsname{\fancyqr@draw{#5}}}
+% similar to \qr@newpattern but for negative patterns (in which the current tile should be white)
+% this can be used to define smoother roundings etc.
+\long\def\qr@newnegpattern#1#2#3#4#5{\expandafter\def\csname qcc@neg@#1#2#3#4\endcsname{\fancyqr@draw{#5}}}
 
 % [#3][#2]
 % [#4][#1]
@@ -72,6 +74,14 @@
 }
 \def\fancyqr@rounded@rect@close{\fillpath}
 
+% TODO: paramters
+\def\fancyqr@negative@rounded@rect#1#2#3#4{\color{red}
+   \moveto(0,0)
+   \lineto(1,0)
+   \lineto(1,-1)
+   \circlearc\fancyqr@rounding@factor\fancyqr@rounding@factor\fancyqr@rounding@factor{270}{360}
+}
+
 \def\FancyQrLoadDefault{%
 % .
 \qr@newpattern0000{\fancyqr@rounded@rect1111}%
@@ -90,6 +100,7 @@
 \qr@newpattern0110{\fancyqr@rounded@rect0000}%
 % enclosed
 \qr@newpattern1111{\fancyqr@rounded@rect0000}%
+\qr@newnegpattern1111{\fancyqr@rounded@rect0000}%
 % t's
 \qr@newpattern0111{\fancyqr@rounded@rect0000}%
 \qr@newpattern1011{\fancyqr@rounded@rect0000}%
@@ -101,12 +112,17 @@
 
 \def\FancyQrLoad#1{%
 \def\fancyqr@rounded@rect@close{\fillpath}%
-\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
+\let\@tmp@newpattern\newpattern\let\newpattern\qr@newpattern
+\let\@tmp@newnegpattern\newnegpattern\let\newnegpattern\qr@newnegpattern
+\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
 \expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
 \catcode`\@=11\relax
 \input{fancyqr-style-#1.code}
 \catcode`\@=\csname pingu@lib@#1@atcode\endcsname
-\fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
+\fi\@esphack
+\let\newpattern\@tmp@newpattern \let\@tmp@newpattern\undefined
+\let\newnegpattern\@tmp@newnegpattern \let\@tmp@newnegpattern\undefined
+}
 
 
 % modify the getter so everything that is not defined is white:
@@ -174,14 +190,16 @@
          \qr@fancy@updateif\i\j
          \iffancy@qr@do@print@
             \edef\@mid{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\j}}%
+            \iffancy@qr@roundcut@\qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi
+            \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-\@ne}{\the\j}}%
+            \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-\@ne}}%
+            \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+\@ne}}%
+            \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+\@ne}{\the\j}}%
             \ifnum\@mid=\qr@black\relax
-               \iffancy@qr@roundcut@\qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi
-               \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-\@ne}{\the\j}}%
-               \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-\@ne}}%
-               \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+\@ne}}%
-               \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+\@ne}{\the\j}}%
                \FancyQrColor{\GetPattern}%
-         \fi\fi
+            \else\ifnum\@mid=\qr@white\relax
+               \FancyQrColor{\GetNegativePattern}%
+         \fi\fi\fi
       }}%
       \if@fancyqr@image@
          % floating point mid
