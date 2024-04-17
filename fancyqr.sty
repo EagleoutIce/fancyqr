@@ -148,7 +148,6 @@
 \def\fancy@qr@printmatrix#1{%
    \def\qr@white{0}\def\qr@black{1}%
    \protected@edef\fancyqr@currprint{#1}%
-   % TODO: provide rings for the edges
    \let\qr@black@fixed\qr@black \let\qr@white@fixed\qr@white
    \let\qr@black@format\qr@black \let\qr@white@format\qr@white
   %Set module size
@@ -160,7 +159,6 @@
    \edef\@y{\fpeval{ceil((.5\ht\fancyqr@imgbox+.5\dp\fancyqr@imgbox)/\qr@modulesize)+\fancyqr@img@padding@y}}%
    \FancyQrDoNotPrintSquare\@x\@y
   \fi
-  % TODO: new style with edges rotated by 90%
   \qr@minipagewidth=\qr@desiredheight
   \ifqr@tight\else \advance\qr@minipagewidth by 8\qr@modulesize\relax \fi
   \begingroup
@@ -282,6 +280,3 @@
 \pgfmathdeclarerandomlist{@@fancyqr@@randomcol}{\@fancyqr@random@colors}\let\FancyQrColor\@@fancyqr@color@random\else\if@fancyqr@gradient\let\FancyQrColor\@@fancyqr@color@gradient\fi\fi
 \bgroup\qr@verbatimcatcodes\qr@setescapedspecials\qrcode@in}
 \endinput
-
-% TODO: NEGATIVE PATTERNS IF MIDDLE IS 0
-% => make rounded negative corners
