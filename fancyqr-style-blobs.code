@@ -6,7 +6,7 @@
 \moveto(0,0)
 \loop
 \advance\@tempcnta by 30
-\edef\rad{\fpeval{.2*\qr@modulesize+.115*\qr@modulesize*abs(rand())}}% fixed rand for both
+\edef\rad{\fpeval{.1*\qr@modulesize+.13*\qr@modulesize*abs(rand())}}% fixed rand for both
 \lineto(\fpeval{cos(\@tempcnta)*\rad},\fpeval{sin(\@tempcnta)*\rad})
 \ifnum\@tempcnta<360\relax
 \repeat
