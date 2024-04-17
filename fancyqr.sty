@@ -32,18 +32,21 @@
 \def\GetPattern{%
 \ifcsname qcc\@up\@left\@right\@down\endcsname
    \csname qcc\@up\@left\@right\@down\endcsname
-\else\rule\qr@modulesize\z@\fi}
+\fi}
 
 % backwards compatibility
 \def\fancyqr@clap#1{\hb@xt@\z@{\hss#1\hss}}
-\newdimen\fancyqr@edge@compensate
-\fancyqr@edge@compensate=.15\p@
+\newdimen\fancyqr@edge@compensate \fancyqr@edge@compensate=.15\p@
 
 % is larger to be compensated by overlaps
 \def\qrm{\dimexpr\qr@modulesize+\fancyqr@edge@compensate\relax}
 \long\def\qr@newpattern#1#2#3#4#5{%
-\expandafter\def\csname qcc#1#2#3#4\endcsname{\parbox[b][\qr@modulesize]\qr@modulesize{\kern-\fancyqr@edge@compensate\relax\smash{\fancyqr@clap{\picture(\@ne,\@ne)#5\endpicture}}}%
-}}
+\expandafter\def\csname qcc#1#2#3#4\endcsname{% scaling happens implicitly by the unitlength
+   \put(\the\j,\the\numexpr\@max@y-\the\i){%
+      \advance\unitlength by \fancyqr@edge@compensate
+      #5%
+   }}%
+}
 
 % [#3][#2]
 % [#4][#1]
@@ -145,57 +148,53 @@
 \def\fancy@qr@printmatrix#1{%
    \def\qr@white{0}\def\qr@black{1}%
    \protected@edef\fancyqr@currprint{#1}%
-   \let\qr@black@fixed\qr@black
-   \let\qr@white@fixed\qr@white
-   \let\qr@black@format\qr@black
-   \let\qr@white@format\qr@white
+   \let\qr@black@fixed\qr@black \let\qr@white@fixed\qr@white
+   \let\qr@black@format\qr@black \let\qr@white@format\qr@white
   %Set module size
   \qr@modulesize=\qr@desiredheight
   \divide\qr@modulesize by \qr@size\relax
-  \unitlength=\dimexpr\qr@modulesize+\fancyqr@edge@compensate\relax % initialize unitlength once
+  \unitlength=\dimexpr\qr@modulesize\relax % will be re-set in placement
   \if@fancyqr@image@% image is in \fancyqr@imgbox
    \edef\@x{\fpeval{ceil((.5\wd\fancyqr@imgbox)/\qr@modulesize)+\fancyqr@img@padding@x}}%
    \edef\@y{\fpeval{ceil((.5\ht\fancyqr@imgbox+.5\dp\fancyqr@imgbox)/\qr@modulesize)+\fancyqr@img@padding@y}}%
    \FancyQrDoNotPrintSquare\@x\@y
   \fi
   \qr@minipagewidth=\qr@desiredheight
-  \ifqr@tight \advance\qr@minipagewidth by -\qr@modulesize \else \advance\qr@minipagewidth by 7\qr@modulesize \fi
-  \minipage\qr@minipagewidth%
-      \hfuzz=\qr@modulesize
-      \baselineskip=\qr@modulesize
-      \lineskiplimit=\z@ \lineskip=\z@ \parskip=\z@
-      \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi% %Blank space at top.
+  \ifqr@tight\else \advance\qr@minipagewidth by 8\qr@modulesize\relax \fi
+  \begingroup
       \edef\@max@x{\qr@numberofrowsinmatrix\fancyqr@currprint}\edef\@half@max@x{\the\numexpr\@max@x/2}%
       \edef\@max@y{\qr@numberofcolsinmatrix\fancyqr@currprint}\edef\@half@max@y{\the\numexpr\@max@y/2}%
       \edef\@do@x@min{\the\numexpr\@half@max@x-\fancy@qr@donotprint@center@x-\@ne}%
       \edef\@do@x@max{\the\numexpr\@half@max@x+\fancy@qr@donotprint@center@x+\@ne}%
       \edef\@do@y@min{\the\numexpr\@half@max@y-\fancy@qr@donotprint@center@y-\@ne}%
       \edef\@do@y@max{\the\numexpr\@half@max@y+\fancy@qr@donotprint@center@y+\@ne}%
-      \qr@for \i=\@ne to \@max@y by \@ne{%
-      \ifqr@tight\else\rule{4\qr@modulesize}\z@\fi% %Blank space at left.
-      \qr@for \j=\@ne to \@max@x by \@ne{%
+      \edef\@tmp@tight{\ifqr@tight\z@\else-4\fi}%
+      \picture(\qr@minipagewidth,\qr@minipagewidth)(\the\numexpr\@ne+\@tmp@tight,\@tmp@tight)
+      \qr@for \i=\@ne to \@max@y by \@ne{\qr@for \j=\@ne to \@max@x by \@ne{%
          \qr@fancy@updateif\i\j
          \iffancy@qr@do@print@
-         \edef\@mid{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\j}}%
-         \ifnum\@mid=\qr@white
-            \rule\qr@modulesize\z@
-         \else% if not white, get its pattern
-            \iffancy@qr@roundcut@\qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi
-            \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-1}{\the\j}}%
-            \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-1}}%
-            \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+1}}%
-            \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+1}{\the\j}}%
-            \FancyQrColor{\GetPattern}%
-         \fi\else \rule\qr@modulesize\z@\fi
-      }\par}%
-      \ifqr@tight\else\rule\z@{4\qr@modulesize}\par\fi
-   \endminipage
-   \if@fancyqr@image@\nobreak
-   \llap{\parbox\qr@minipagewidth{\centering\usebox\fancyqr@imgbox}%
-      % if half the width is odd, offset by half a module width, done by centering
-      \edef\@halfcheck{\fpeval{round(\fancy@qr@donotprint@center@x/2)}}%
-      \ifodd\@halfcheck \kern.5\qr@modulesize\fi
-   }\fi
+            \edef\@mid{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\j}}%
+            \ifnum\@mid=\qr@black\relax
+               \iffancy@qr@roundcut@\qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi
+               \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-\@ne}{\the\j}}%
+               \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-\@ne}}%
+               \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+\@ne}}%
+               \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+\@ne}{\the\j}}%
+               \FancyQrColor{\GetPattern}%
+         \fi\fi
+      }}%
+      \if@fancyqr@image@
+         % floating point mid
+         \put(\fpeval{.5*\@max@x+.5},\fpeval{.5*\@max@y}){%
+            \edef\@halfcheck{\fpeval{round(\fancy@qr@donotprint@center@x/2)}}%
+            \raisebox{-.5\height}{\clap{% TODO: remove this offset
+               \ifodd\@halfcheck \else\kern\qr@modulesize\fi
+               \usebox\fancyqr@imgbox
+            }}%
+         }%
+      \fi
+      \endpicture
+   \endgroup
 }%
 
 \def\fancy@qr@setup#1{%
@@ -281,6 +280,3 @@
 \pgfmathdeclarerandomlist{@@fancyqr@@randomcol}{\@fancyqr@random@colors}\let\FancyQrColor\@@fancyqr@color@random\else\if@fancyqr@gradient\let\FancyQrColor\@@fancyqr@color@gradient\fi\fi
 \bgroup\qr@verbatimcatcodes\qr@setescapedspecials\qrcode@in}
 \endinput
-
-% TODO: NEGATIVE PATTERNS IF MIDDLE IS 0
-% => make rounded negative corners
