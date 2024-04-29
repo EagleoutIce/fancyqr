@@ -3,6 +3,7 @@
 % https://opensource.org/licenses/gpl-3.0.html
 \documentclass{article}
 
+\usepackage[T1]{fontenc}
 \usepackage{fontawesome}
 \usepackage{fancyqr}
 
@@ -13,6 +14,9 @@
 % to showcase scalebox
 \usepackage{graphicx}
 
+% for the coding font
+\usepackage{FiraMono}
+
 \usepackage[active,tightpage]{preview} % for presentation
 \setlength\PreviewBorder{15pt}
 
@@ -21,6 +25,7 @@
 \errorcontextlines=9999
 \begin{document}
 \preview
+\begin{center}
 % \FancyQrDoNotPrintSquare{8}{9}
 % \FancyQrHardCut
 \mbox{\FancyQrLoad{blobs}%
@@ -29,6 +34,8 @@
 \fancyqr{https://github.com/EagleoutIce/fancyqr}%
 \FancyQrLoad{dots}%
 \fancyqr[image={\textsf{\textbf{\textcolor{gray}{fancy}qr}}}, random color={@Red}{@Pink}{@Purple}{@DeepPurple}{@Indigo}{@Blue}{@Cyan}{@Teal}{@Green}{@Amber}{@Orange}{@DeepOrange}{@Brown}]{https://github.com/EagleoutIce/fancyqr}%
-}%
+}\\[4mm]
+\texttt{\textbackslash \textbf{fancyqr}\{\textcolor{@Grey}{https://github.com/EagleoutIce/fancyqr}\}}
+\end{center}
 \endpreview
 \end{document}
