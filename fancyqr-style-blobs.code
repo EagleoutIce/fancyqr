@@ -3,11 +3,11 @@
 \@tempcnta=\z@
 \roundjoin
 \roundcap
-\moveto(0,0)
+\moveto(.5,.5)
 \loop
 \advance\@tempcnta by 30
 \edef\rad{\fpeval{.1*\qr@modulesize+.13*\qr@modulesize*abs(rand())}}% fixed rand for both
-\lineto(\fpeval{cos(\@tempcnta)*\rad},\fpeval{sin(\@tempcnta)*\rad})
+\lineto(\fpeval{cos(\@tempcnta)*\rad+.5},\fpeval{sin(\@tempcnta)*\rad+.5})
 \ifnum\@tempcnta<360\relax
 \repeat
 \fillpath
