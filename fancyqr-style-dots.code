@@ -1,4 +1,4 @@
-\def\fancyqr@dots@circle{\put(.5,.5){\circle*{\@ne}}}
+\def\fancyqr@dots@circle{\put(.5,.5){\circle*{\@ne}}}%
 % .
 \newpattern0000{\fancyqr@dots@circle}%
 % | | - -

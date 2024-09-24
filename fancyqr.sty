@@ -102,10 +102,11 @@
 \def\FancyQrLoad#1{%
 \protected@edef\fancyqr@loaded@style{#1}%
 \def\fancyqr@rounded@rect@close{\fillpath}%
-\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
+\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}%
+\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
 \expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
 \catcode`\@=11\relax
-\input{fancyqr-style-#1.code}
+\input{fancyqr-style-#1.code}%
 \catcode`\@=\csname pingu@lib@#1@atcode\endcsname
 \fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
 
