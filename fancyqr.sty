@@ -43,7 +43,7 @@
 \long\def\qr@newpattern#1#2#3#4#5{%
 \expandafter\def\csname qcc#1#2#3#4\endcsname{% scaling happens implicitly by the unitlength
    \put(\the\j,\the\numexpr\@max@y-\the\i){%
-      \advance\unitlength by \fancyqr@edge@compensate
+      \advance\unitlength by\fancyqr@edge@compensate\relax
       #5%
    }}%
 }
@@ -100,11 +100,13 @@
 \def\@fancy@qr@default@name{default}
 
 \def\FancyQrLoad#1{%
+\protected@edef\fancyqr@loaded@style{#1}%
 \def\fancyqr@rounded@rect@close{\fillpath}%
-\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
+\let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}%
+\ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
 \expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
 \catcode`\@=11\relax
-\input{fancyqr-style-#1.code}
+\input{fancyqr-style-#1.code}%
 \catcode`\@=\csname pingu@lib@#1@atcode\endcsname
 \fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
 
@@ -151,7 +153,7 @@
    \let\qr@black@fixed\qr@black \let\qr@white@fixed\qr@white
    \let\qr@black@format\qr@black \let\qr@white@format\qr@white
   %Set module size
-  \qr@modulesize=\qr@desiredheight
+  \qr@modulesize=\qr@desiredheight\relax
   \divide\qr@modulesize by \qr@size\relax
   \unitlength=\dimexpr\qr@modulesize\relax % will be re-set in placement
   \if@fancyqr@image@% image is in \fancyqr@imgbox
@@ -262,6 +264,15 @@
 \define@key{fancyqr}{random color}{\@fancyqr@randomcolor@true\def\@fancyqr@random@colors{#1}}
 \define@key{fancyqr}{width}{\setkeys{qr}{height=#1}}
 \define@key{fancyqr}{size}{\setkeys{qr}{height=#1}}
+% \fancyqr@loaded@style
+\def\fancyqr@flat@style{flat}
+\define@boolkey{fancyqr}[@fancyqr@]{classic}[true]{} % if@fancyqr@classic
+\def\fancyqr@classic{%
+\ifx\fancyqr@loaded@style\fancyqr@flat@style\else\FancyQrLoad{\fancyqr@flat@style}\fi
+\setkeys{fancyqr}{%
+   gradient=false,color=black,l color=black,r color=black%
+}%
+}
 
 \def\fancyqrset#1{\setkeys{qr,fancyqr}{#1}}
 \fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
@@ -274,6 +285,7 @@
 \newcommand\@@fancyqr[1][]{\begingroup\@fancyqr@init
 \ifqr@starinvoked\qr@hyperlinkfalse\fi
 \setkeys{qr,fancyqr}{#1}%
+\if@fancyqr@classic\fancyqr@classic\fi%
 \if@fancyqr@randomcolor@%
 \ifcsname pgfmathdeclarerandomlist\endcsname\else
 \PackageError{fancyqr}{Random colors requested but pgfmath not loaded}{Please load pgfmath if you want this}\fi
