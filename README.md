@@ -13,22 +13,27 @@ If you do want to hide a center square (e.g., because you want to embed an image
 At the moment, there are six other styles (`flat`, `frame`, `blobs`, `glitch`, and `dots`) that you can load (locally) by using `\FancyQrLoad{<name>}`. The default style is named `default` and can be 'reset' by `\FancyQrLoad{default}` or `\FancyQrLoadDefault`.
 
 There are the following extra qr-options (you can set all of them with `\fancyqrset{<keys>}`):
-| Option            | Type    | Default  | Explanation                                                |
-| ----------------- | ------- | :------: | ---------------------------------------------------------- |
-| `image`           | LaTeX   |          | Automatically center an image.[^1]                         |
-| `image padding`   | number  |          | Additionally hide blocks (x & y) around the image.         |
-| `image x padding` | number  |   `0`    | Additionally hide blocks (x) around the image.             |
-| `image y padding` | number  |   `0`    | Additionally hide blocks (y) around the image.             |
-| `gradient`        | boolean |   true   | Toggle the color gradient                                  |
-| `color`           | color   |          | Disables the `gradient` and sets the qr color accordingly. |
-| `l color`         | color   | `purple` | Set the top left gradient color.                           |
-| `left color`      | color   |          | Alias for `l color`.                                       |
-| `r color`         | color   |  `teal`  | Set the bottom right gradient color.                       |
-| `right color`     | color   |          | Alias for `r color`.                                       |
-| `gradient angle`  | angle   |  `135`   | Change the gradient angle.                                 |
-| `random color`    | colors  |          | Allow to set a random color pool to pick from.             |
-| `width`           | length  |          | Alias for [`qrcode`'s][qrcode] `height` option.            |
-| `size`            | length  |          | Alias for [`qrcode`'s][qrcode] `height` option.            |
+
+| Option            | Type        | Default  | Explanation                                                                                   |
+| ----------------- | ----------- | :------: | --------------------------------------------------------------------------------------------- |
+| `color`           | color       |          | Disables the `gradient` and sets the qr color accordingly.                                    |
+| `gradient angle`  | angle       |  `135`   | Change the gradient angle.                                                                    |
+| `gradient`        | boolean     |   true   | Toggle the color gradient                                                                     |
+| `image`           | LaTeX       |          | Automatically center an image.[^1]                                                            |
+| `image padding`   | number      |          | Additionally hide blocks (x & y) around the image.                                            |
+| `image x padding` | number      |   `0`    | Additionally hide blocks (x) around the image.                                                |
+| `image y padding` | number      |   `0`    | Additionally hide blocks (y) around the image.                                                |
+| `l color`         | color       | `purple` | Set the top left gradient color.                                                              |
+| `left color`      | color       |          | Alias for `l color`.                                                                          |
+| `level`           | L/M/Q/H     |   `M`    | [`qrcode`][qrcode] option affecting error correction (low, medium, quartile, high). |
+| `padding`         | flag        |          | [`qrcode`][qrcode] option adding sufficient additional space around the QR code.    |
+| `r color`         | color       |  `teal`  | Set the bottom right gradient color.                                                          |
+| `random color`    | colors      |          | Allow to set a random color pool to pick from.                                                |
+| `right color`     | color       |          | Alias for `r color`.                                                                          |
+| `size`            | length      |          | Alias for [`qrcode`'s][qrcode] `height` option.                                               |
+| `tight`           | flag        |          | [`qrcode`][qrcode] option adding no additional space around the QR code.            |
+| `version`         | [0..40] ∈ ℕ |   `0`    | [`qrcode`][qrcode] option affecting the size (tries to be as small as possible).  |
+| `width`           | length      |          | Alias for [`qrcode`'s][qrcode] `height` option.                                               |
 
 The defaults are set like this:
 

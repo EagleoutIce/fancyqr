@@ -66,20 +66,24 @@
 		\toprule
 		\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
 		\midrule
+		color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
+		gradient        & boolean &   true   & Toggle the color gradient                                    \\
+		gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
 		image           & \LaTeX   &          & Automatically center an image.\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr code still has enough information to be readable). Therefore, the image will not scale with the qr code.} \\
 		image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
 		image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
 		image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
-		gradient        & boolean &   true   & Toggle the color gradient                                    \\
-		color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
 		l color         & color   & purple   & Set the top left gradient color.                             \\
 		left color      & color   &          & Alias for |l color|.                                         \\
+		level 			 & L/M/Q/H &   M      & |qrcode| option affecting error correction (low, medium, quartile, high).                                     \\
+		padding         & flag    &          & |qrcode| option adding sufficient additional space around the QR code.                                            \\
 		r color         & color   &  teal    & Set the bottom right gradient color.                         \\
-		right color     & color   &          & Alias for |r color|.                                         \\
-		gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
 		random color    & colors  &          & Allow to set a random color pool to pick from.               \\
-		width           & length  &          & Alias for |qrcode|'s |height| option.                        \\
+		right color     & color   &          & Alias for |r color|.                                         \\
 		size            & length  &          & Alias for |qrcode|'s |height| option.                        \\
+		tight           & flag    &          & |qrcode| option adding no additional space around the QR code.                                                    \\
+		version         & \([0..40] \in \mathbb{N}\) &   0      & |qrcode| option affecting the size (tries to be as small as possible).                                             \\
+		width           & length  &          & Alias for |qrcode|'s |height| option.                        \\
 		\bottomrule
 	\end{tabular}
 	\caption{Overview of special qr-options.}
