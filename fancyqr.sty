@@ -166,6 +166,16 @@
   \begingroup
       \edef\@max@x{\qr@numberofrowsinmatrix\fancyqr@currprint}\edef\@half@max@x{\the\numexpr\@max@x/2}%
       \edef\@max@y{\qr@numberofcolsinmatrix\fancyqr@currprint}\edef\@half@max@y{\the\numexpr\@max@y/2}%
+      % redefine the border to be white!
+      \qr@for \i=\@ne to \@max@y by \@ne{%
+      % redefine the limits to be white!
+      \qr@storetomatrix\fancyqr@currprint{\the\numexpr\z@}{\the\i}{\qr@white}%
+      \qr@storetomatrix\fancyqr@currprint{\the\numexpr\@max@x+\@ne}{\the\i}{\qr@white}%
+      }%
+      \qr@for \i=\@ne to \@max@x by \@ne{%
+         \qr@storetomatrix\fancyqr@currprint{\the\i}{\the\numexpr\z@}{\qr@white}%
+         \qr@storetomatrix\fancyqr@currprint{\the\i}{\the\numexpr\@max@y+\@ne}{\qr@white}%
+      }%
       \edef\@do@x@min{\the\numexpr\@half@max@x-\fancy@qr@donotprint@center@x-\@ne}%
       \edef\@do@x@max{\the\numexpr\@half@max@x+\fancy@qr@donotprint@center@x+\@ne}%
       \edef\@do@y@min{\the\numexpr\@half@max@y-\fancy@qr@donotprint@center@y-\@ne}%
