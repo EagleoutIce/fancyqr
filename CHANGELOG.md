@@ -1,12 +1,33 @@
 # Changelog
 
+## [v2.1](https://github.com/EagleoutIce/fancyqr/tree/v2.1) (2024-10-05)
 
-## [Unreleased](https://github.com/EagleoutIce/fancyqr/tree/HEAD)
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.0...v2.1)
 
-[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.0...HEAD)
+**Implemented enhancements:**
 
+- Add a `classic` option [\#34](https://github.com/EagleoutIce/fancyqr/issues/34)
+- Using one picture environment for the QR-Code [\#28](https://github.com/EagleoutIce/fancyqr/pull/28) ([EagleoutIce](https://github.com/EagleoutIce))
+
+**Closed issues:**
+
+- QR Rounding breaks after generating a QR Code of 64 or more chars [\#36](https://github.com/EagleoutIce/fancyqr/issues/36)
+- Doc: Some of the important qr parameters like padding [\#32](https://github.com/EagleoutIce/fancyqr/issues/32)
+- Blob Pattern Is Shifted Down [\#30](https://github.com/EagleoutIce/fancyqr/issues/30)
+- Blobs appear to be a little bit "too-heavy" [\#24](https://github.com/EagleoutIce/fancyqr/issues/24)
+- Join tile pictures into one large picture [\#23](https://github.com/EagleoutIce/fancyqr/issues/23)
+
+**Merged pull requests:**
+
+- fix: printing small qr code after big qr code broke rounding [\#37](https://github.com/EagleoutIce/fancyqr/pull/37) ([EagleoutIce](https://github.com/EagleoutIce))
+- New `classic` option [\#35](https://github.com/EagleoutIce/fancyqr/pull/35) ([EagleoutIce](https://github.com/EagleoutIce))
+- Document important options of the `qrcode` package [\#33](https://github.com/EagleoutIce/fancyqr/pull/33) ([EagleoutIce](https://github.com/EagleoutIce))
+- Fix: blob pattern vertical center [\#31](https://github.com/EagleoutIce/fancyqr/pull/31) ([EagleoutIce](https://github.com/EagleoutIce))
+- Reduce Size of Blobs [\#29](https://github.com/EagleoutIce/fancyqr/pull/29) ([EagleoutIce](https://github.com/EagleoutIce))
 
 ## [v2.0](https://github.com/EagleoutIce/fancyqr/tree/v2.0) (2024-04-13)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.2...v2.0)
 
 **Implemented enhancements:**
 
@@ -18,8 +39,6 @@
 - feat: `width` and `size` as alias for `height` [\#20](https://github.com/EagleoutIce/fancyqr/pull/20) ([EagleoutIce](https://github.com/EagleoutIce))
 - Small typo in the documentation: the name of the style is `blobs`, not `blob` [\#18](https://github.com/EagleoutIce/fancyqr/pull/18) ([jejust](https://github.com/jejust))
 - provide fallback for clap [\#12](https://github.com/EagleoutIce/fancyqr/pull/12) ([EagleoutIce](https://github.com/EagleoutIce))
-
-[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v1.2...v2.0)
 
 ## [v1.2](https://github.com/EagleoutIce/fancyqr/tree/v1.2) (2024-04-13)
 
