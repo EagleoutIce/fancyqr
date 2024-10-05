@@ -12,7 +12,7 @@ ctanpkg = module
 builddir = os.getenv("TMPDIR")
 
 -- Package version ===================================================
-packageversion = "v2.0"
+packageversion = "v2.1"
 -- packageversion="v1.3"
 
 -- Package date ======================================================
