@@ -18,6 +18,7 @@ There are the following extra qr-options (you can set all of them with `\fancyqr
 | ----------------- | ----------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `classic`         | boolean     |  `false` | Use the classic qr-code style (black with flat rectangles, this loads the `flat` style).                                                    |
 | `color`           | color       |          | Disables the `gradient` and sets the qr color accordingly.                                                                                 |
+| `compensate`      | length      | `0.15pt` | Compensating overlap to add to avoid glitches.                                                                                             |
 | `gradient angle`  | angle       |  `135`   | Change the gradient angle.                                                                                                                 |
 | `gradient`        | boolean     |   true   | Toggle the color gradient                                                                                                                  |
 | `image`           | LaTeX       |          | Automatically center an image (you have to care for the size and maybe adjust the `version` and `level` to keep the qr-code readable).[^1] |

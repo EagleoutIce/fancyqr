@@ -274,13 +274,14 @@
 \define@key{fancyqr}{random color}{\@fancyqr@randomcolor@true\def\@fancyqr@random@colors{#1}}
 \define@key{fancyqr}{width}{\setkeys{qr}{height=#1}}
 \define@key{fancyqr}{size}{\setkeys{qr}{height=#1}}
+\define@key{fancyqr}{compensate}{\setlength\fancyqr@edge@compensate{#1}}
 % \fancyqr@loaded@style
 \def\fancyqr@flat@style{flat}
 \define@boolkey{fancyqr}[@fancyqr@]{classic}[true]{} % if@fancyqr@classic
 \def\fancyqr@classic{%
 \ifx\fancyqr@loaded@style\fancyqr@flat@style\else\FancyQrLoad{\fancyqr@flat@style}\fi
 \setkeys{fancyqr}{%
-   gradient=false,color=black,l color=black,r color=black%
+   gradient=false,color=black,l color=black,r color=black,compensate=\z@\relax
 }%
 }
 
