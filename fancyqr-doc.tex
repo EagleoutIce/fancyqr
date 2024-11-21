@@ -68,6 +68,7 @@
 		\midrule
 		classic         & boolean &   false  & Use the classic qr-code style (black with flat rectangles, this loads the |flat| style).                                \\
 		color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
+		compensate      & length  & 0.15pt & Compensating overlap to add to avoid glitches.               \\
 		gradient        & boolean &   true   & Toggle the color gradient                                    \\
 		gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
 		image           & \LaTeX   &          & Automatically center an image (you have to care for the size and maybe adjust the |version| and |level| to keep the qr-code readable).\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr-code still has enough information to be readable). Therefore, the image will not scale with the qr-code.} \\
