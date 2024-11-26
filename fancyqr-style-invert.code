@@ -1,0 +1,52 @@
+\def\fancyqr@invert@rect{%
+   \moveto(\z@,\z@)
+   \lineto(\@ne,\z@)
+   \lineto(\@ne,\@ne)
+   \lineto(\z@,\@ne)
+   \lineto(\z@,\z@)
+   \fancyqr@invert@rect@close
+}%
+\def\fancyqr@invert@tr{%
+   \color{green}
+   \moveto(\@ne,\fancyqr@edge@compensate)
+   \lineto(\@ne,\z@)
+   \lineto(\z@,\z@)
+   \lineto(\z@,\@ne)
+   \lineto(\fancyqr@edge@compensate,\@ne)
+   \curveto(\fancyqr@edge@compensate,\@ne)(.33,.33)(\@ne,\fancyqr@edge@compensate)
+   \fancyqr@invert@rect@close
+}%
+\def\fancyqr@invert@bl{%
+   \color{green}
+   \moveto(\z@,\expandafter\strip@pt\dimexpr\p@-\fancyqr@edge@compensate)
+   \lineto(\z@,\@ne)
+   \lineto(\@ne,\@ne)
+   \lineto(\@ne,\z@)
+   \lineto(\expandafter\strip@pt\dimexpr\p@-\fancyqr@edge@compensate,\z@)
+   \curveto(\expandafter\strip@pt\dimexpr\p@-\fancyqr@edge@compensate,\z@)(.66,.66)(\z@,\expandafter\strip@pt\dimexpr\p@-\fancyqr@edge@compensate)
+   \fancyqr@invert@rect@close
+}%
+\def\fancyqr@invert@rect@close{\fillpath}%
+% .
+% TODO: change to star?
+\qr@newpattern0000{\fancyqr@rounded@rect1111}%
+% | | - -
+\qr@newpattern1000{\fancyqr@rounded@rect1001}%
+\qr@newpattern0001{\fancyqr@rounded@rect0110}%
+\qr@newpattern0100{\fancyqr@rounded@rect1100}%
+\qr@newpattern0010{\fancyqr@rounded@rect0011}%
+% corners
+\qr@newpattern1100{\fancyqr@invert@tr}% bottom right
+\qr@newpattern1010{\fancyqr@invert@bl}% bottom left
+\qr@newpattern0101{\fancyqr@invert@tr}% top right
+\qr@newpattern0011{\fancyqr@invert@tr}% top left
+% straights | --
+\qr@newpattern1001{\fancyqr@invert@rect}%
+\qr@newpattern0110{\fancyqr@invert@rect}%
+% enclosed
+\qr@newpattern1111{\fancyqr@invert@rect}%
+% t's
+\qr@newpattern0111{\fancyqr@invert@rect}%
+\qr@newpattern1011{\fancyqr@invert@rect}%
+\qr@newpattern1101{\fancyqr@invert@rect}%
+\qr@newpattern1110{\fancyqr@invert@rect}%

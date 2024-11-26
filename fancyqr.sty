@@ -41,7 +41,7 @@
 % is larger to be compensated by overlaps
 \def\qrm{\dimexpr\qr@modulesize+\fancyqr@edge@compensate\relax}
 \long\def\qr@newpattern#1#2#3#4#5{%
-\expandafter\def\csname qcc#1#2#3#4\endcsname{% scaling happens implicitly by the unitlength
+\expandafter\def\csname qcc#1#2#3#4\endcsname{%
    \put(\the\j,\the\numexpr\@max@y-\the\i){%
       \advance\unitlength by\fancyqr@edge@compensate\relax
       #5%
