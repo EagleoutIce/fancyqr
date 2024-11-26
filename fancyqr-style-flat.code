@@ -1,3 +1,4 @@
+\FancyQrHardCut%
 \def\fancyqr@flat@rect{\moveto(0,0)\lineto(0,1)\lineto(1,1)\lineto(1,0)\lineto(0,0)\fillpath}
 % .
 \newpattern0000{\fancyqr@flat@rect}%
