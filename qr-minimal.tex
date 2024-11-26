@@ -1,12 +1,22 @@
 \documentclass{article}
 
+\errorcontextlines=99999
 \usepackage{fancyqr}
 
 \usepackage[active,tightpage]{preview}
-\setlength\PreviewBorder{0pt}
+\setlength\PreviewBorder{50pt}
+\usepackage{pgffor}
 
+\makeatletter
+% make all black:
+\def\qr@white{1}
 \begin{document}
 \preview
-\fancyqr[classic,padding]{https://github.com/EagleoutIce/fancyqr}
+\foreach \i in {0,.1,...,1}{%
+\expandafter\FancyQrDoNotPrintRadius\expandafter{\i}%
+\fancyqr[classic,image=\Large\color{green}@,level=H,version=10]{https://github.com/EagleoutIce/fancyqr}\hfill
+\fancyqr[classic,image=\Large\color{purple}*\fpeval{round(\i,2)}*,level=H,version=10]{https://github.com/EagleoutIce/fancyqr}\hfill
+}\\
+\centerline{Various Variants of \texttt{\textbackslash FancyQrDoNotPrintRadius}}
 \endpreview
 \end{document}
