@@ -121,12 +121,30 @@
    \else\qr@white@format\fi
 }%
 
-\def\FancyQrDoNotPrintSquare#1#2{\def\fancy@qr@donotprint@center@x{#1}\def\fancy@qr@donotprint@center@y{#2}}
+% #1 width
+% #2 height
+\def\FancyQrDoNotPrintSquare#1#2{%
+   \def\fancy@qr@donotprint@center@x{#1}%
+   \def\fancy@qr@donotprint@center@y{#2}%
+}
 \FancyQrDoNotPrintSquare00
+% is a factor between 0 and 1
+\def\FancyQrDoNotPrintRadius#1{%
+   \def\fancy@qr@donotprint@center@r{#1}%
+}
+\FancyQrDoNotPrintRadius0
 
 \newif\iffancy@qr@do@print@
 \def\qr@fancy@updateif#1#2{\fancy@qr@do@print@true
-\ifnum#1>\@do@y@min\relax \ifnum#1<\@do@y@max\relax \ifnum#2>\@do@x@min\relax \ifnum#2<\@do@x@max\relax \fancy@qr@do@print@false \fi\fi\fi\fi}
+\ifdim\fancy@qr@donotprint@center@r\p@>\z@
+   \ifnum#1>\@do@y@min\relax \ifnum#1<\@do@y@max\relax \ifnum#2>\@do@x@min\relax \ifnum#2<\@do@x@max\relax
+      \ifdim\fpeval{sqrt((#1-\@half@max@y)^2 + (#2-\@half@max@x)^2)}\p@<\@max@rcrad\p@
+         \fancy@qr@do@print@false
+      \fi
+   \fi\fi\fi\fi
+\else
+\ifnum#1>\@do@y@min\relax \ifnum#1<\@do@y@max\relax \ifnum#2>\@do@x@min\relax \ifnum#2<\@do@x@max\relax \fancy@qr@do@print@false \fi\fi\fi\fi\fi
+}
 
 \newif\iffancy@qr@roundcut@
 \fancy@qr@roundcut@true
@@ -147,8 +165,8 @@
 
 \newif\if@fancyqr@image@
 
+\def\qr@white{0}\def\qr@black{1}%
 \def\fancy@qr@printmatrix#1{%
-   \def\qr@white{0}\def\qr@black{1}%
    \protected@edef\fancyqr@currprint{#1}%
    \let\qr@black@fixed\qr@black \let\qr@white@fixed\qr@white
    \let\qr@black@format\qr@black \let\qr@white@format\qr@white
@@ -180,6 +198,7 @@
       \edef\@do@x@max{\the\numexpr\@half@max@x+\fancy@qr@donotprint@center@x+\@ne}%
       \edef\@do@y@min{\the\numexpr\@half@max@y-\fancy@qr@donotprint@center@y-\@ne}%
       \edef\@do@y@max{\the\numexpr\@half@max@y+\fancy@qr@donotprint@center@y+\@ne}%
+      \edef\@max@rcrad{\fpeval{max((\@ne-\fancy@qr@donotprint@center@r)*\fancy@qr@donotprint@center@x,(\@ne-\fancy@qr@donotprint@center@r)*\fancy@qr@donotprint@center@y)+\fancyqr@edge@compensate}}%
       \edef\@tmp@tight{\ifqr@tight\z@\else-4\fi}%
       \picture(\qr@minipagewidth,\qr@minipagewidth)(\the\numexpr\@ne+\@tmp@tight,\@tmp@tight)
       \qr@for \i=\@ne to \@max@y by \@ne{\qr@for \j=\@ne to \@max@x by \@ne{%
