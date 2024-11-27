@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.2](https://github.com/EagleoutIce/fancyqr/tree/v2.2) (2024-11-27)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.1...v2.2)
+
+**Closed issues:**
+
+- Broken example files  [\#39](https://github.com/EagleoutIce/fancyqr/issues/39)
+- Squares generated with `classic` option slightly too large [\#38](https://github.com/EagleoutIce/fancyqr/issues/38)
+- Allow to configure overlap of tiles \(to make random colors work better\) [\#17](https://github.com/EagleoutIce/fancyqr/issues/17)
+- Allow for circular cut-outs not just rectangle [\#5](https://github.com/EagleoutIce/fancyqr/issues/5)
+
+**Merged pull requests:**
+
+- Rounded Cutoff [\#41](https://github.com/EagleoutIce/fancyqr/pull/41) ([EagleoutIce](https://github.com/EagleoutIce))
+- New `compensate` option, no overlap with `classic` [\#40](https://github.com/EagleoutIce/fancyqr/pull/40) ([EagleoutIce](https://github.com/EagleoutIce))
+
 ## [v2.1](https://github.com/EagleoutIce/fancyqr/tree/v2.1) (2024-10-05)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.0...v2.1)
