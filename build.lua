@@ -11,13 +11,8 @@ module = "fancyqr"
 ctanpkg = module
 builddir = os.getenv("TMPDIR")
 
--- Package version ===================================================
-packageversion = "v2.1"
--- packageversion="v1.3"
-
 -- Package date ======================================================
 packagedate = os.date("!%Y-%m-%d")
--- packagedate = "2020-01-02"
 
 -- interacting with git ==============================================
 function git(...)
@@ -34,11 +29,11 @@ function update_tag(file, content, tagname, tagdate)
     tagdate = string.gsub(packagedate, "-", "/")
     if string.match(file, "%.sty$") then
         content = string.gsub(content, "\\ProvidesPackage{(.-)}%[%d%d%d%d%/%d%d%/%d%d version v%d%.%d+",
-            "\\ProvidesPackage{%1}[" .. tagdate .. " version " .. packageversion)
+            "\\ProvidesPackage{%1}[" .. tagdate .. " version " .. tagname)
         return content
     elseif string.match(file, "*-doc.tex$") then
         content = string.gsub(content, "\\date{Version v%d%.%d+ \\textendash\\ %d%d%d%d%/%d%d%/%d%d",
-            "\\date{Version " .. packageversion .. " \\textendash{} " .. tagdate)
+            "\\date{Version " .. tagname .. " \\textendash{} " .. tagdate)
         return content
     end
     return content
@@ -48,14 +43,26 @@ end
 require('build-private.lua')
 
 function tag_hook(tagname)
+    -- update the tag first
+    for _, file in ipairs(tagfiles) do
+        for _, file in ipairs(filelist(file)) do
+            local content = update_tag(file, readfile(file), tagname)
+            writefile(file, content)
+        end
+    end
     git("add", "*.sty")
     git("add", "*-doc.tex")
-    git("commit -m 'step version " .. packageversion .. "'")
-    git("tag", packageversion)
-    git("push", "--tags")
-    os.execute("github_changelog_generator --user EagleoutIce --project \"" .. module .. "\" --token \"" .. token .. "\"")
+    os.execute("github_changelog_generator --user EagleoutIce --future-release \"" .. tagname .. "\" --project \"" .. module .. "\" --token \"" .. token .. "\"")
     git("add", "CHANGELOG.md")
-    git("commit -m 'update changelog " .. packageversion .. "'")
+    git("status")
+    -- ask for verification if the tag is correct and all is updated correctly
+    print("Please verify the changes and commit the changes with the tag '" .. tagname .. "'")
+    print("Press any key to continue...")
+    io.read()
+    
+    git("commit -m 'step version " .. tagname .. "'")
+    git("tag", tagname)
+    git("push", "--tags")
     git("push")
 end
 
@@ -74,23 +81,6 @@ packtdszip = false
 
 -- Preserve structure for CTAN
 flatten = true
-
--- configuring ctan upload ===========================================
-uploadconfig = {
-    author = uploadconfig.author,
-    uploader = uploadconfig.uploader,
-    email = uploadconfig.email,
-    pkg = ctanpkg,
-    version = packageversion .. " " .. packagedate,
-    license = "gpl3.0",
-    summary = "Fancy QR-Codes in LaTeX",
-    ctanPath = "/graphics/pgf/contrib/" .. ctanpkg,
-    repository = "https://github.com/EagleoutIce/" .. module,
-    home = "https://github.com/EagleoutIce/" .. module,
-    note = [[Uploaded automatically by l3build...]],
-    bugtracker = "https://github.com/EagleoutIce/" .. module .. "/issues",
-    announcement_file = "announcement.txt"
-}
 
 -- cleanup ===========================================================
 cleanfiles = { module .. "-ctan.curlopt", module .. "-ctan.zip"}
