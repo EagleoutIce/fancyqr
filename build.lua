@@ -43,6 +43,16 @@ end
 require('build-private.lua')
 
 function tag_hook(tagname)
+    -- fail if tagname is missing
+    if not tagname then
+        print("No tagname provided, please use 'l3build tag <tagname>'")
+        return
+    end
+    -- fail if tag already exists locally
+    if os.execute("git rev-parse " .. tagname) == 0 then
+        print("Tag '" .. tagname .. "' already exists locally")
+        return
+    end
     -- update the tag first
     for _, file in ipairs(tagfiles) do
         for _, file in ipairs(filelist(file)) do
@@ -60,7 +70,7 @@ function tag_hook(tagname)
     print("Press any key to continue...")
     io.read()
     
-    git("commit -m 'step version " .. tagname .. "'")
+    git("commit -S -m 'step version " .. tagname .. "'")
     git("tag", tagname)
     git("push", "--tags")
     git("push")
