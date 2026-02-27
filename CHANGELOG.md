@@ -1,5 +1,20 @@
 # Changelog
 
+## [v2.3](https://github.com/EagleoutIce/fancyqr/tree/v2.3) (2026-02-27)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.2...v2.3)
+
+**Closed issues:**
+
+- Switch to LPPL [\#49](https://github.com/EagleoutIce/fancyqr/issues/49)
+- Colored boxes [\#46](https://github.com/EagleoutIce/fancyqr/issues/46)
+- Error in the doc? [\#43](https://github.com/EagleoutIce/fancyqr/issues/43)
+
+**Merged pull requests:**
+
+- Switch to LPPL [\#50](https://github.com/EagleoutIce/fancyqr/pull/50) ([EagleoutIce](https://github.com/EagleoutIce))
+- doc-fix: fix style and macro highlight [\#44](https://github.com/EagleoutIce/fancyqr/pull/44) ([EagleoutIce](https://github.com/EagleoutIce))
+
 ## [v2.2](https://github.com/EagleoutIce/fancyqr/tree/v2.2) (2024-11-27)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.1...v2.2)
