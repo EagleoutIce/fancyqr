@@ -17,40 +17,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - name: Install TeX Live
-      uses: zauguin/install-texlive@v4
-      with:
-        package_file: tl_packages
-    - run: pdflatex qr-example.tex
-    - run: pdflatex qr-minimal.tex
-    - run: pdflatex fancyqr-doc.tex
-    - uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages: poppler-utils
-        version: 1.0
-    - name: 'Generate previews'
-      run: pdftoppm -png -r 300 -f 1 -l 1 qr-example.pdf preview
-    - name: Commit
-      if: github.repository == 'EagleoutIce/fancyqr' && github.ref == 'refs/heads/main'
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add -f "qr-example.pdf" "fancyqr-doc.pdf" "preview-1.png"
-        git commit -m "Newly compiled data"
-    - name: Push changes
-      if: github.repository == 'EagleoutIce/fancyqr' && github.ref == 'refs/heads/main'
-      uses: ad-m/github-push-action@master
-      with:
-        branch: gh-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        force: true
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: result
-        path: |
-          qr-example.pdf
-          qr-minimal.pdf
-          fancyqr-doc.pdf
-          preview-1.png
+      - uses: actions/checkout@v6
+
+      - name: Install TeX Live
+        uses: zauguin/install-texlive@v4
+        with:
+          package_file: tl_packages
+      - run: pdflatex qr-example.tex
+      - run: pdflatex qr-minimal.tex
+      - run: pdflatex fancyqr-doc.tex
+      - run: pdflatex fancyqr-doc.tex
+
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: poppler-utils
+          version: 1.0
+
+      - name: 'Generate previews'
+        run: pdftoppm -png -r 300 -f 1 -l 1 qr-example.pdf preview
+
+      - name: Commit
+        if: github.repository == 'EagleoutIce/fancyqr' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -f "qr-example.pdf" "fancyqr-doc.pdf" "preview-1.png"
+          git commit -m "Newly compiled data"
+      - name: Push changes
+        if: github.repository == 'EagleoutIce/fancyqr' && github.ref == 'refs/heads/main'
+        uses: ad-m/github-push-action@master
+        with:
+          branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: result
+          path: |
+            qr-example.pdf
+            qr-minimal.pdf
+            fancyqr-doc.pdf
+            preview-1.png
