@@ -1,5 +1,5 @@
 name: compile qr
-'on':
+on:
   push:
     branches:
       - master
