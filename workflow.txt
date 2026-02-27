@@ -2,5 +2,6 @@
 
 * We need the [`github_changelog_generator`](https://github.com/github-changelog-generator/github-changelog-generator)
 * Make a new tag with `l3build tag <vX.Y>`
+  * Make sure that all files (sty, doc, ...) are updated with the version, tag, and date
 * Run `l3build ctan` to create the `fancyqr-ctan.zip`
 * Upload the created `fancyqr-ctan.zip`
