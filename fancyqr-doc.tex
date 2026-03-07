@@ -14,16 +14,15 @@
 % The Current Maintainer of this work is Florian Sihler
 %
 % This work consists of the fancyqr.sty, alongside the `fancyqr-style-*.code` files and the documentation `fancyqr-doc.tex`.
-\documentclass[parskip=half,english,numbers=noenddot,footnotes=nomultiple,oneside]{scrartcl}
+\documentclass[parskip=half,english,numbers=noenddot,footnotes=nomultiple,oneside,10pt]{scrartcl}
 
 \usepackage[T1]{fontenc}
 
 \usepackage{babel}
 
 \usepackage{microtype}
-\usepackage[hidelinks]{hyperref}
+\usepackage[allcolors=cyan!30!purple,colorlinks]{hyperref}
 
-\usepackage{lmodern}
 \usepackage{array,booktabs}
 \usepackage{footnote}
 \usepackage{fontawesome}
@@ -32,6 +31,10 @@
 \usepackage{xcolor}
 \usepackage[tex]{listings}
 \usepackage{amssymb}
+\usepackage[defaultfam]{montserrat}
+\usepackage{beramono}
+\usepackage[margin=2cm]{geometry}
+\urlstyle{same}
 
 \lstdefinelanguage{ltx}{
 	language={[LaTeX]TeX},
@@ -45,17 +48,20 @@
 
 \title{The \texttt{fancyqr} package}
 \author{%
-	\texorpdfstring{Florian Sihler\medskip\\*
-		\fancyqr{https://github.com/EagleoutIce/fancyqr}
+	\texorpdfstring{%
+		\parbox{2.83cm}{\fancyqr[height=2.5cm,padding,l color=purple!80!black, r color=red!50!purple!80!black]{https://github.com/EagleoutIce/fancyqr}}\quad%
+		\parbox{7cm}{Florian Sihler\\*
+			Version v2.3 \textendash{} 2026/02/27\medskip\\
+			\textcolor{gray}{\href{https://github.com/EagleoutIce/fancyqr}{github.com/EagleoutIce/fancyqr}}
+		}%
 	}{Florian Sihler}}
-\date{Version v2.3 \textendash{} 2026/02/27}
+\date{}
 
 \begin{document}
-   \maketitle
-
+   \maketitle\vspace*{-\baselineskip}
 
 	\texttt{fancyqr} is a simple package to create fancy qr-codes with the help of the \textit{\href{https://www.ctan.org/pkg/qrcode}{qrcode}}-package.
-	You can use the |\fancyqr|-macro just like the normal |\qrcode|.\footnote{\ltx{\\fancyqr[<qr-options>]\{<url>\}}}
+	You can use the |\fancyqr|-macro as a drop-in replacement for the normal |\qrcode|.\footnote{\ltx{\\fancyqr[<qr-options>]\{<url>\}}}
 
 	If you do want to hide a center square (e.g, because you want to embed an image) you can use |\FancyQrDoNotPrintSquare{<x>}{<y>}| to hide a rectangle with radius x and y set from the center (with |\FancyQrDoNotPrintRadius{<factor>}| you can apply a \href{https://github.com/EagleoutIce/fancyqr/pull/41}{rounding} to this!). If you choose this option, the default |\FancyQrRoundCut| that rounds cut corners can be changed with |\FancyQrHardCut|.
 	At the moment, there are five additional styles for the qr-code: |flat|, |frame|, |blobs|, |glitch|, and |dots|, that you can load (locally) by using |\FancyQrLoad{<name>}|. The default style is named |default| and can be 'reset' by |\FancyQrLoad{default}| or |\FancyQrLoadDefault|.
