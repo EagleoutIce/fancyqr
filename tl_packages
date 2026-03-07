@@ -13,6 +13,7 @@ bitset
 bookmark
 booktabs
 cm
+enumitem
 etoolbox
 epstopdf-pkg
 fira
@@ -22,6 +23,7 @@ gettitlestring
 graphics
 graphics-cfg
 graphics-def
+geometry
 hycolor
 hyperref
 hyphen-english
@@ -54,6 +56,7 @@ qrcode
 refcount
 rerunfilecheck
 stringenc
+tcolorbox
 tools
 uniquecounter
 url
