@@ -2,7 +2,7 @@
 %% Copyright 2026 Florian Sihler
 %
 % This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
+% conditions of the LaTeX Project Public License, either version 1.3c
 % of this license or (at your option) any later version.
 % The latest version of this license is in
 %   https://www.latex-project.org/lppl.txt
@@ -29,11 +29,23 @@
 
 \usepackage{fancyqr}
 \usepackage{xcolor}
+\usepackage[prefix=@]{xcolor-material}
 \usepackage[tex]{listings}
 \usepackage{amssymb}
 \usepackage[defaultfam]{montserrat}
 \usepackage{beramono}
 \usepackage[margin=2cm]{geometry}
+\usepackage{enumitem}
+\usepackage[skins,breakable,hooks,xparse,listingsutf8,external]{tcolorbox}
+\tcbset{%
+	colframe=gray,enhanced,breakable, arc=2mm,
+	fonttitle=\bfseries, sidebyside,
+	listing options={language=ltx},
+	boxrule=.35mm,center lower,segmentation at break=false,
+	righthand width=4.75cm, bottom=0pt, top=0pt,boxsep=4.25pt,
+	before lower app={}, colback=white
+}
+
 \urlstyle{same}
 
 \lstdefinelanguage{ltx}{
@@ -72,13 +84,28 @@
 \fancyqrset{image padding=0,gradient=true,
 	gradient angle=135,r color=teal,l color=purple}
 \end{lstlisting}
-	Consider the following example (uses \href{https://www.ctan.org/pkg/fontawesome}{fontawesome} for the symbol, but you can use include images,~\ldots):
-\begin{lstlisting}
-\fancyqr[image=\huge\faGithub,image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}
-\end{lstlisting}
+	Consider the following examples (uses \href{https://www.ctan.org/pkg/fontawesome}{fontawesome}, but you can use include images,~\ldots):
 
-	\parbox[c]{.3\linewidth}{Which produces:}\hfill\parbox[c]{.4\linewidth}{\raggedleft\fancyqr[image=\Huge\faGithub,image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}}\par
+\begin{tcblisting}{}
+\fancyqr[
+   classic,image=\LARGE\faGithub, color=purple
+]{https://github.com/EagleoutIce/fancyqr}
+\end{tcblisting}
+\begin{tcblisting}{}
+\FancyQrLoad{blobs}%
+\fancyqr[color=black]{https://github.com/EagleoutIce/fancyqr}%
+\end{tcblisting}
+\begin{tcblisting}{}
+% needs \usepackage[prefix=@]{xcolor-material}
+\FancyQrLoad{dots}%
+\fancyqr[
+   height=4cm,
+   image={\textbf{\textcolor{gray}{fancy}qr}},
+   random color={@Red}{@Yellow}{@Purple}{@Orange}{@Green}{@DeepOrange}{@Cyan}
+]{https://github.com/EagleoutIce/fancyqr}%
+\end{tcblisting}
 
+	
 \begin{savenotes}
 \begin{table}
 	\centering\begin{tabular}{>{\ttfamily}ll>{\ttfamily}cp{.5\linewidth}}
@@ -111,5 +138,40 @@
 	\label{tbl:extra-keys}
 \end{table}
 \end{savenotes}
+
+\section{History}
+\errorcontextlines999
+
+\long\def\ForVersion#1#2#3{%
+\subsection*{\texorpdfstring{\href{https://github.com/EagleoutIce/fancyqr/releases/tag/v#1}{Version v#1}}{Version v#1} \textmd{\small#2}}\vspace*{-\baselineskip}
+
+\textcolor{lightgray}{\hypersetup{allcolors=.}\url{https://github.com/EagleoutIce/fancyqr/releases/tag/v#1}}
+\begin{itemize}[nosep,leftmargin=*]
+	#3
+\end{itemize}
+}
+
+\ForVersion{2.3}{2026-02-27}{
+	\item Relicense under the LPPL 1.3c
+}
+\ForVersion{2.2}{2024-11-27}{
+	\item Configurable tile overlap
+	\item Circular cut-out support
+	\item New \texttt{compensate} option
+}
+\ForVersion{2.1}{2024-10-05}{
+	\item Add \texttt{classic} option to easily typeset classic QR codes
+	\item Simplify picture usage for QR codes
+	\item More documentation and Bug-Fixes
+}
+\ForVersion{2.0}{2024-04-13}{
+	\item No longer require Ti\textit{k}Z!
+	\item Random Colors
+	\item Support \texttt{width} and \texttt{height}
+}
+\ForVersion{1.0}{2022-18-08}{
+	\item Initial release with basic drop-in functionality
+	\item Using Ti\textit{k}Z to create the QR code
+}
 
 \end{document}
