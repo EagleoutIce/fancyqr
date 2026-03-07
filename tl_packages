@@ -1,4 +1,4 @@
-scheme-small
+scheme-medium
 latex-bin
 
 fontaxes
@@ -7,7 +7,6 @@ fontaxes
 amsfonts
 babel
 babel-english
-beramono
 bigintcalc
 bitset
 bookmark
@@ -45,7 +44,6 @@ latexconfig
 ltxcmds
 mdwtools
 microtype
-montserrat
 pdfescape
 luatex85
 pdftexcmds
