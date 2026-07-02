@@ -1,0 +1,43 @@
+name: check links
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # weekly, so externally broken links are caught even without a push
+    - cron: "27 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        env:
+          # authenticate GitHub link checks: the docs contain ~90 github.com
+          # links, which would otherwise trip unauthenticated rate limits
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: >-
+            --no-progress
+            --max-retries 3
+            --retry-wait-time 10
+            --accept 200,206,429
+            --exclude 'releases/tag/v'
+            '*.md'
+            '*.tex'
+          fail: true

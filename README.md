@@ -5,7 +5,7 @@
 [<img src="https://github.com/EagleoutIce/fancyqr/blob/gh-pages/preview-1.png?raw=true" width="600"/>](qr-example.tex)
 
 A simple package to create fancy qr-codes with the help of the [`qrcode`][qrcode]-package.
-You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`). See the [documentation](https://media.githubusercontent.com/media/EagleoutIce/fancyqr/gh-pages/build/fancyqr-doc.pdf). If you just want to create a simple qr-code, please refer to the [minimal example](qr-minimal.tex).
+You may use `\fancyqr` just like the normal `\qrcode` (`\fancyqr[<qr-options>]{<url>}`). See the [documentation](https://github.com/EagleoutIce/fancyqr/raw/gh-pages/fancyqr-doc.pdf). If you just want to create a simple qr-code, please refer to the [minimal example](qr-minimal.tex).
 
 *fancyqr* is actively developed by *Florian Sihler* (contact me at: <florian.sihler@uni-ulm.de>) under the [LPPL Version 1.3c](LICENSE) (please note that this changed on 2026-02-27 from GPL&nbsp;v3, versions **after** v2.2 are licensed with LPPL 1.3c). I am very happy about every contribution (see [CONTRIBUTING.md](CONTRIBUTING.md)). You can find it on CTAN (<https://www.ctan.org/pkg/fancyqr>).
 
