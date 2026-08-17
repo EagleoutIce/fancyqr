@@ -33,7 +33,8 @@
 \usepackage[active,tightpage]{preview} % for presentation
 \setlength\PreviewBorder{15pt}
 
-\fancyqrset{size=3.25cm, level=H, padding}
+\fancyqrset{size=3.25cm, level=H, padding,
+   r color=orange!35!red!88!black, l color=purple!45!red!38!black}
 
 \errorcontextlines=9999
 \begin{document}
@@ -41,12 +42,12 @@
 \begin{center}
 % \FancyQrDoNotPrintSquare{8}{9}
 % \FancyQrHardCut
-\mbox{\FancyQrLoad{blobs}%
-\fancyqr[image=\scalebox{2.9}{\faGithub},image padding=1,color=black!90!gray]{https://github.com/EagleoutIce/fancyqr}%
+\mbox{\FancyQrLoad{goo}%
+\fancyqr[image=\scalebox{2.9}{\faGithub},image padding=1,seed=3,content color=black]{https://github.com/EagleoutIce/fancyqr}%
 \FancyQrLoad{default}%
 \fancyqr{https://github.com/EagleoutIce/fancyqr}%
 \FancyQrLoad{dots}%
-\fancyqr[image={\textsf{\textbf{\textcolor{gray}{fancy}qr}}}, random color={@Red}{@Pink}{@Purple}{@DeepPurple}{@Indigo}{@Blue}{@Cyan}{@Teal}{@Green}{@Amber}{@Orange}{@DeepOrange}{@Brown}]{https://github.com/EagleoutIce/fancyqr}%
+\fancyqr[image={\textsf{\textbf{\textcolor{gray}{fancy}qr}}}, random color={@Red600}{@Purple600}{@DeepPurple600}{@Indigo600}{@Teal600}{@Green600}{@DeepOrange600}{@Brown600}{@BlueGrey600}]{https://github.com/EagleoutIce/fancyqr}%
 }\\[4mm]
 \texttt{\textbackslash \textbf{fancyqr}\{\textcolor{@Grey}{https://github.com/EagleoutIce/fancyqr}\}}
 \end{center}

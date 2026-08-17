@@ -1,0 +1,57 @@
+% style `goo': liquid drops that bleed into their neighbours and drip down;
+% tunables \fancyqr@goo@bleed, \fancyqr@goo@jitter, \fancyqr@goo@round,
+% \fancyqr@goo@drip
+\@ifundefined{fancyqr@goo@bleed}{\def\fancyqr@goo@bleed{.34}}{}%
+\@ifundefined{fancyqr@goo@jitter}{\def\fancyqr@goo@jitter{.26}}{}%
+\@ifundefined{fancyqr@goo@drip}{\def\fancyqr@goo@drip{.45}}{}%
+\@ifundefined{fancyqr@goo@round}{\def\fancyqr@goo@round{.5}}{}%
+\def\fancyqr@goo@sett#1#2{%
+\ifnum\numexpr#1+#2\relax=2 \def\fancyqr@goo@tf{.10}\else
+\ifnum\numexpr#1+#2\relax=1 \def\fancyqr@goo@tf{.30}\else
+\def\fancyqr@goo@tf{.85}\fi\fi
+\edef\fancyqr@goo@t{\fpeval{1-\fancyqr@goo@tf*\fancyqr@goo@round+.5*\fancyqr@goo@jitter*(rand()-.5)}}%
+}%
+\def\fancyqr@goo@quarter#1#2#3#4#5#6{%
+\curveto(\fpeval{#1+\fancyqr@goo@t*(#3-#1)},\fpeval{#2+\fancyqr@goo@t*(#4-#2)})%
+        (\fpeval{#5+\fancyqr@goo@t*(#3-#5)},\fpeval{#6+\fancyqr@goo@t*(#4-#6)})(#5,#6)%
+}%
+\def\fancyqr@goo@tile#1#2#3#4{%
+\roundjoin\roundcap
+\ifnum#1=\@ne\edef\fancyqr@goo@u{\fpeval{1+\fancyqr@goo@bleed+\fancyqr@goo@jitter*(rand()-.5)}}%
+\else\edef\fancyqr@goo@u{\fpeval{1-.5*\fancyqr@goo@jitter*rand()-.4*\fancyqr@goo@drip*rand()}}\fi
+\ifnum#4=\@ne\edef\fancyqr@goo@d{\fpeval{-\fancyqr@goo@bleed-\fancyqr@goo@drip*rand()+\fancyqr@goo@jitter*(rand()-.5)}}%
+\else\edef\fancyqr@goo@d{\fpeval{.5*\fancyqr@goo@jitter*rand()-\fancyqr@goo@drip*rand()}}\fi
+\ifnum#3=\@ne\edef\fancyqr@goo@r{\fpeval{1+\fancyqr@goo@bleed+\fancyqr@goo@jitter*(rand()-.5)}}%
+\else\edef\fancyqr@goo@r{\fpeval{1-.5*\fancyqr@goo@jitter*rand()}}\fi
+\ifnum#2=\@ne\edef\fancyqr@goo@l{\fpeval{-\fancyqr@goo@bleed+\fancyqr@goo@jitter*(rand()-.5)}}%
+\else\edef\fancyqr@goo@l{\fpeval{.5*\fancyqr@goo@jitter*rand()}}\fi
+\edef\fancyqr@goo@ry{\fpeval{.5+.5*\fancyqr@goo@jitter*(rand()-.5)-.45*\fancyqr@goo@drip*rand()}}%
+\edef\fancyqr@goo@ly{\fpeval{.5+.5*\fancyqr@goo@jitter*(rand()-.5)-.45*\fancyqr@goo@drip*rand()}}%
+\ifnum#4=\@ne\let\fancyqr@goo@dc\fancyqr@goo@d
+\else\edef\fancyqr@goo@dc{\fpeval{\fancyqr@goo@d+\fancyqr@goo@drip*(.45+.55*rand())}}\fi
+\edef\fancyqr@goo@ux{\fpeval{.5+.5*\fancyqr@goo@jitter*(rand()-.5)}}%
+\edef\fancyqr@goo@dx{\fpeval{.5+.5*\fancyqr@goo@jitter*(rand()-.5)}}%
+\moveto(\fancyqr@goo@r,\fancyqr@goo@ry)
+\fancyqr@goo@sett{#3}{#1}\fancyqr@goo@quarter\fancyqr@goo@r\fancyqr@goo@ry\fancyqr@goo@r\fancyqr@goo@u\fancyqr@goo@ux\fancyqr@goo@u
+\fancyqr@goo@sett{#1}{#2}\fancyqr@goo@quarter\fancyqr@goo@ux\fancyqr@goo@u\fancyqr@goo@l\fancyqr@goo@u\fancyqr@goo@l\fancyqr@goo@ly
+\fancyqr@goo@sett{#2}{#4}\fancyqr@goo@quarter\fancyqr@goo@l\fancyqr@goo@ly\fancyqr@goo@l\fancyqr@goo@dc\fancyqr@goo@dx\fancyqr@goo@d
+\fancyqr@goo@sett{#4}{#3}\fancyqr@goo@quarter\fancyqr@goo@dx\fancyqr@goo@d\fancyqr@goo@r\fancyqr@goo@dc\fancyqr@goo@r\fancyqr@goo@ry
+\closepath\fillpath
+}%
+\newpattern0000{\fancyqr@goo@tile0000}%
+\newpattern1000{\fancyqr@goo@tile1000}%
+\newpattern0001{\fancyqr@goo@tile0001}%
+\newpattern0100{\fancyqr@goo@tile0100}%
+\newpattern0010{\fancyqr@goo@tile0010}%
+\newpattern1100{\fancyqr@goo@tile1100}%
+\newpattern1010{\fancyqr@goo@tile1010}%
+\newpattern0101{\fancyqr@goo@tile0101}%
+\newpattern0011{\fancyqr@goo@tile0011}%
+\newpattern1001{\fancyqr@goo@tile1001}%
+\newpattern0110{\fancyqr@goo@tile0110}%
+\newpattern1111{\fancyqr@goo@tile1111}%
+\newpattern0111{\fancyqr@goo@tile0111}%
+\newpattern1011{\fancyqr@goo@tile1011}%
+\newpattern1101{\fancyqr@goo@tile1101}%
+\newpattern1110{\fancyqr@goo@tile1110}%
+\fancyqrset{finder=inherit}%

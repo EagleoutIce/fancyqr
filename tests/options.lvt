@@ -1,0 +1,73 @@
+% Keys and the cut-out that hides the center of a code.
+\input{regression-test}
+\documentclass{article}
+\usepackage{fancyqr}
+\usepackage{fancyqrtest}
+\makeatletter
+\def\Code{\fancyqr[size=2cm,tight,color=black]{abc}}
+\begin{document}
+\START
+\section*{Options}
+
+\FancyQrLoad{default}
+\fancyqrtest@run{\Code}\edef\Plain{\fancyqrtest@n{P}}
+
+% a radius of zero is no cut-out; the bounds are inclusive, so an unguarded
+% check used to drop the center module
+\fancyqrtest@run{\FancyQrDoNotPrintSquare00\Code}\edef\Zero{\fancyqrtest@n{P}}
+\TestValue{cutout-zero-hides-nothing}{same}{\ifx\Plain\Zero same\else different\fi}
+
+\fancyqrtest@run{\FancyQrDoNotPrintSquare22\Code}\edef\Cut{\fancyqrtest@n{P}}
+\TestValue{cutout-hides-modules}{fewer}{\ifnum\Cut<\Plain fewer\else not\fi}
+% the round cut clears what sticks out into the hole, so the tiles along its
+% border see white neighbours and are rounded off
+\fancyqrtest@run{\FancyQrDoNotPrintSquare22\Code}\edef\Round{\fancyqrtest@n{A+}}
+\fancyqrtest@run{\FancyQrHardCut\FancyQrDoNotPrintSquare22\Code}\edef\Hard{\fancyqrtest@n{A+}}
+\TestValue{round-cut-rounds-more}{more}{\ifnum\Round>\Hard more\else not\fi}
+\FancyQrRoundCut\FancyQrDoNotPrintSquare00
+
+% an image derives the cut-out from its own size
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,image=\rule{6mm}{6mm}]{abc}}%
+\edef\Image{\fancyqrtest@n{P}}
+\TestValue{image-cuts-out}{fewer}{\ifnum\Image<\Plain fewer\else not\fi}
+\TestCounts{image}{P=200 M=199 L=848 A+=160 A-=52 C=0 F=199 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black,image=\rule{6mm}{6mm}]{abc}}
+\TestCounts{image-padding}{P=184 M=183 L=775 A+=143 A-=43 C=0 F=183 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black,image=\rule{6mm}{6mm},image padding=1]{abc}}
+
+% the tile overlap is relative to the module size unless `compensate' pins it
+% to a length, and either choice is local to the code it was given to
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,overlap=.1]{abc}}%
+\edef\Wide{\fancyqrtest@n{P}}
+\TestValue{overlap-keeps-tiles}{same}{\ifx\Plain\Wide same\else different\fi}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,compensate=.4pt]{abc}}%
+\edef\Abs{\fancyqrtest@n{P}}
+\TestValue{compensate-keeps-tiles}{same}{\ifx\Plain\Abs same\else different\fi}
+\fancyqrtest@run{\Code}\edef\AfterAbs{\fancyqrtest@n{P}}
+\TestValue{overlap-choice-is-local}{same}{\ifx\Plain\AfterAbs same\else different\fi}
+
+% classic falls back to the flat style without gradient or overlap
+\TestCounts{classic}{P=230 M=230 L=920 A+=0 A-=0 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,classic]{abc}}
+
+% the matrix is cached between codes, so everything that is cleared while
+% drawing -- the round cut and the modules a pattern shape replaces -- has to
+% be put back, or the next code would come out with holes in it
+\fancyqrtest@run{\FancyQrDoNotPrintSquare33\Code}%
+\fancyqrtest@run{\Code}\edef\AfterCut{\fancyqrtest@n{P}}
+\TestValue{cache-restores-the-cut}{same}{\ifx\Plain\AfterCut same\else different\fi}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,finder=circle]{abc}}%
+\fancyqrtest@run{\Code}\edef\AfterShape{\fancyqrtest@n{P}}
+\TestValue{cache-restores-the-patterns}{same}{\ifx\Plain\AfterShape same\else different\fi}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,cache=false]{abc}}%
+\edef\NoCache{\fancyqrtest@n{P}}
+\TestValue{cache-off-draws-the-same}{same}{\ifx\Plain\NoCache same\else different\fi}
+
+% a fixed seed makes the randomized styles reproducible
+\FancyQrSeed{7}\edef\SeedA{\fpeval{rand()}}%
+\FancyQrSeed{7}\edef\SeedB{\fpeval{rand()}}%
+\TestValue{seed}{same}{\ifx\SeedA\SeedB same\else different\fi}
+
+\TestSummary
+\END
+\end{document}

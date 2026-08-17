@@ -1,0 +1,56 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+[PASS] tile-enclosed
+[PASS] tile-isolated
+[PASS] tile-topleft
+[PASS] inner-br
+[PASS] inner-tr
+[PASS] inner-tl
+[PASS] inner-bl
+[PASS] inner-all
+[PASS] inner-ignored
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Calculating QR code for "abc" in version 1-H.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 9\ and 10:  1, 2, 3, 4, 5, 6, 7, 8, 9, .> <Interleaving errorblocks of length 17:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 976>
+<Applying Mask 1... done. Calculating penalty... penalty is 1026>
+<Applying Mask 2... done. Calculating penalty... penalty is 1003>
+<Applying Mask 3... done. Calculating penalty... penalty is 1003>
+<Applying Mask 4... done. Calculating penalty... penalty is 1004>
+<Applying Mask 5... done. Calculating penalty... penalty is 985>
+<Applying Mask 6... done. Calculating penalty... penalty is 982>
+<Applying Mask 7... done. Calculating penalty... penalty is 1004>
+<Selected Mask 0>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] inner-on-by-default
+[PASS] inner-rounding-0
+(fancyqr-style-rounded.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] rounded-style-has-no-fillets
+(fancyqr-style-flat.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] flat-has-no-arcs
+(fancyqr-style-frame.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] frame-has-no-fillets
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] rounding-0
+===== fancyqr tests: 15 passed, 0 failed =====
+[1
+]

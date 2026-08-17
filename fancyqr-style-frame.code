@@ -1,2 +1,46 @@
-\def\fancyqr@rounded@rect@close{\linethickness{.1\qr@modulesize}\closepath\strokepath}%
-\FancyQrLoadDefault
+% style `frame': the outline of the shape the modules form, with a dot inside
+% every module; tunables \fancyqr@frame@width, \fancyqr@frame@dot
+\@ifundefined{fancyqr@frame@width}{\def\fancyqr@frame@width{.11}}{}%
+\@ifundefined{fancyqr@frame@dot}{\def\fancyqr@frame@dot{.44}}{}%
+\newif\iffancyqr@frame@pen
+\def\fancyqr@frame@corner#1#2{\ifnum\numexpr#1+#2\relax=\z@ \@ne\else\z@\fi}
+\def\fancyqr@frame@side#1#2#3#4#5{%
+   \ifnum#1=\@ne\iffancyqr@frame@pen\else\moveto(#2,#3)\fi\else\moveto(#2,#3)\fi
+   \lineto(#4,#5)\fancyqr@frame@pentrue
+}
+\def\fancyqr@frame@tile#1#2#3#4{%
+   \linethickness{\fancyqr@frame@width\qr@modulesize}\roundjoin\roundcap
+   \edef\@fq@bl{\fancyqr@frame@corner{#2}{#4}}\edef\@fq@br{\fancyqr@frame@corner{#3}{#4}}%
+   \edef\@fq@tr{\fancyqr@frame@corner{#3}{#1}}\edef\@fq@tl{\fancyqr@frame@corner{#2}{#1}}%
+   \fancyqr@frame@penfalse
+   \ifnum#4=\z@ %
+      \fancyqr@frame@side\@fq@bl{\ifnum\@fq@bl=\@ne\fancyqr@rounding@factor\else\z@\fi}\z@
+         {\ifnum\@fq@br=\@ne\fancyqr@rounding@other\else\@ne\fi}\z@
+      \ifnum\@fq@br=\@ne
+         \circlearc\fancyqr@rounding@other\fancyqr@rounding@factor\fancyqr@rounding@factor{270}{360}\fi
+   \else\fancyqr@frame@penfalse\fi
+   \ifnum#3=\z@ %
+      \fancyqr@frame@side\@fq@br\@ne{\ifnum\@fq@br=\@ne\fancyqr@rounding@factor\else\z@\fi}%
+         \@ne{\ifnum\@fq@tr=\@ne\fancyqr@rounding@other\else\@ne\fi}%
+      \ifnum\@fq@tr=\@ne
+         \circlearc\fancyqr@rounding@other\fancyqr@rounding@other\fancyqr@rounding@factor{0}{90}\fi
+   \else\fancyqr@frame@penfalse\fi
+   \ifnum#1=\z@ %
+      \fancyqr@frame@side\@fq@tr{\ifnum\@fq@tr=\@ne\fancyqr@rounding@other\else\@ne\fi}\@ne
+         {\ifnum\@fq@tl=\@ne\fancyqr@rounding@factor\else\z@\fi}\@ne
+      \ifnum\@fq@tl=\@ne
+         \circlearc\fancyqr@rounding@factor\fancyqr@rounding@other\fancyqr@rounding@factor{90}{180}\fi
+   \else\fancyqr@frame@penfalse\fi
+   \ifnum#2=\z@ %
+      \fancyqr@frame@side\@fq@tl\z@{\ifnum\@fq@tl=\@ne\fancyqr@rounding@other\else\@ne\fi}%
+         \z@{\ifnum\@fq@bl=\@ne\fancyqr@rounding@factor\else\z@\fi}%
+      \ifnum\@fq@bl=\@ne
+         \circlearc\fancyqr@rounding@factor\fancyqr@rounding@factor\fancyqr@rounding@factor{180}{270}\fi
+   \fi
+   \ifnum\numexpr#1+#2+#3+#4\relax=\z@ \closepath\fi
+   \strokepath
+   \put(.5,.5){\circle*{\fancyqr@frame@dot}}%
+}
+\FancyQrSidePatterns\fancyqr@frame@tile
+\FancyQrNoInnerRoundings
+\fancyqrset{finder=inherit}

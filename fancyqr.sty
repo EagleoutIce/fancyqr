@@ -10,48 +10,100 @@
 % version 2008 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is Florian Sihler
 %
 % This work consists of the fancyqr.sty, alongside the `fancyqr-style-*.code` files and the documentation `fancyqr-doc.tex`.
 \def\filename{fancyqr}
-\ProvidesPackage{\filename}[2026/02/27 version v2.3 Fancy QR-Codes]
+\ProvidesPackage{\filename}[2026/08/17 version v2.4 Fancy QR-Codes]
 \RequirePackage{pict2e, xfp, qrcode}
 
-% element
-% x: {\the\j}; y: {\the\i} | \@max@x \@max@y
-\def\@@fancyqr@color@gradient#1{\edef\angle{\fpeval{%
-   % approximate mod
-   \fancyqr@gradient@angle+225 - floor((\fancyqr@gradient@angle+225)/360)*360
-}}% rotate to align 0 to the right
-\edef\gradient{\fpeval{%
-   % we do rotate the x and y points before color drawing by
-   % Mod(\fancyqr@gradient@angle,360) with the shifted origin
-   % Old: #3/2 #4/2
-   ((\the\j-\@half@max@x)*cos(\angle) - (\the\i-\@half@max@y)*sin(\angle) + \@half@max@x)/\@max@x * 50% rel x [0,1]
-   + ((\the\j-\@half@max@x)*sin(\angle) + (\the\i-\@half@max@y)*cos(\angle) + \@half@max@y)/\@max@y * 50% rel y [0,1]
-   }}\@declaredcolor{qr@fancy@gradient@br!\gradient!qr@fancy@gradient@tl}{#1}}
+% the gradient is affine in the module coordinates: trigonometry once per code,
+% the row part once per row, a multiply-add per module
+\newdimen\fancyqr@grad@a \newdimen\fancyqr@grad@b \newdimen\fancyqr@grad@c
+\newdimen\fancyqr@grad@row \newdimen\fancyqr@grad@t
+\newcount\fancyqr@grad@n \newcount\fancyqr@ci
+
+% g(i,j) = a*j + b*i + c for
+%   ((j-hx)*cos-(i-hy)*sin+hx)/mx*50 + ((j-hx)*sin+(i-hy)*cos+hy)/my*50
+\def\fancyqr@gradient@setup{%
+   \edef\fancyqr@grad@cos{\fpeval{cosd(\fancyqr@gradient@angle+225)}}% 0 to the right
+   \edef\fancyqr@grad@sin{\fpeval{sind(\fancyqr@gradient@angle+225)}}%
+   \fancyqr@grad@a=\fpeval{50*(\fancyqr@grad@cos/\@max@x+\fancyqr@grad@sin/\@max@y)}\p@
+   \fancyqr@grad@b=\fpeval{50*(\fancyqr@grad@cos/\@max@y-\fancyqr@grad@sin/\@max@x)}\p@
+   \fancyqr@grad@c=\fpeval{%
+      50*(\@half@max@x*(1-\fancyqr@grad@cos)+\@half@max@y*\fancyqr@grad@sin)/\@max@x
+     +50*(\@half@max@y*(1-\fancyqr@grad@cos)-\@half@max@x*\fancyqr@grad@sin)/\@max@y}\p@
+}
+\def\fancyqr@gradient@row#1{%
+   \fancyqr@grad@row=\fancyqr@grad@b \multiply\fancyqr@grad@row#1\relax
+   \advance\fancyqr@grad@row\fancyqr@grad@c
+}
+% #1 column, result in \fancyqr@grad@n
+\def\fancyqr@gradient@col#1{%
+   \fancyqr@grad@t=\fancyqr@grad@a \multiply\fancyqr@grad@t#1\relax
+   \advance\fancyqr@grad@t\fancyqr@grad@row \advance\fancyqr@grad@t.5\p@% round
+   \fancyqr@grad@n=\fancyqr@grad@t
+   \divide\fancyqr@grad@n\@cclvi \divide\fancyqr@grad@n\@cclvi
+   % a rotated gradient may leave the unit square, xcolor may not
+   \ifnum\fancyqr@grad@n<\z@ \fancyqr@grad@n\z@\fi
+   \ifnum\fancyqr@grad@n>100 \fancyqr@grad@n=100 \fi
+}
+
+% integral percentages: 101 mixtures parsed per code, not per module (this must
+% run outside of any loop group)
+\def\fancyqr@gradient@cache{%
+   \fancyqr@grad@n\z@
+   \@whilenum\fancyqr@grad@n<101 \do{%
+      \colorlet{fancyqr@g@\the\fancyqr@grad@n}%
+         {qr@fancy@gradient@br!\the\fancyqr@grad@n!qr@fancy@gradient@tl}%
+      \advance\fancyqr@grad@n\@ne}%
+}
+\def\@@fancyqr@color@gradient#1{%
+   \fancyqr@gradient@col\fancyqr@ci
+   \@declaredcolor{fancyqr@g@\the\fancyqr@grad@n}{#1}%
+}
 \def\@@fancyqr@color@default#1{\@declaredcolor{qr@fancy@gradient@tl}{#1}}
 \def\@@fancyqr@color@random#1{\pgfmathrandomitem{\@fancyqr@random@c@l@r}{@@fancyqr@@randomcol}\@declaredcolor{\@fancyqr@random@c@l@r}{#1}}
 \let\FancyQrColor\@@fancyqr@color@default
 
 \def\fancyqr@rounding@factor{.5}
 \edef\fancyqr@rounding@other{\fpeval{1-\fancyqr@rounding@factor}}
+% fillet radius for a corner enclosed by two neighbours but not by the diagonal
+\def\fancyqr@overlap@factor{.045}% see \qrm below
+\def\fancyqr@inner@factor{.25}
+% the two legs of a fillet run along the edges of the neighbours it bridges;
+% drawing the arc wider by the tile overlap pushes them inside those neighbours,
+% where they cannot show up as a seam between two abutting fills
+\def\fancyqr@inner@setup{%
+   \edef\fancyqr@inner@neg{\fpeval{-\fancyqr@inner@factor}}%
+   \edef\fancyqr@inner@plus{\fpeval{1+\fancyqr@inner@factor}}%
+   \edef\fancyqr@inner@radius{\fpeval{\fancyqr@inner@factor+2*\fancyqr@overlap@factor}}%
+}
+\fancyqr@inner@setup
+\def\fancyqr@inner@tl{0}\def\fancyqr@inner@tr{0}% set by \fancyqr@setinner
+\def\fancyqr@inner@bl{0}\def\fancyqr@inner@br{0}
+\newif\iffancyqr@inner@ % styles opt in, the lookups are not free
+% a style may draw the modules more than once and switch on \fancyqr@pass
+\def\fancyqr@passes{1}\newcount\fancyqr@pass
 
 % O 1 O
 % 2 X 3
 % O 4 O
 % uses \@up\@left\@right\@down
-\def\GetPattern{%
-\ifcsname qcc\@up\@left\@right\@down\endcsname
-   \csname qcc\@up\@left\@right\@down\endcsname
-\fi}
+% an undefined combination expands to \relax, i.e. draws nothing
+\def\GetPattern{\csname qcc\@up\@left\@right\@down\endcsname}
 
 % backwards compatibility
 \def\fancyqr@clap#1{\hb@xt@\z@{\hss#1\hss}}
 \newdimen\fancyqr@edge@compensate \fancyqr@edge@compensate=.15\p@
 
-% is larger to be compensated by overlaps
+% Tiles are drawn a little larger than their cell so that neighbours overlap:
+% where two path edges cross the same pixel, neither covers it fully and the
+% renderer leaves a fraction of the background showing through. The overlap has
+% to be a fraction of a module rather than a fixed length -- what matters is how
+% many device pixels it is at the size the code is actually drawn at.
+\newif\iffancyqr@abscomp@
 \def\qrm{\dimexpr\qr@modulesize+\fancyqr@edge@compensate\relax}
 \long\def\qr@newpattern#1#2#3#4#5{%
 \expandafter\def\csname qcc#1#2#3#4\endcsname{% scaling happens implicitly by the unitlength
@@ -61,53 +113,78 @@
    }}%
 }
 
-% [#3][#2]
-% [#4][#1]
+% Flag 1 rounds a corner outwards, 0 continues into a neighbour.  Such a corner
+% is an *inner* one when both neighbours are black but the diagonal is not, and
+% then gets a fillet: a detour into the empty diagonal cell, traced counter-
+% clockwise like the outline so the non-zero fill rule adds it.
+% #1 flag, #2 inner flag, #3 point before the outward arc, #4 its center,
+% #5 its angles, #6 the corner, #7 the fillet center, #8 its angles -- all
+% literal, so a tile needs no arithmetic.
+\def\fancyqr@corner#1#2#3#4#5#6#7#8{%
+   \ifnum#1=\@ne \lineto#3\circlearc#4\fancyqr@rounding@factor#5%
+   \else \lineto#6%
+      \ifnum#2=\@ne \circlearc#7\fancyqr@inner@radius#8\lineto#6\fi
+   \fi}
 \def\fancyqr@rounded@rect#1#2#3#4{%
    \ifnum#4=\@ne\relax \moveto(\fancyqr@rounding@factor,\z@)\else\moveto(\z@,\z@)\fi
-   \ifnum#1=\@ne
-      \lineto(\fancyqr@rounding@other,\z@)%
-      \circlearc\fancyqr@rounding@other\fancyqr@rounding@factor\fancyqr@rounding@factor{270}{360}
-   \else\lineto(\@ne,\z@)\fi
-   \ifnum#2=\@ne
-      \lineto(\@ne,\fancyqr@rounding@other)%
-      \circlearc\fancyqr@rounding@other\fancyqr@rounding@other\fancyqr@rounding@factor{0}{90}
-   \else\lineto(\@ne,\@ne)\fi
-   \ifnum#3=\@ne
-      \lineto(\fancyqr@rounding@factor,\@ne)%
-      \circlearc\fancyqr@rounding@factor\fancyqr@rounding@other\fancyqr@rounding@factor{90}{180}
-   \else\lineto(\z@,\@ne)\fi
-   \ifnum#4=\@ne
-      \lineto(\z@,\fancyqr@rounding@factor)%
-      \circlearc\fancyqr@rounding@factor\fancyqr@rounding@factor\fancyqr@rounding@factor{180}{270}
-   \else\lineto(\z@,\z@)\fi
+   \fancyqr@corner#1\fancyqr@inner@br
+      {(\fancyqr@rounding@other,\z@)}{{\fancyqr@rounding@other}{\fancyqr@rounding@factor}}{{270}{360}}%
+      {(\@ne,\z@)}{{\fancyqr@inner@plus}{\fancyqr@inner@neg}}{{180}{90}}%
+   \fancyqr@corner#2\fancyqr@inner@tr
+      {(\@ne,\fancyqr@rounding@other)}{{\fancyqr@rounding@other}{\fancyqr@rounding@other}}{{0}{90}}%
+      {(\@ne,\@ne)}{{\fancyqr@inner@plus}{\fancyqr@inner@plus}}{{270}{180}}%
+   \fancyqr@corner#3\fancyqr@inner@tl
+      {(\fancyqr@rounding@factor,\@ne)}{{\fancyqr@rounding@factor}{\fancyqr@rounding@other}}{{90}{180}}%
+      {(\z@,\@ne)}{{\fancyqr@inner@neg}{\fancyqr@inner@plus}}{{360}{270}}%
+   \fancyqr@corner#4\fancyqr@inner@bl
+      {(\z@,\fancyqr@rounding@factor)}{{\fancyqr@rounding@factor}{\fancyqr@rounding@factor}}{{180}{270}}%
+      {(\z@,\z@)}{{\fancyqr@inner@neg}{\fancyqr@inner@neg}}{{90}{0}}%
    \fancyqr@rounded@rect@close
 }
 \def\fancyqr@rounded@rect@close{\fillpath}
 
+% [#3][#2]  the neighbourhood-to-corner table; #1 draws a tile from its four
+% [#4][#1]  corner flags, so a style can reuse the shape
+\def\FancyQrRoundedPatterns#1{%
+\qr@newpattern0000{#1{1}{1}{1}{1}}% .
+\qr@newpattern1000{#1{1}{0}{0}{1}}% | | - -
+\qr@newpattern0001{#1{0}{1}{1}{0}}%
+\qr@newpattern0100{#1{1}{1}{0}{0}}%
+\qr@newpattern0010{#1{0}{0}{1}{1}}%
+\qr@newpattern1100{#1{1}{0}{0}{0}}% bottom right
+\qr@newpattern1010{#1{0}{0}{0}{1}}% bottom left
+\qr@newpattern0101{#1{0}{1}{0}{0}}% top right
+\qr@newpattern0011{#1{0}{0}{1}{0}}% top left
+\qr@newpattern1001{#1{0}{0}{0}{0}}% straights, enclosed and t's
+\qr@newpattern0110{#1{0}{0}{0}{0}}%
+\qr@newpattern1111{#1{0}{0}{0}{0}}%
+\qr@newpattern0111{#1{0}{0}{0}{0}}%
+\qr@newpattern1011{#1{0}{0}{0}{0}}%
+\qr@newpattern1101{#1{0}{0}{0}{0}}%
+\qr@newpattern1110{#1{0}{0}{0}{0}}%
+}
+% the same table by the four neighbours instead of by the corners
+\def\FancyQrSidePatterns#1{%
+\qr@newpattern0000{#1{0}{0}{0}{0}}%
+\qr@newpattern1000{#1{1}{0}{0}{0}}%
+\qr@newpattern0001{#1{0}{0}{0}{1}}%
+\qr@newpattern0100{#1{0}{1}{0}{0}}%
+\qr@newpattern0010{#1{0}{0}{1}{0}}%
+\qr@newpattern1100{#1{1}{1}{0}{0}}%
+\qr@newpattern1010{#1{1}{0}{1}{0}}%
+\qr@newpattern0101{#1{0}{1}{0}{1}}%
+\qr@newpattern0011{#1{0}{0}{1}{1}}%
+\qr@newpattern1001{#1{1}{0}{0}{1}}%
+\qr@newpattern0110{#1{0}{1}{1}{0}}%
+\qr@newpattern1111{#1{1}{1}{1}{1}}%
+\qr@newpattern0111{#1{0}{1}{1}{1}}%
+\qr@newpattern1011{#1{1}{0}{1}{1}}%
+\qr@newpattern1101{#1{1}{1}{0}{1}}%
+\qr@newpattern1110{#1{1}{1}{1}{0}}%
+}
 \def\FancyQrLoadDefault{%
-% .
-\qr@newpattern0000{\fancyqr@rounded@rect1111}%
-% | | - -
-\qr@newpattern1000{\fancyqr@rounded@rect1001}%
-\qr@newpattern0001{\fancyqr@rounded@rect0110}%
-\qr@newpattern0100{\fancyqr@rounded@rect1100}%
-\qr@newpattern0010{\fancyqr@rounded@rect0011}%
-% corners
-\qr@newpattern1100{\fancyqr@rounded@rect1000}% bottom right
-\qr@newpattern1010{\fancyqr@rounded@rect0001}% bottom left
-\qr@newpattern0101{\fancyqr@rounded@rect0100}% top right
-\qr@newpattern0011{\fancyqr@rounded@rect0010}% top left
-% straights | --
-\qr@newpattern1001{\fancyqr@rounded@rect0000}%
-\qr@newpattern0110{\fancyqr@rounded@rect0000}%
-% enclosed
-\qr@newpattern1111{\fancyqr@rounded@rect0000}%
-% t's
-\qr@newpattern0111{\fancyqr@rounded@rect0000}%
-\qr@newpattern1011{\fancyqr@rounded@rect0000}%
-\qr@newpattern1101{\fancyqr@rounded@rect0000}%
-\qr@newpattern1110{\fancyqr@rounded@rect0000}%
+   \fancyqr@inner@true % this style knows about inner corners
+   \FancyQrRoundedPatterns\fancyqr@rounded@rect
 }
 \FancyQrLoadDefault % allows to reset the style after other loads
 \def\@fancy@qr@default@name{default}
@@ -115,6 +192,9 @@
 \def\FancyQrLoad#1{%
 \protected@edef\fancyqr@loaded@style{#1}%
 \def\fancyqr@rounded@rect@close{\fillpath}%
+\fancyqr@inner@false % a style has to ask for inner roundings
+\def\fancyqr@passes{1}%
+\setkeys{fancyqr}{finder=inherit,finder core=auto}% the style owns the shapes
 \let\@tmp\newpattern\let\newpattern\qr@newpattern\@bsphack\def\@@tmp{#1}%
 \ifx\@@tmp\@fancy@qr@default@name\FancyQrLoadDefault\else
 \expandafter\edef\csname pingu@lib@#1@atcode\endcsname{\the\catcode`\@}%
@@ -122,21 +202,19 @@
 \input{fancyqr-style-#1.code}%
 \catcode`\@=\csname pingu@lib@#1@atcode\endcsname
 \fi\@esphack\let\newpattern\@tmp\let\@tmp\relax}
+\let\FancyQrInnerRoundings\fancyqr@inner@true
+\let\FancyQrNoInnerRoundings\fancyqr@inner@false
+\def\FancyQrPasses#1{\def\fancyqr@passes{#1}}
 
 
-% modify the getter so everything that is not defined is white:
-\def\fancy@qr@matrixentry#1#2#3{%
+% everything that is not defined is white
+\def\fancy@qr@matrixentry#1#2#3{% matrix, row, column
    \ifcsname #1@#2@#3\endcsname
-   % #1 = matrix name
-   % #2 = row number
-   % #3 = column number
    \csname #1@#2@#3\endcsname
    \else\qr@white@format\fi
 }%
 
-% #1 width
-% #2 height
-\def\FancyQrDoNotPrintSquare#1#2{%
+\def\FancyQrDoNotPrintSquare#1#2{% width, height
    \def\fancy@qr@donotprint@center@x{#1}%
    \def\fancy@qr@donotprint@center@y{#2}%
 }
@@ -148,6 +226,9 @@
 \FancyQrDoNotPrintRadius0
 
 \newif\iffancy@qr@do@print@
+% the bounds are inclusive by one module, so without a cut-out an unguarded
+% check would drop the center module
+\newif\iffancy@qr@cutout@
 \def\qr@fancy@updateif#1#2{\fancy@qr@do@print@true
 \ifdim\fancy@qr@donotprint@center@r\p@>\z@
    \ifnum#1>\@do@y@min\relax \ifnum#1<\@do@y@max\relax \ifnum#2>\@do@x@min\relax \ifnum#2<\@do@x@max\relax
@@ -176,6 +257,196 @@
    \iffancy@qr@do@print@\else \expandafter\let\csname #1@#2@\the\numexpr#3+1\endcsname\@undefined \fi
 }
 
+% only look up a diagonal if both of its neighbours are black
+\def\fancyqr@inner@check#1#2#3{%
+   \edef\@tmp{\qr@matrixentry\fancyqr@currprint{#1}{#2}}%
+   \ifnum\@tmp=\qr@white\relax \def#3{1}\fi
+}
+\def\fancyqr@setinner{% uses \@up\@left\@right\@down and the counters \i \j
+   \def\fancyqr@inner@tl{0}\def\fancyqr@inner@tr{0}%
+   \def\fancyqr@inner@bl{0}\def\fancyqr@inner@br{0}%
+   \ifnum\@up=\qr@black\relax
+      \ifnum\@left=\qr@black\relax
+         \fancyqr@inner@check{\the\numexpr\i-\@ne\relax}{\the\numexpr\j-\@ne\relax}\fancyqr@inner@tl\fi
+      \ifnum\@right=\qr@black\relax
+         \fancyqr@inner@check{\the\numexpr\i-\@ne\relax}{\the\numexpr\j+\@ne\relax}\fancyqr@inner@tr\fi
+   \fi
+   \ifnum\@down=\qr@black\relax
+      \ifnum\@left=\qr@black\relax
+         \fancyqr@inner@check{\the\numexpr\i+\@ne\relax}{\the\numexpr\j-\@ne\relax}\fancyqr@inner@bl\fi
+      \ifnum\@right=\qr@black\relax
+         \fancyqr@inner@check{\the\numexpr\i+\@ne\relax}{\the\numexpr\j+\@ne\relax}\fancyqr@inner@br\fi
+   \fi
+}
+
+% position patterns follow from the size, alignment patterns are recorded while
+% `qrcode' places them (\fancy@qr@setup)
+\newif\iffancyqr@fixed@      % the patterns are treated specially at all
+\newif\iffancyqr@fixedshape@ % ... drawn as one shape instead of as modules
+\newif\iffancyqr@fixedmap@   % ... only recolored, which needs a module map
+\def\fancyqr@finder@style{inherit}
+\def\fancyqr@finder@core{auto}
+\def\fancyqr@finder@color{}
+\def\fancyqr@content@color{}% the data modules, i.e. everything but the patterns
+\def\fancyqr@finder@radius{.5}   % corner radius, relative to the pattern
+\def\fancyqr@finder@thickness{1}% ring width in modules
+\def\fancyqr@star@ratio{.55}    % inner/outer radius of a star core
+\def\fancyqr@star@boost{1.27}   % ... which is a single module on an alignment
+                                % pattern and reads too small at that size
+\gdef\fancyqr@alignlist{}
+\def\fancyqr@do#1#2{}
+
+\def\fancyqr@finder@none{none}\def\fancyqr@finder@auto{auto}
+\def\fancyqr@finder@inherit{inherit}
+% `inherit' (and its synonym `none') leaves the patterns to the tiles of the
+% loaded style, which is what fancyqr did before the shapes existed
+% the map that tells a pattern module from a data one is needed as soon as the
+% two are colored differently
+\def\fancyqr@finder@update{%
+   \fancyqr@fixedshape@true
+   \ifx\fancyqr@finder@style\fancyqr@finder@none\fancyqr@fixedshape@false\fi
+   \ifx\fancyqr@finder@style\fancyqr@finder@inherit\fancyqr@fixedshape@false\fi
+   \fancyqr@fixedmap@false
+   \iffancyqr@fixedshape@\else
+      \ifx\fancyqr@finder@color\@empty\else\fancyqr@fixedmap@true\fi
+      \ifx\fancyqr@content@color\@empty\else\fancyqr@fixedmap@true\fi
+   \fi
+   \iffancyqr@fixedshape@\fancyqr@fixed@true
+   \else\iffancyqr@fixedmap@\fancyqr@fixed@true\else\fancyqr@fixed@false\fi\fi
+}
+
+% applies \fancyqr@fixed@action{top row}{left column}{size} to every pattern
+\def\fancyqr@fixedpatterns{%
+   \edef\fancyqr@fix@last{\the\numexpr\@max@x-6\relax}%
+   \fancyqr@fixed@action{1}{1}{7}%
+   \fancyqr@fixed@action{1}{\fancyqr@fix@last}{7}%
+   \fancyqr@fixed@action{\fancyqr@fix@last}{1}{7}%
+   \let\fancyqr@do\fancyqr@fixed@align \fancyqr@alignlist
+}
+\def\fancyqr@fixed@align#1#2{\fancyqr@fixed@action{\the\numexpr#1-2\relax}{\the\numexpr#2-2\relax}{5}}
+
+% walks the modules (#1,#2)--(#1+#3-1,#2+#4-1) applying \fancyqr@rect@action
+\def\fancyqr@rect#1#2#3#4{%
+   \qr@for \fancyqr@mi=#1 to \the\numexpr#1+#3-\@ne\relax by \@ne{%
+      \qr@for \fancyqr@mj=#2 to \the\numexpr#2+#4-\@ne\relax by \@ne{%
+         \fancyqr@rect@action}}%
+}
+\def\fancyqr@cell{\fancyqr@currprint @\the\fancyqr@mi @\the\fancyqr@mj}
+\def\fancyqr@mark{\global\expandafter\let
+   \csname fancyqr@fix@\the\fancyqr@mi @\the\fancyqr@mj\endcsname\@ne}
+\def\fancyqr@unmark{\global\expandafter\let
+   \csname fancyqr@fix@\the\fancyqr@mi @\the\fancyqr@mj\endcsname\@undefined}
+% a shape replaces the modules of its pattern, so they are dropped from the
+% matrix: they are then neither drawn twice nor seen by their neighbours, which
+% round off against the shape instead of ending in a flat stub beside it
+\def\fancyqr@clear{\global\expandafter\let\csname\fancyqr@cell\endcsname\@undefined}
+% the matrix is shared between codes, so anything cleared has to come back
+\def\fancyqr@save{\global\expandafter\let
+   \csname fancyqr@sv@\the\fancyqr@mi @\the\fancyqr@mj\expandafter\endcsname
+   \csname\fancyqr@cell\endcsname}
+\def\fancyqr@restore{\global\expandafter\let\csname\fancyqr@cell\expandafter\endcsname
+   \csname fancyqr@sv@\the\fancyqr@mi @\the\fancyqr@mj\endcsname}
+\def\fancyqr@saveclear{\fancyqr@save\fancyqr@clear}
+
+\def\fancyqr@block#1#2#3{\fancyqr@rect{#1}{#2}{#3}{#3}}
+\def\fancyqr@markfixed{%
+   \iffancyqr@fixedshape@\let\fancyqr@rect@action\fancyqr@saveclear
+   \else\let\fancyqr@rect@action\fancyqr@mark\fi
+   \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns}
+\def\fancyqr@unmarkfixed{%
+   \iffancyqr@fixedshape@\let\fancyqr@rect@action\fancyqr@restore
+   \else\let\fancyqr@rect@action\fancyqr@unmark\fi
+   \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns}
+% the round cut only ever clears modules inside the hidden rectangle
+\def\fancyqr@cutrect#1{\let\fancyqr@rect@action#1%
+   \fancyqr@rect{\the\numexpr\@do@y@min+\@ne\relax}{\the\numexpr\@do@x@min+\@ne\relax}%
+      {\the\numexpr\@do@y@max-\@do@y@min-\@ne\relax}{\the\numexpr\@do@x@max-\@do@x@min-\@ne\relax}}
+
+% both hoisted once per code, so a tile pays nothing for them
+\def\fancyqr@colorsetup{%
+   \ifx\fancyqr@finder@color\@empty \let\fancyqr@fixedcolor\FancyQrColor
+   \else \def\fancyqr@fixedcolor##1{{\color{\fancyqr@finder@color}##1}}\fi
+   \ifx\fancyqr@content@color\@empty \let\fancyqr@tilecolor\FancyQrColor
+   \else \def\fancyqr@tilecolor##1{{\color{\fancyqr@content@color}##1}}\fi
+}
+
+% a shape is a path inscribed in (#1,#1)--(#2,#2) closed by #3, so the same five
+% macros serve the stroked ring and the filled core
+\def\fancyqr@shape@none#1#2#3{}
+\def\fancyqr@shape@square#1#2#3{\moveto(#1,#1)\lineto(#2,#1)\lineto(#2,#2)\lineto(#1,#2)\closepath#3}
+\def\fancyqr@shape@circle#1#2#3{%
+   \edef\@fq@c{\fpeval{(#1+#2)/2}}%
+   \circlearc[1]\@fq@c\@fq@c{\fpeval{(#2-#1)/2}}{0}{360}\closepath#3}
+\def\fancyqr@shape@rounded#1#2#3{%
+   \roundjoin
+   \edef\@fq@r{\fpeval{\fancyqr@finder@radius*(#2-#1)/2}}%
+   \moveto(\fpeval{#1+\@fq@r},#1)%
+   \lineto(\fpeval{#2-\@fq@r},#1)\circlearc{\fpeval{#2-\@fq@r}}{\fpeval{#1+\@fq@r}}\@fq@r{270}{360}%
+   \lineto(#2,\fpeval{#2-\@fq@r})\circlearc{\fpeval{#2-\@fq@r}}{\fpeval{#2-\@fq@r}}\@fq@r{0}{90}%
+   \lineto(\fpeval{#1+\@fq@r},#2)\circlearc{\fpeval{#1+\@fq@r}}{\fpeval{#2-\@fq@r}}\@fq@r{90}{180}%
+   \lineto(#1,\fpeval{#1+\@fq@r})\circlearc{\fpeval{#1+\@fq@r}}{\fpeval{#1+\@fq@r}}\@fq@r{180}{270}%
+   \closepath#3}
+% a thinner star breaks the 1:1:3:1:1 run a scanner looks for
+\def\fancyqr@shape@star#1#2#3{%
+   \roundjoin
+   \edef\@fq@c{\fpeval{(#1+#2)/2}}%
+   \edef\@fq@ro{\fpeval{(#2-#1)/2*((#2-#1)<2 ? \fancyqr@star@boost : 1)}}%
+   \edef\@fq@ri{\fpeval{\fancyqr@star@ratio*\@fq@ro}}%
+   \moveto(\fpeval{\@fq@c+\@fq@ro},\@fq@c)%
+   \@tempcnta=\z@
+   \loop\advance\@tempcnta45\relax
+      \edef\@fq@rr{\ifodd\numexpr\@tempcnta/45\relax \@fq@ri\else\@fq@ro\fi}%
+      \lineto(\fpeval{\@fq@c+\@fq@rr*cosd(\@tempcnta)},\fpeval{\@fq@c+\@fq@rr*sind(\@tempcnta)})%
+   \ifnum\@tempcnta<360\relax\repeat
+   \closepath#3}
+
+\def\fancyqr@shape#1#2#3#4{%
+   \ifcsname fancyqr@shape@#1\endcsname
+      \csname fancyqr@shape@#1\endcsname{#2}{#3}{#4}%
+   \else
+      \PackageError{fancyqr}{Unknown pattern shape `#1'}%
+         {Known shapes are inherit, square, rounded, circle and star.}%
+   \fi}
+
+\def\fancyqr@draw@block#1#2#3{%
+   % colored as if it were the module in its center
+   \fancyqr@gradient@row{\the\numexpr#1+(#3-\@ne)/\tw@\relax}%
+   \fancyqr@ci=\numexpr#2+(#3-\@ne)/\tw@\relax
+   \edef\@fq@t{\fpeval{\fancyqr@finder@thickness/2}}%
+   \put(#2,\the\numexpr\@max@y-#1-#3+\@ne\relax){%
+      \fancyqr@fixedcolor{%
+         \linethickness{\fancyqr@finder@thickness\unitlength}%
+         \fancyqr@shape\fancyqr@finder@style\@fq@t{\fpeval{#3-\@fq@t}}\strokepath
+         \fancyqr@shape\fancyqr@effective@core{2}{\fpeval{#3-2}}\fillpath
+      }%
+   }%
+}
+\def\fancyqr@drawfixed{\let\fancyqr@fixed@action\fancyqr@draw@block\fancyqr@fixedpatterns}
+
+\def\fancyqr@modules{%
+   \qr@for \i=\@ne to \@max@y by \@ne{%
+      \fancyqr@gradient@row\i
+      \qr@for \j=\@ne to \@max@x by \@ne{%
+      \iffancy@qr@cutout@\qr@fancy@updateif\i\j\fi
+      \iffancy@qr@do@print@
+         \ifnum\qr@matrixentry\fancyqr@currprint{\the\i}{\the\j}=\qr@black\relax
+            \iffancy@qr@cutout@\iffancy@qr@roundcut@
+               \qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi\fi
+            \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-\@ne}{\the\j}}%
+            \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-\@ne}}%
+            \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+\@ne}}%
+            \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+\@ne}{\the\j}}%
+            \iffancyqr@inner@\fancyqr@setinner\fi
+            \fancyqr@ci=\j
+            \iffancyqr@fixedmap@
+               \ifcsname fancyqr@fix@\the\i @\the\j\endcsname
+                  \fancyqr@fixedcolor{\GetPattern}%
+               \else\fancyqr@tilecolor{\GetPattern}\fi
+            \else\fancyqr@tilecolor{\GetPattern}\fi
+      \fi\fi
+   }}%
+}
+
 \newif\if@fancyqr@image@
 
 \def\qr@white{0}\def\qr@black{1}%
@@ -187,16 +458,25 @@
   \qr@modulesize=\qr@desiredheight\relax
   \divide\qr@modulesize by \qr@size\relax
   \unitlength=\dimexpr\qr@modulesize\relax % will be re-set in placement
-  \if@fancyqr@image@% image is in \fancyqr@imgbox
-   \edef\@x{\fpeval{ceil((.5\wd\fancyqr@imgbox)/\qr@modulesize)+\fancyqr@img@padding@x}}%
-   \edef\@y{\fpeval{ceil((.5\ht\fancyqr@imgbox+.5\dp\fancyqr@imgbox)/\qr@modulesize)+\fancyqr@img@padding@y}}%
-   \FancyQrDoNotPrintSquare\@x\@y
+  \iffancyqr@abscomp@\else
+     \fancyqr@edge@compensate=\fancyqr@overlap@factor\qr@modulesize
   \fi
+  \if@fancyqr@image@% image is in \fancyqr@imgbox
+   % the hidden square spans 2r+1 modules, i.e. r+1/2 to each side
+   \edef\fancyqr@img@x{\fpeval{max(0,ceil((.5\wd\fancyqr@imgbox)/\qr@modulesize-.5))+\fancyqr@img@padding@x}}%
+   \edef\fancyqr@img@y{\fpeval{max(0,ceil((.5\ht\fancyqr@imgbox+.5\dp\fancyqr@imgbox)/\qr@modulesize-.5))+\fancyqr@img@padding@y}}%
+   \FancyQrDoNotPrintSquare\fancyqr@img@x\fancyqr@img@y
+  \fi
+  \ifx\FancyQrColor\@@fancyqr@color@gradient\fancyqr@gradient@cache\fi
   \qr@minipagewidth=\qr@desiredheight
   \ifqr@tight\else \advance\qr@minipagewidth by 8\qr@modulesize\relax \fi
   \begingroup
       \edef\@max@x{\qr@numberofrowsinmatrix\fancyqr@currprint}\edef\@half@max@x{\the\numexpr\@max@x/2}%
       \edef\@max@y{\qr@numberofcolsinmatrix\fancyqr@currprint}\edef\@half@max@y{\the\numexpr\@max@y/2}%
+      \fancyqr@gradient@setup \fancyqr@colorsetup
+      \ifdim\fancyqr@inner@factor\p@>\z@\else\fancyqr@inner@false\fi
+      \edef\fancyqr@effective@core{%
+         \ifx\fancyqr@finder@core\fancyqr@finder@auto\fancyqr@finder@style\else\fancyqr@finder@core\fi}%
       % redefine the border to be white!
       \qr@for \i=\@ne to \@max@y by \@ne{%
       % redefine the limits to be white!
@@ -212,32 +492,28 @@
       \edef\@do@y@min{\the\numexpr\@half@max@y-\fancy@qr@donotprint@center@y-\@ne}%
       \edef\@do@y@max{\the\numexpr\@half@max@y+\fancy@qr@donotprint@center@y+\@ne}%
       \edef\@max@rcrad{\fpeval{max((\@ne-\fancy@qr@donotprint@center@r)*\fancy@qr@donotprint@center@x,(\@ne-\fancy@qr@donotprint@center@r)*\fancy@qr@donotprint@center@y)+\fancyqr@edge@compensate}}%
+      \ifdim\fpeval{max(\fancy@qr@donotprint@center@x,\fancy@qr@donotprint@center@y)}\p@>\z@
+         \fancy@qr@cutout@true\else\fancy@qr@cutout@false\fancy@qr@do@print@true\fi
+      \iffancyqr@fixed@\fancyqr@markfixed\fi
+      \iffancy@qr@cutout@\iffancy@qr@roundcut@\fancyqr@cutrect\fancyqr@save\fi\fi
       \edef\@tmp@tight{\ifqr@tight\z@\else-4\fi}%
       \picture(\qr@minipagewidth,\qr@minipagewidth)(\the\numexpr\@ne+\@tmp@tight,\@tmp@tight)
-      \qr@for \i=\@ne to \@max@y by \@ne{\qr@for \j=\@ne to \@max@x by \@ne{%
-         \qr@fancy@updateif\i\j
-         \iffancy@qr@do@print@
-            \edef\@mid{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\j}}%
-            \ifnum\@mid=\qr@black\relax
-               \iffancy@qr@roundcut@\qr@fancy@clear@surround\fancyqr@currprint{\the\i}{\the\j}\fi
-               \edef\@up{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i-\@ne}{\the\j}}%
-               \edef\@left{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j-\@ne}}%
-               \edef\@right{\qr@matrixentry\fancyqr@currprint{\the\i}{\the\numexpr\the\j+\@ne}}%
-               \edef\@down{\qr@matrixentry\fancyqr@currprint{\the\numexpr\the\i+\@ne}{\the\j}}%
-               \FancyQrColor{\GetPattern}%
-         \fi\fi
-      }}%
+      \fancyqr@pass\z@
+      \loop \advance\fancyqr@pass\@ne \fancyqr@modules
+      \ifnum\fancyqr@pass<\fancyqr@passes\relax\repeat
+      \iffancyqr@fixedshape@\fancyqr@drawfixed\fi
       \if@fancyqr@image@
-         % floating point mid
-         \put(\fpeval{.5*\@max@x+.5},\fpeval{.5*\@max@y}){%
-            \edef\@halfcheck{\fpeval{round(\fancy@qr@donotprint@center@x/2)}}%
-            \raisebox{-.5\height}{\clap{% TODO: remove this offset
-               \ifodd\@halfcheck \else\kern\qr@modulesize\fi
+         % the cut-out is centered on module (\@half@max@y,\@half@max@x), whose
+         % own center is half a module up and right of its origin
+         \put(\fpeval{\@half@max@x+.5},\fpeval{\@max@y-\@half@max@y+.5}){%
+            \raisebox{\dimexpr-.5\height+.5\depth\relax}{\fancyqr@clap{%
                \usebox\fancyqr@imgbox
             }}%
          }%
       \fi
       \endpicture
+      \iffancy@qr@cutout@\iffancy@qr@roundcut@\fancyqr@cutrect\fancyqr@restore\fi\fi
+      \iffancyqr@fixed@\fancyqr@unmarkfixed\fi
    \endgroup
 }%
 
@@ -248,7 +524,16 @@
    % we do not need to create blank because we store all
    \qr@placefinderpatterns{#1}%
    \qr@placetimingpatterns{#1}%
-   \qr@placealignmentpatterns{#1}%
+   % remember where the alignment patterns end up, so they can be styled
+   \gdef\fancyqr@alignlist{}%
+   \begingroup
+      \let\fancyqr@orig@align\qr@placealignmentpattern@int
+      \def\qr@placealignmentpattern@int##1##2##3{%
+         \xdef\fancyqr@alignlist{\unexpanded\expandafter{\fancyqr@alignlist}%
+            \noexpand\fancyqr@do{\number\numexpr##2\relax}{\number\numexpr##3\relax}}%
+         \fancyqr@orig@align{##1}{##2}{##3}}%
+      \qr@placealignmentpatterns{#1}%
+   \endgroup
 }
 
 \newcount\c@fancy@a \newcount\c@fancy@b
@@ -283,11 +568,27 @@
 }%
 
 
+% Building the matrix costs more than drawing it, and `qrcode' hands us the
+% same code over and over (a gallery, a running header, ...), so keep it under
+% a name derived from its content instead of rebuilding it into a scratch one.
 \def\fancy@qr@printsavedbinarymatrix#1{%
-   \def\qr@binarystring{#1\relax\relax}%
-   \fancy@qr@setup{@tmp}%
-   \fancy@qr@writedata{@tmp}{\qr@binarystring}%
-   \fancy@qr@printmatrix{@tmp}%
+   \iffancyqr@cache
+      \edef\fancyqr@currmat{fq@\qr@texttoencode @\qr@version @\qr@level}%
+   \else
+      \def\fancyqr@currmat{@tmp}%
+      \global\expandafter\let\csname @tmp@numrows\endcsname\@undefined
+   \fi
+   \ifcsname\fancyqr@currmat @numrows\endcsname
+      \expandafter\let\expandafter\fancyqr@alignlist
+         \csname fancyqr@align@\fancyqr@currmat\endcsname
+   \else
+      \def\qr@binarystring{#1\relax\relax}%
+      \expandafter\fancy@qr@setup\expandafter{\fancyqr@currmat}%
+      \expandafter\fancy@qr@writedata\expandafter{\fancyqr@currmat}{\qr@binarystring}%
+      \global\expandafter\let\csname fancyqr@align@\fancyqr@currmat\endcsname
+         \fancyqr@alignlist
+   \fi
+   \expandafter\fancy@qr@printmatrix\expandafter{\fancyqr@currmat}%
 }%
 
 \newsavebox\fancyqr@imgbox
@@ -298,27 +599,54 @@
 \define@key{fancyqr}{image}{\@fancyqr@image@true\savebox\fancyqr@imgbox{#1}}
 \define@key{fancyqr}{color}{\@fancyqr@randomcolor@false\@fancyqr@gradientfalse\colorlet{qr@fancy@gradient@tl}{#1}}
 \define@key{fancyqr}{left color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@br}{#1}}
-\define@key{fancyqr}{l color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@br}{#1}}
+\define@key{fancyqr}{l color}{\setkeys{fancyqr}{left color=#1}}
 \define@key{fancyqr}{right color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@tl}{#1}}
-\define@key{fancyqr}{r color}{\@fancyqr@randomcolor@false\colorlet{qr@fancy@gradient@tl}{#1}}
+\define@key{fancyqr}{r color}{\setkeys{fancyqr}{right color=#1}}
 \define@key{fancyqr}{gradient angle}{\@fancyqr@randomcolor@false\def\fancyqr@gradient@angle{#1}}
 \define@boolkey{fancyqr}[@fancyqr@]{gradient}[true]{}% if@fancyqr@gradient
+\define@boolkey{fancyqr}[fancyqr@]{cache}[true]{}% iffancyqr@cache
 \define@key{fancyqr}{random color}{\@fancyqr@randomcolor@true\def\@fancyqr@random@colors{#1}}
 \define@key{fancyqr}{width}{\setkeys{qr}{height=#1}}
 \define@key{fancyqr}{size}{\setkeys{qr}{height=#1}}
-\define@key{fancyqr}{compensate}{\setlength\fancyqr@edge@compensate{#1}}
+\define@key{fancyqr}{compensate}{\fancyqr@abscomp@true\setlength\fancyqr@edge@compensate{#1}}
+\define@key{fancyqr}{overlap}{\fancyqr@abscomp@false\def\fancyqr@overlap@factor{#1}\fancyqr@inner@setup}
+\define@key{fancyqr}{rounding}{%
+   \edef\fancyqr@rounding@factor{\fpeval{min(.5,max(0,#1))}}%
+   \edef\fancyqr@rounding@other{\fpeval{1-\fancyqr@rounding@factor}}}
+\define@key{fancyqr}{inner rounding}{%
+   \edef\fancyqr@inner@factor{\fpeval{min(.5,max(0,#1))}}\fancyqr@inner@setup}
+\define@key{fancyqr}{finder}{\def\fancyqr@finder@style{#1}\fancyqr@finder@update}
+\define@key{fancyqr}{finder radius}{\def\fancyqr@finder@radius{#1}}
+\define@key{fancyqr}{finder thickness}{\def\fancyqr@finder@thickness{#1}}
+\define@key{fancyqr}{finder core}{\def\fancyqr@finder@core{#1}\fancyqr@finder@update}
+\define@key{fancyqr}{finder color}{\def\fancyqr@finder@color{#1}\fancyqr@finder@update}
+\define@key{fancyqr}{content color}{\def\fancyqr@content@color{#1}\fancyqr@finder@update}
+% a fixed seed makes the randomized styles reproducible
+\define@key{fancyqr}{seed}{\FancyQrSeed{#1}}
+\def\FancyQrSeed#1{%
+   \ifcsname sys_gset_rand_seed:n\endcsname
+      \csname sys_gset_rand_seed:n\endcsname{#1}%
+   \else\ifdefined\pdfsetrandomseed \pdfsetrandomseed#1\relax\fi\fi}
 % \fancyqr@loaded@style
 \def\fancyqr@flat@style{flat}
 \define@boolkey{fancyqr}[@fancyqr@]{classic}[true]{} % if@fancyqr@classic
 \def\fancyqr@classic{%
 \ifx\fancyqr@loaded@style\fancyqr@flat@style\else\FancyQrLoad{\fancyqr@flat@style}\fi
 \setkeys{fancyqr}{%
-   gradient=false,color=black,l color=black,r color=black,compensate=\z@\relax
+   gradient=false,color=black,l color=black,r color=black,compensate=\z@\relax,
+   finder=inherit,finder color=,content color=
 }%
 }
 
 \def\fancyqrset#1{\setkeys{qr,fancyqr}{#1}}
-\fancyqrset{image padding=0,gradient=true,gradient angle=135,r color=teal,l color=purple}
+\fancyqrset{%
+   image padding=0,%
+   gradient=true,%
+   gradient angle=135,%
+   r color=red!68!black!88!white!90!white,%
+   l color=purple!40!red!20!black!90!white,%
+   cache=true%
+}
 
 \def\@fancyqr@init{\let\qr@printsavedbinarymatrix\fancy@qr@printsavedbinarymatrix\let\qr@matrixentry\fancy@qr@matrixentry\let\qr@printmatrix\fancy@qr@printmatrix}
 \def\fancyqr{\@ifstar\s@fancyqr\ns@fancyqr}

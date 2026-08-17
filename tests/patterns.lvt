@@ -1,0 +1,55 @@
+% Styling of the position (finder) and alignment patterns. `version=7' is fixed
+% so that the code always has three position and six alignment patterns.
+\input{regression-test}
+\documentclass{article}
+\usepackage{fancyqr}
+\usepackage{fancyqrtest}
+\makeatletter
+\def\Code{\fancyqr[size=3cm,tight,version=7,color=black]{abc}}
+\begin{document}
+\START
+\section*{Patterns}
+
+\FancyQrLoad{default}
+\fancyqrtest@run{\Code}\edef\Plain{\fancyqrtest@n{P}}
+
+% `inherit' is the default and leaves the patterns to the tiles of the style
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=inherit]{abc}}%
+\edef\Inherited{\fancyqrtest@n{P}}
+\TestValue{inherit-keeps-tiles}{same}{\ifx\Plain\Inherited same\else different\fi}
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=none]{abc}}%
+\edef\NoneStyle{\fancyqrtest@n{P}}
+\TestValue{none-is-a-synonym}{same}{\ifx\Plain\NoneStyle same\else different\fi}
+
+% recoloring alone must not change what is drawn
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder color=red]{abc}}%
+\edef\Recolored{\fancyqrtest@n{P}}
+\TestValue{color-only-keeps-tiles}{same}{\ifx\Plain\Recolored same\else different\fi}
+
+% a shape replaces the 3*49+6*25 modules of the nine patterns by nine shapes
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=circle]{abc}}%
+\edef\Shaped{\fancyqrtest@n{P}}
+\TestValue{shape-replaces-tiles}{fewer}{\ifnum\Shaped<\Plain fewer\else not\fi}
+% three position plus six alignment patterns, each a stroked ring and a
+% filled core
+\TestValue{pattern-rings}{9}{\fancyqrtest@n{S}}
+\TestValue{pattern-shapes}{18}{\fancyqrtest@n{Z}}
+
+\TestCounts{finder-circle}{P=812 M=803 L=3553 A+=967 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+  \fancyqr[size=3cm,tight,version=7,color=black,finder=circle]{abc}}
+\TestCounts{finder-square}{P=812 M=821 L=3607 A+=949 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+  \fancyqr[size=3cm,tight,version=7,color=black,finder=square]{abc}}
+\TestCounts{finder-rounded}{P=812 M=821 L=3625 A+=1021 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+  \fancyqr[size=3cm,tight,version=7,color=black,finder=rounded]{abc}}
+\TestCounts{finder-star}{P=812 M=821 L=3661 A+=985 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+  \fancyqr[size=3cm,tight,version=7,color=black,finder=rounded,finder core=star]{abc}}
+\TestCounts{finder-mixed}{P=812 M=812 L=3580 A+=958 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+  \fancyqr[size=3cm,tight,version=7,color=black,finder=square,finder core=circle]{abc}}
+
+% the map is torn down again, so the next code is unaffected
+\fancyqrtest@run{\Code}\edef\After{\fancyqrtest@n{P}}
+\TestValue{map-is-cleared}{same}{\ifx\Plain\After same\else different\fi}
+
+\TestSummary
+\END
+\end{document}

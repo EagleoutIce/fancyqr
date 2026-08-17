@@ -1,0 +1,86 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Calculating QR code for "abc" in version 1-H.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 9\ and 10:  1, 2, 3, 4, 5, 6, 7, 8, 9, .> <Interleaving errorblocks of length 17:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 976>
+<Applying Mask 1... done. Calculating penalty... penalty is 1026>
+<Applying Mask 2... done. Calculating penalty... penalty is 1003>
+<Applying Mask 3... done. Calculating penalty... penalty is 1003>
+<Applying Mask 4... done. Calculating penalty... penalty is 1004>
+<Applying Mask 5... done. Calculating penalty... penalty is 985>
+<Applying Mask 6... done. Calculating penalty... penalty is 982>
+<Applying Mask 7... done. Calculating penalty... penalty is 1004>
+<Selected Mask 0>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] cutout-zero-hides-nothing
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] cutout-hides-modules
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] round-cut-rounds-more
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] image-cuts-out
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] image
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] image-padding
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] overlap-keeps-tiles
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] compensate-keeps-tiles
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] overlap-choice-is-local
+(fancyqr-style-flat.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] classic
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] cache-restores-the-cut
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] cache-restores-the-patterns
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] cache-off-draws-the-same
+[PASS] seed
+===== fancyqr tests: 14 passed, 0 failed =====
+[1
+]

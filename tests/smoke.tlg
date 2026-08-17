@@ -1,0 +1,68 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+[PASS] primitives
+[PASS] arc-sign
+[PASS] record
+[PASS] value
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Calculating QR code for "abc" in version 1-H.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 9\ and 10:  1, 2, 3, 4, 5, 6, 7, 8, 9, .> <Interleaving errorblocks of length 17:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 976>
+<Applying Mask 1... done. Calculating penalty... penalty is 1026>
+<Applying Mask 2... done. Calculating penalty... penalty is 1003>
+<Applying Mask 3... done. Calculating penalty... penalty is 1003>
+<Applying Mask 4... done. Calculating penalty... penalty is 1004>
+<Applying Mask 5... done. Calculating penalty... penalty is 985>
+<Applying Mask 6... done. Calculating penalty... penalty is 982>
+<Applying Mask 7... done. Calculating penalty... penalty is 1004>
+<Selected Mask 0>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] qr-default
+(fancyqr-style-flat.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-flat
+(fancyqr-style-frame.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-frame
+(fancyqr-style-dots.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-dots
+(fancyqr-style-rounded.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-rounded
+(fancyqr-style-glows.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-glows
+(fancyqr-style-blobs.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-blobs (P=134 M=131 L=1572 A+=6 A-=0 C=0 F=134 S=3 Z=6 O=0 o=0)
+[1
+] (fancyqr-style-glitch.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-glitch (P=1150 M=690 L=4830 A+=0 A-=0 C=0 F=690 S=0 Z=690 O=0 o=0)
+(fancyqr-style-goo.code) 
+<QR code requested for "abc" in version 0-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 1-H as previously calculated.>
+[PASS] qr-goo (P=230 M=230 L=0 A+=0 A-=0 C=920 F=230 S=0 Z=230 O=0 o=0)
+===== fancyqr tests: 13 passed, 0 failed =====
+[2]

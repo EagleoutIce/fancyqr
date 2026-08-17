@@ -1,5 +1,25 @@
 # Changelog
 
+## [v2.4](https://github.com/EagleoutIce/fancyqr/tree/v2.4) (2026-08-17)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.3...v2.4)
+
+**Fixed bugs:**
+
+- Regression: marginpagerestore fix for beamer [\#55](https://github.com/EagleoutIce/fancyqr/issues/55)
+
+**Closed issues:**
+
+- Documentation link in README does not work [\#57](https://github.com/EagleoutIce/fancyqr/issues/57)
+- Improved doc [\#53](https://github.com/EagleoutIce/fancyqr/issues/53)
+
+**Merged pull requests:**
+
+- chore\(deps\): bump actions/checkout from 6 to 7 [\#56](https://github.com/EagleoutIce/fancyqr/pull/56) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Improve Documentation [\#54](https://github.com/EagleoutIce/fancyqr/pull/54) ([EagleoutIce](https://github.com/EagleoutIce))
+- chore\(deps\): bump actions/upload-artifact from 4 to 7 [\#52](https://github.com/EagleoutIce/fancyqr/pull/52) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Refine ci [\#51](https://github.com/EagleoutIce/fancyqr/pull/51) ([koppor](https://github.com/koppor))
+
 ## [v2.3](https://github.com/EagleoutIce/fancyqr/tree/v2.3) (2026-02-27)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.2...v2.3)

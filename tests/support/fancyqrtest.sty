@@ -1,0 +1,179 @@
+% fancyqrtest.sty -- test harness for fancyqr
+% Load *after* fancyqr: the pict2e drawing primitives additionally record what
+% they draw, so a test can compare the sequence of drawing operations a tile
+% produces while the code stays typeset as it normally would be. Comparing the
+% operations instead of the pdf keeps the tests free of engine- and
+% rounding-dependent coordinates.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{fancyqrtest}[2026/08/17 fancyqr test harness]
+
+\RequirePackage{etoolbox}
+
+\newcount\fancyqrtest@passed
+\newcount\fancyqrtest@failed
+\newbox\fancyqrtest@box
+
+% the op codes, in the order \TestCounts reports them
+\def\fancyqrtest@ops{P,M,L,A+,A-,C,F,S,Z,O,o}
+
+\expandafter\@for\expandafter\fancyqrtest@op\expandafter:\expandafter=%
+  \fancyqrtest@ops\do{%
+  \expandafter\newcount\csname fancyqrtest@n@\fancyqrtest@op\endcsname}
+
+\def\fancyqrtest@n#1{\the\csname fancyqrtest@n@#1\endcsname}
+
+% Drawing happens inside `picture' environments and inside the \bgroup...\egroup
+% bodies of \qr@for, so *every* update below has to be global or it is rolled
+% back before the test can look at it.
+\gdef\fancyqrtest@trace{}
+\def\fancyqrtest@rec#1{%
+  \gappto\fancyqrtest@trace{#1}%
+  \global\advance\csname fancyqrtest@n@#1\endcsname\@ne}
+% \put separates the tiles, so it gets a visual delimiter in the trace string
+\def\fancyqrtest@recP{%
+  \gappto\fancyqrtest@trace{|P}%
+  \global\advance\fancyqrtest@n@P\@ne}
+
+\def\fancyqrtest@reset{%
+  \gdef\fancyqrtest@trace{}%
+  \expandafter\@for\expandafter\fancyqrtest@op\expandafter:\expandafter=%
+    \fancyqrtest@ops\do{%
+    \global\csname fancyqrtest@n@\fancyqrtest@op\endcsname=0\relax}%
+}
+
+% Instrumentation ----------------------------------------------------------
+% Every primitive keeps its original meaning under a private name and is
+% redefined with the *same* argument signature, so the picture is still drawn.
+\let\fancyqrtest@orig@moveto\moveto
+\def\moveto(#1,#2){\fancyqrtest@rec{M}\fancyqrtest@orig@moveto(#1,#2)}
+
+\let\fancyqrtest@orig@lineto\lineto
+\def\lineto(#1,#2){\fancyqrtest@rec{L}\fancyqrtest@orig@lineto(#1,#2)}
+
+\let\fancyqrtest@orig@curveto\curveto
+\def\curveto(#1,#2)(#3,#4)(#5,#6){%
+  \fancyqrtest@rec{C}\fancyqrtest@orig@curveto(#1,#2)(#3,#4)(#5,#6)}
+
+% The sign of the sweep is the interesting bit: a counter-clockwise arc rounds a
+% corner outwards (convex), a clockwise one cuts into the tile (concave).
+% \circlearc is \newcommand*[6][0], i.e. a wrapper that parses the optional
+% argument plus an internal \<escape>circlearc that takes [#1]#2..#6. Hooking the
+% *internal* leaves the optional-argument parsing alone; \renewcommand'ing the
+% wrapper instead would make the saved copy call the new internal and loop.
+\expandafter\let\expandafter\fancyqrtest@orig@circlearc
+  \csname\string\circlearc\endcsname
+\expandafter\def\csname\string\circlearc\endcsname[#1]#2#3#4#5#6{%
+  \ifdim\fpeval{(#6)-(#5)}\p@>\z@
+    \fancyqrtest@rec{A+}%
+  \else
+    \fancyqrtest@rec{A-}%
+  \fi
+  \fancyqrtest@orig@circlearc[#1]{#2}{#3}{#4}{#5}{#6}}
+
+\let\fancyqrtest@orig@fillpath\fillpath
+\def\fillpath{\fancyqrtest@rec{F}\fancyqrtest@orig@fillpath}
+\let\fancyqrtest@orig@strokepath\strokepath
+\def\strokepath{\fancyqrtest@rec{S}\fancyqrtest@orig@strokepath}
+\let\fancyqrtest@orig@closepath\closepath
+\def\closepath{\fancyqrtest@rec{Z}\fancyqrtest@orig@closepath}
+
+% \circle is \@ifstar{\@dot}{\@circle}; hooking the two branches catches both
+% \circle{d} and \circle*{d} without touching the star parsing.
+\let\fancyqrtest@orig@circle\@circle
+\def\@circle#1{\fancyqrtest@rec{O}\fancyqrtest@orig@circle{#1}}
+\let\fancyqrtest@orig@dot\@dot
+\def\@dot#1{\fancyqrtest@rec{o}\fancyqrtest@orig@dot{#1}}
+
+% the body is still executed, so the ops of the tile follow the P
+\let\fancyqrtest@orig@put\put
+\def\put(#1,#2)#3{\fancyqrtest@recP\fancyqrtest@orig@put(#1,#2){#3}}
+
+% Reporting ----------------------------------------------------------------
+\def\fancyqrtest@verdict#1{\texttt{\footnotesize[#1]}}
+\def\fancyqrtest@name#1{\textsf{\footnotesize#1}}
+\def\fancyqrtest@show#1{\texttt{\footnotesize#1}}
+
+% #1 name -- compares \fancyqrtest@got against \fancyqrtest@want
+\def\fancyqrtest@check#1{%
+  \par\medskip\noindent
+  \ifx\fancyqrtest@got\fancyqrtest@want
+    \global\advance\fancyqrtest@passed\@ne
+    \typeout{[PASS] #1}%
+    \fancyqrtest@verdict{PASS}~\fancyqrtest@name{#1}~\fancyqrtest@show{\fancyqrtest@got}%
+  \else
+    \global\advance\fancyqrtest@failed\@ne
+    \typeout{[FAIL] #1: expected `\fancyqrtest@want' but got `\fancyqrtest@got'}%
+    \fancyqrtest@verdict{FAIL}~\fancyqrtest@name{#1}~
+    \fancyqrtest@show{want \fancyqrtest@want{} got \fancyqrtest@got}%
+  \fi
+  \par\nobreak\noindent
+}
+
+\def\fancyqrtest@setwant#1{\edef\fancyqrtest@want{\detokenize{#1}}}
+\def\fancyqrtest@gettrace{%
+  \edef\fancyqrtest@got{\detokenize\expandafter{\fancyqrtest@trace}}}
+
+% all eleven counters, always, so the format never depends on what was drawn
+\def\fancyqrtest@counts{%
+  P=\fancyqrtest@n{P} M=\fancyqrtest@n{M} L=\fancyqrtest@n{L}
+  A+=\fancyqrtest@n{A+} A-=\fancyqrtest@n{A-} C=\fancyqrtest@n{C}
+  F=\fancyqrtest@n{F} S=\fancyqrtest@n{S} Z=\fancyqrtest@n{Z}
+  O=\fancyqrtest@n{O} o=\fancyqrtest@n{o}%
+}
+\def\fancyqrtest@getcounts{%
+  \edef\fancyqrtest@tmp{\fancyqrtest@counts}%
+  \edef\fancyqrtest@got{\detokenize\expandafter{\fancyqrtest@tmp}}}
+
+\def\fancyqrtest@run#1{\fancyqrtest@reset\setbox\fancyqrtest@box\hbox{#1}}
+
+% Test commands ------------------------------------------------------------
+% #1 name, #2 expected trace, #3 code
+\newcommand*\TestTrace[3]{%
+  \fancyqrtest@run{#3}%
+  \fancyqrtest@gettrace \fancyqrtest@setwant{#2}%
+  \fancyqrtest@check{#1}%
+  \box\fancyqrtest@box\par
+}
+
+% #1 name, #2 expected `P=n M=n ...', #3 code -- for whole codes, whose full
+% trace would be several thousand characters long
+\newcommand*\TestCounts[3]{%
+  \fancyqrtest@run{#3}%
+  \fancyqrtest@getcounts \fancyqrtest@setwant{#2}%
+  \fancyqrtest@check{#1}%
+  \box\fancyqrtest@box\par
+}
+
+% #1 name, #2 expected, #3 something expandable -- for computed values such as
+% image offsets and cut-out sizes
+\newcommand*\TestValue[3]{%
+  \edef\fancyqrtest@tmp{#3}%
+  \edef\fancyqrtest@got{\detokenize\expandafter{\fancyqrtest@tmp}}%
+  \fancyqrtest@setwant{#2}%
+  \fancyqrtest@check{#1}%
+}
+
+% lets a test record a marker of its own; no counter, the token is arbitrary
+\def\TestRecord#1{\gappto\fancyqrtest@trace{#1}}
+
+% #1 name, #2 code -- a smoke test: it only has to typeset without an error, the
+% counts are reported for information (styles using rand() cannot be pinned)
+\newcommand*\TestRuns[2]{%
+  \fancyqrtest@run{#2}%
+  \fancyqrtest@getcounts
+  \global\advance\fancyqrtest@passed\@ne
+  \typeout{[PASS] #1 (\fancyqrtest@got)}%
+  \par\medskip\noindent
+  \fancyqrtest@verdict{PASS}~\fancyqrtest@name{#1}~\fancyqrtest@show{\fancyqrtest@got}%
+  \par\nobreak\noindent\box\fancyqrtest@box\par
+}
+
+% closes a test file
+\def\TestSummary{%
+  \typeout{===== fancyqr tests: \the\fancyqrtest@passed\space passed,
+    \the\fancyqrtest@failed\space failed =====}%
+  \par\bigskip\noindent
+  \textbf{\the\fancyqrtest@passed\ passed, \the\fancyqrtest@failed\ failed}%
+  % \END ends the run with the primitive \end, which would drop the last page
+  \clearpage
+}

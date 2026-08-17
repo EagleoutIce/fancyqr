@@ -1,0 +1,32 @@
+% style `glows': the default tiles, each in a halo of rings; configured with
+% \FancyQrGlow{<width>}{<strength>}{<falloff>}, \FancyQrGlowColor{<from>}{<to>}
+% and \fancyqr@glow@rings
+\@ifundefined{fancyqr@glow@rings}{\def\fancyqr@glow@rings{4}}{}%
+\def\FancyQrGlowColor#1#2{\def\fancyqr@glow@from{#1}\def\fancyqr@glow@to{#2}}%
+\FancyQrGlowColor{.}{white}
+\def\FancyQrGlow#1#2#3{%
+\def\fancyqr@glow@radius{#1}\def\fancyqr@glow@strength{#2}\def\fancyqr@glow@falloff{#3}%
+\@tempcnta=\z@
+\loop\advance\@tempcnta\@ne
+   \edef\fancyqr@glow@f{\fpeval{(\fancyqr@glow@rings-\@tempcnta+1)/\fancyqr@glow@rings}}%
+   \expandafter\edef\csname fancyqr@glow@w\the\@tempcnta\endcsname
+      {\fpeval{\fancyqr@glow@radius*\fancyqr@glow@f}}%
+   \expandafter\edef\csname fancyqr@glow@s\the\@tempcnta\endcsname
+      {\fpeval{round(min(100,\fancyqr@glow@strength/\fancyqr@glow@f**\fancyqr@glow@falloff))}}%
+\ifnum\@tempcnta<\fancyqr@glow@rings\relax\repeat
+}%
+\FancyQrGlow{.5}{14}{1.1}
+\def\fancyqr@glow@tile#1#2#3#4{%
+\ifnum\fancyqr@pass>\fancyqr@glow@rings\relax
+   \fancyqr@rounded@rect#1#2#3#4%
+\else
+   \color{\fancyqr@glow@from!\csname fancyqr@glow@s\the\fancyqr@pass\endcsname!\fancyqr@glow@to}%
+   \linethickness{\csname fancyqr@glow@w\the\fancyqr@pass\endcsname\unitlength}\roundjoin
+   \def\fancyqr@rounded@rect@close{\closepath\strokepath}%
+   \fancyqr@rounded@rect#1#2#3#4%
+\fi
+}%
+\FancyQrRoundedPatterns\fancyqr@glow@tile
+\FancyQrInnerRoundings
+\edef\fancyqr@glow@passes{\fpeval{\fancyqr@glow@rings+1}}
+\expandafter\FancyQrPasses\expandafter{\fancyqr@glow@passes}

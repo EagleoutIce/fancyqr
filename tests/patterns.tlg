@@ -1,0 +1,67 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+\qr@newforcount=\count...
+<Calculating QR code for "abc" in version 7-H.>
+<Splitting off block 1> <Splitting off block 2> <Splitting off block 3> <Splitting off block 4> <Splitting off block 5> <Making error block 1> <Making error block 2> <Making error block 3> <Making error block 4> <Making error block 5> <Interleaving datablocks of length 13\ and 14:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14.> <Interleaving errorblocks of length 26:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 1870>
+<Applying Mask 1... done. Calculating penalty... penalty is 1868>
+<Applying Mask 2... done. Calculating penalty... penalty is 1946>
+<Applying Mask 3... done. Calculating penalty... penalty is 1851>
+<Applying Mask 4... done. Calculating penalty... penalty is 2011>
+<Applying Mask 5... done. Calculating penalty... penalty is 1980>
+<Applying Mask 6... done. Calculating penalty... penalty is 1945>
+<Applying Mask 7... done. Calculating penalty... penalty is 1991>
+<Selected Mask 3>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] inherit-keeps-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] none-is-a-synonym
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] color-only-keeps-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] shape-replaces-tiles
+[PASS] pattern-rings
+[PASS] pattern-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-circle
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-square
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-rounded
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-star
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-mixed
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[1
+]
+[PASS] map-is-cleared
+===== fancyqr tests: 12 passed, 0 failed =====
+[2]

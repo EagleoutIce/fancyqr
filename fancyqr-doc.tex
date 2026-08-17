@@ -21,9 +21,10 @@
 \usepackage{babel}
 
 \usepackage{microtype}
-\usepackage[allcolors=cyan!30!purple,colorlinks]{hyperref}
+\usepackage[allcolors=purple!30!red!45!black,colorlinks]{hyperref}
 
 \usepackage{array,booktabs}
+\usepackage{float}
 \usepackage{footnote}
 \usepackage{fontawesome}
 
@@ -50,10 +51,10 @@
 
 \lstdefinelanguage{ltx}{
 	language={[LaTeX]TeX},
-	moretexcs=[1]{fancyqr,qrcode,textcolor,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyQrLoadDefault,fancyqrset,faGithub,FancyQrDoNotPrintRadius},
+	moretexcs=[1]{fancyqr,qrcode,textcolor,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyQrLoadDefault,fancyqrset,faGithub,FancyQrDoNotPrintRadius,FancyQrSeed,FancyQrInnerRoundings,FancyQrNoInnerRoundings},
 	commentstyle=\color{gray}\ttfamily\itshape,
 }
-\lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\color{purple}\bfseries,language=ltx}
+\lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\color{purple!30!red!35!black}\bfseries,language=ltx}
 \lstMakeShortInline|
 \def\ltx#1{\lstinline/#1/}
 \interfootnotelinepenalty=10000
@@ -62,9 +63,9 @@
 \title{The \texttt{fancyqr} package}
 \author{%
 	\texorpdfstring{%
-		\parbox{2.83cm}{\fancyqr[height=2.5cm,padding,l color=purple!80!black, r color=red!50!purple!80!black]{https://github.com/EagleoutIce/fancyqr}}\quad%
+		\parbox{2.83cm}{\fancyqr[height=2.5cm,padding]{https://github.com/EagleoutIce/fancyqr}}\quad%
 		\parbox{7cm}{\href{mailto:florian.sihler@uni-ulm.de}{Florian Sihler}\\*
-			Version v2.3 \textendash{} 2026/02/27\\[-6.5pt]
+			Version v2.4 \textendash{} 2026/08/17\\[-6.5pt]
 			{\footnotesize LPPL~1.3c or later}
 			\medskip\\
 			\textcolor{gray}{\href{https://github.com/EagleoutIce/fancyqr}{github.com/EagleoutIce/fancyqr}}
@@ -79,13 +80,15 @@
 	You can use the |\fancyqr|-macro as a drop-in replacement for the normal |\qrcode|.\footnote{\ltx{\\fancyqr[<qr-options>]\{<url>\}}}
 
 	If you do want to hide a center square (e.g, because you want to embed an image) you can use |\FancyQrDoNotPrintSquare{<x>}{<y>}| to hide a rectangle with radius x and y set from the center (with |\FancyQrDoNotPrintRadius{<factor>}| you can apply a \href{https://github.com/EagleoutIce/fancyqr/pull/41}{rounding} to this!). If you choose this option, the default |\FancyQrRoundCut| that rounds cut corners can be changed with |\FancyQrHardCut|.
-	At the moment, there are five additional styles for the qr-code: |flat|, |frame|, |blobs|, |glitch|, and |dots|, that you can load (locally) by using |\FancyQrLoad{<name>}|. The default style is named |default| and can be 'reset' by |\FancyQrLoad{default}| or |\FancyQrLoadDefault|.
+	The styles that draw randomized tiles use the random number generator of \LaTeX; |\FancyQrSeed{<n>}| (or the |seed| option) fixes its seed and makes them reproducible.
 
 	All of the extra qr-options (you can set all of them with |\fancyqrset{<keys>}|) are showcased in \autoref{tbl:extra-keys}.
 	The defaults are set like this:
 \begin{lstlisting}
 \fancyqrset{image padding=0,gradient=true,
-	gradient angle=135,r color=teal,l color=purple}
+	gradient angle=135,
+	r color=red!68!black!88!white!90!white,
+	l color=purple!40!red!20!black!90!white}
 \end{lstlisting}
 	Consider the following examples (uses \href{https://www.ctan.org/pkg/fontawesome}{fontawesome}, but you can use include images,~\ldots):
 
@@ -95,8 +98,10 @@
 ]{https://github.com/EagleoutIce/fancyqr}
 \end{tcblisting}
 \begin{tcblisting}{}
-\FancyQrLoad{blobs}%
-\fancyqr[color=black]{https://github.com/EagleoutIce/fancyqr}%
+\FancyQrLoad{goo}%
+\fancyqr[
+   seed=3,content color=black
+]{https://github.com/EagleoutIce/fancyqr}%
 \end{tcblisting}
 \begin{tcblisting}{}
 % needs \usepackage[prefix=@]{xcolor-material}
@@ -104,34 +109,121 @@
 \fancyqr[
    height=4cm,
    image={\textbf{\textcolor{gray}{fancy}qr}},
-   random color={@Red}{@Yellow}{@Purple}{@Orange}{@Green}{@DeepOrange}{@Cyan}
-	{@Teal}{@Blue}{@Pink}{@Brown}
+   random color={@Red800}{@Purple800}{@Indigo800}{@Teal800}{@Green800}
+	{@DeepOrange800}{@Brown700}{@BlueGrey700}
 ]{https://github.com/EagleoutIce/fancyqr}%
 \end{tcblisting}
 
-	
+\section{Styles}\label{sec:styles}
+
+	Besides the |default| style there are eight more, all loaded (locally) with |\FancyQrLoad{<name>}|; |\FancyQrLoad{default}| and |\FancyQrLoadDefault| reset to the default.
+	\autoref{fig:styles} shows every one of them with the same payload and the call that produced it.
+
+\begin{figure}[H]
+	\centering
+	\newcommand*\ShowStyle[1]{%
+		\begin{minipage}{.31\linewidth}\centering
+			\FancyQrLoad{#1}%
+			\fancyqr[height=2.6cm,tight,seed=4]{https://github.com/EagleoutIce/fancyqr}%
+			\\[.5ex]\texttt{\textbackslash FancyQrLoad\{#1\}}
+		\end{minipage}}
+	\ShowStyle{default}\hfill\ShowStyle{rounded}\hfill\ShowStyle{flat}\\[2ex]
+	\ShowStyle{frame}\hfill\ShowStyle{dots}\hfill\ShowStyle{blobs}\\[2ex]
+	\ShowStyle{glitch}\hfill\ShowStyle{glows}\hfill\ShowStyle{goo}%
+	\FancyQrLoadDefault
+	\caption{Every style that \texttt{fancyqr} ships with. \texttt{blobs}, \texttt{glitch} and \texttt{goo} are randomized and therefore shown with a fixed \texttt{seed}. Every one of them but \texttt{frame} is read by a scanner as it is; \texttt{frame} leaves the center of a module white, which is where a scanner samples, so it needs \texttt{finder=square} to be found at all.}
+	\label{fig:styles}
+\end{figure}
+
+	The |default| style rounds the free corners of a tile with the |rounding| radius.
+	A corner that is enclosed by two black neighbours but not by the diagonal one is an \emph{inner} corner; it is softened with a fillet of the (smaller) |inner rounding| radius instead of staying a hard 90 degree edge.
+	Setting |inner rounding=0|, or loading the |rounded| style, brings back the sharp notches of earlier versions:
+
+\begin{tcblisting}{}
+\fancyqr[
+   color=black,inner rounding=0
+]{https://github.com/EagleoutIce/fancyqr}
+\end{tcblisting}
+\begin{tcblisting}{}
+\fancyqr[
+   color=black,rounding=.25,inner rounding=.35
+]{https://github.com/EagleoutIce/fancyqr}
+\end{tcblisting}
+
+	Every style picks the pattern shape that suits it: |dots| and |blobs| a |circle|, everything else |inherit|, which leaves the patterns to the tiles of the style itself.
+	The |glows| style draws every module once per halo ring and once for the tile itself; |\FancyQrPasses{<n>}| is what a style uses to ask for that.
+	It is tuned with |\FancyQrGlow{<width>}{<strength>}{<falloff>}| -- the width of the widest ring in modules, the percentage of color it keeps, and how quickly the rings gain color towards the tile -- and with |\FancyQrGlowColor{<from>}{<to>}|, where |.| is the color of the tile the halo surrounds: |\FancyQrGlowColor{white}{black}| turns it into a white backglow.
+	Keep the width below one module, or the halos of two modules with a white one between them run into each other.
+	|glitch| uses the passes as well, for the two displaced ghosts it puts behind its shards; its |\fancyqr@glitch@detach| is the chance that a shard tears off a neighbour instead of merging with it.
+	|goo| hangs its tiles downwards by |\fancyqr@goo@drip|; |0| makes it symmetric again.
+	|frame| outlines the shape the modules form -- only the sides facing white are stroked, so a run of modules becomes one pill -- and puts a dot inside every module, because a scanner samples the center of a module and a bare outline would leave it white.
+	|dots| and |blobs| additionally draw the position and alignment patterns as solid shapes, because a scanner first has to find those; with |finder=inherit| they are made of tiles as well and the code no longer reads.
+	A style declares with |\FancyQrInnerRoundings| (or |\FancyQrNoInnerRoundings|) whether its tiles understand inner corners at all; only |default| and |glows| do, so no other style pays for the extra lookups.
+
+\section{Position and alignment patterns}\label{sec:finder}
+
+	The three big position (finder) patterns and all alignment patterns can be drawn as one shape instead of as single modules, and in a color of their own.
+	|finder| picks the shape of their ring, |finder core| the shape of their center block (|auto| follows the ring), |finder radius| and |finder thickness| its corner radius and its ring width, and |finder color| paints both.
+	\autoref{fig:finder} shows the combinations together with the keys that produced them.
+	|finder color| paints the patterns and |content color| everything else, so |content color=black| keeps the gradient on the patterns alone.
+	The modules of a pattern stay black in the matrix and only their drawing is replaced, so neighbouring tiles still merge into the shape wherever it allows it.
+	A |finder thickness| other than |1| leaves the 1:1:3:1:1 run a scanner looks for, so check that the code still reads.
+	|finder=inherit| is the default and leaves the patterns to the tiles of the loaded style, which is what fancyqr did before the shapes existed; |none| is accepted as a synonym.
+	Loading a style resets |finder| and |finder core|, because a style owns its shapes.
+
+\begin{figure}[H]
+	\centering
+	\newcommand*\ShowFinder[2]{%
+		\begin{minipage}{.31\linewidth}\centering
+			\fancyqr[height=2.6cm,tight,#1]{https://github.com/EagleoutIce/fancyqr}%
+			\\[.5ex]{\scriptsize\ttfamily\textbackslash fancyqr[#2]}
+		\end{minipage}}
+	\ShowFinder{finder color=teal!60!black}{finder color=teal!60!black}\hfill
+	\ShowFinder{finder=circle}{finder=circle}\hfill
+	\ShowFinder{finder=square}{finder=square}\\[2ex]
+	\ShowFinder{finder=rounded}{finder=rounded}\hfill
+	\ShowFinder{finder=rounded,finder core=star}{finder=rounded,\\finder core=star}\hfill
+	\ShowFinder{finder=square,finder core=circle}{finder=square,\\finder core=circle}\\[2ex]
+	\ShowFinder{finder=circle,finder core=square}{finder=circle,\\finder core=square}\hfill
+	\ShowFinder{finder=rounded,finder radius=.15}{finder=rounded,\\finder radius=.15}\hfill
+	\ShowFinder{finder=inherit}{finder=inherit}
+	\caption{Styling the position and alignment patterns.}
+	\label{fig:finder}
+\end{figure}
+
 \begin{savenotes}
 \begin{table}
 	\centering\begin{tabular}{>{\ttfamily}ll>{\ttfamily}cp{.5\linewidth}}
 		\toprule
 		\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
 		\midrule
+		cache           & boolean &   true   & Keep the module matrix of a code, so that drawing it again -- in a gallery, a running header, \ldots\ -- only has to redraw it. \\
 		classic         & boolean &   false  & Use the classic qr-code style (black with flat rectangles, this loads the |flat| style).                                \\
 		color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
-		compensate      & length  & 0.15pt & Compensating overlap to add to avoid glitches.               \\
+		compensate      & length  &          & Overlap between neighbouring tiles as an absolute length; setting it switches off the module-relative |overlap|. \\
+		finder color    & color   &          & Color of the position and alignment patterns. Without |finder| they keep their normal tiles and are only recolored. \\
+		content color   & color   &          & Color of everything that is not a position or alignment pattern, so that the patterns can keep the gradient while the data stays flat. \\
+		finder          & shape   & inherit  & Draw the three position (finder) patterns and all alignment patterns as one shape (|square|, |rounded|, or |circle|) instead of as single modules; |inherit| (synonym |none|) leaves them to the tiles of the style (\autoref{sec:finder}). \\
+		finder core     & shape   &  auto    & Shape of the center block of every pattern (|auto|, |none|, |square|, |rounded|, |circle|, or |star|); |auto| follows |finder|, which has to be set to a shape for this to take effect. \\
+		finder radius   & number  &  0.5     & Corner radius of the |rounded| pattern shape, relative to the pattern radius. \\
+		finder thickness& number  &  1       & Width of the pattern ring, in modules. \\
 		gradient        & boolean &   true   & Toggle the color gradient                                    \\
-		gradient angle  & angle   &  135     & Change the gradient angle.                                   \\
+		gradient angle  & angle   &  135     & Change the gradient angle, in degrees; 0 runs from left to right.\\
 		image           & \LaTeX   &          & Automatically center an image (you have to care for the size and maybe adjust the |version| and |level| to keep the qr-code readable).\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr-code still has enough information to be readable). Therefore, the image will not scale with the qr-code.} \\
 		image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
 		image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
 		image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
-		l color         & color   & purple   & Set the top left gradient color.                             \\
+		inner rounding  & number  &  0.25    & Radius of the negative rounding: a corner enclosed by two black neighbours but not by the diagonal one gets a fillet of this size, |0| disables it (\autoref{sec:styles}). \\
+		overlap         & number  &  0.045   & Overlap between neighbouring tiles, as a fraction of a module. Two tile edges that cross the same pixel each cover only a part of it, and a renderer then leaves a sliver of the background showing through; what decides whether that is visible is how many device pixels the overlap is, which is why it scales with the module. \\
+		l color         & color   & \emph{see above} & Color at the left end of the gradient axis, which the default angle puts at the bottom right. \\
 		left color      & color   &          & Alias for |l color|.                                         \\
 		level 			 & L/M/Q/H &   M      & |qrcode| option affecting error correction (low, medium, quartile, high).                                     \\
 		padding         & flag    &          & |qrcode| option adding sufficient additional space around the qr-code.                                            \\
-		r color         & color   &  teal    & Set the bottom right gradient color.                         \\
+		r color         & color   & \emph{see above} & Color at the right end of the gradient axis, which the default angle puts at the top left. \\
 		random color    & colors  &          & Allow to set a random color pool to pick from.               \\
 		right color     & color   &          & Alias for |r color|.                                         \\
+		rounding        & number  &  0.5     & Corner radius of the rounded tiles of the |default| style.    \\
+		seed            & integer &          & Fix the random seed, so that the randomized styles (|blobs|, |glitch|, |goo|) render reproducibly. \\
 		size            & length  &          & Alias for |qrcode|'s |height| option.                        \\
 		tight           & flag    &          & |qrcode| option adding no additional space around the qr-code.                                                    \\
 		version         & \([0..40] \in \mathbb{N}\) &   0      & |qrcode| option affecting the size (tries to be as small as possible).                                             \\
@@ -155,6 +247,15 @@
 \end{itemize}
 }
 
+\ForVersion{2.4}{2026-08-17}{
+	\item Weakly rounded (negative) inner corners for the \texttt{default} style
+	\item New \texttt{rounded}, \texttt{glows} and \texttt{goo} styles
+	\item Style the position and alignment patterns (\texttt{finder}, \texttt{finder core}, \texttt{finder color}, \texttt{finder radius}, \texttt{finder thickness}) and color them apart from the data with \texttt{content color}
+	\item Configurable \texttt{rounding} and \texttt{inner rounding}, reproducible randomness with \texttt{seed}, a less red default gradient
+	\item Roughly five times faster (the module matrix of a code is kept, see \texttt{cache}), an \texttt{l3build} test suite
+	\item Tile overlap is relative to the module size (\texttt{overlap}), which keeps renderers from leaving seams between the tiles
+	\item Bug fixes: \texttt{frame} is readable by a scanner again, the center module is no longer dropped without a cut-out, \texttt{gradient angle} is read in degrees again, and an embedded image is centered exactly
+}
 \ForVersion{2.3}{2026-02-27}{
 	\item Relicense under the LPPL 1.3c
 }

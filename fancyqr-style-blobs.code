@@ -1,4 +1,4 @@
-% with pict2e and polar coordinate translation
+% style `blobs': every module is an irregular round blob
 \def\@fancy@qr@blobb{%
 \@tempcnta=\z@
 \roundjoin
@@ -6,31 +6,26 @@
 \moveto(.5,.5)
 \loop
 \advance\@tempcnta by 30
-\edef\rad{\fpeval{.1*\qr@modulesize+.13*\qr@modulesize*abs(rand())}}% fixed rand for both
+\edef\rad{\fpeval{.3+.2*abs(rand())}}%
 \lineto(\fpeval{cos(\@tempcnta)*\rad+.5},\fpeval{sin(\@tempcnta)*\rad+.5})
 \ifnum\@tempcnta<360\relax
 \repeat
 \fillpath
 }%
-% .
 \newpattern0000{\@fancy@qr@blobb}%
-% | | - -
 \newpattern1000{\@fancy@qr@blobb}%
 \newpattern0001{\@fancy@qr@blobb}%
 \newpattern0100{\@fancy@qr@blobb}%
 \newpattern0010{\@fancy@qr@blobb}%
-% corners
 \newpattern1100{\@fancy@qr@blobb}%
 \newpattern1010{\@fancy@qr@blobb}%
 \newpattern0101{\@fancy@qr@blobb}%
 \newpattern0011{\@fancy@qr@blobb}%
-% straights | --
 \newpattern1001{\@fancy@qr@blobb}%
 \newpattern0110{\@fancy@qr@blobb}%
-% enclosed
 \newpattern1111{\@fancy@qr@blobb}%
-% t's
 \newpattern0111{\@fancy@qr@blobb}%
 \newpattern1011{\@fancy@qr@blobb}%
 \newpattern1101{\@fancy@qr@blobb}%
 \newpattern1110{\@fancy@qr@blobb}%
+\fancyqrset{finder=circle}

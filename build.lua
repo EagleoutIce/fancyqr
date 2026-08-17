@@ -9,7 +9,10 @@
 bundle = ""
 module = "fancyqr"
 ctanpkg = module
+-- TMPDIR is unset (or empty) on the CI runners, and `l3build check` has to put
+-- its output somewhere the workflow can pick it up from
 builddir = os.getenv("TMPDIR")
+if not builddir or builddir == "" then builddir = "build" end
 
 -- Package date ======================================================
 packagedate = os.date("!%Y-%m-%d")
@@ -31,16 +34,21 @@ function update_tag(file, content, tagname, tagdate)
         content = string.gsub(content, "\\ProvidesPackage{(.-)}%[%d%d%d%d%/%d%d%/%d%d version v%d%.%d+",
             "\\ProvidesPackage{%1}[" .. tagdate .. " version " .. tagname)
         return content
-    elseif string.match(file, "*-doc.tex$") then
-        content = string.gsub(content, "\\date{Version v%d%.%d+ \\textendash\\ %d%d%d%d%/%d%d%/%d%d",
-            "\\date{Version " .. tagname .. " \\textendash{} " .. tagdate)
+    elseif string.match(file, "%-doc%.tex$") then
+        -- the version sits in the title block, not in \date
+        content = string.gsub(content, "Version v%d%.%d+ \\textendash{} %d%d%d%d%/%d%d%/%d%d",
+            "Version " .. tagname .. " \\textendash{} " .. tagdate)
         return content
     end
     return content
 end
 
 -- committing retagged file and tag the commit =======================
-require('build-private.lua')
+-- only the maintainer's checkout has it (it holds the upload token); `check`
+-- must still run on CI, where the file is absent
+if fileexists("build-private.lua") then
+    require('build-private.lua')
+end
 
 function tag_hook(tagname)
     -- fail if tagname is missing
@@ -79,7 +87,7 @@ end
 -- collecting files for ctan =========================================
 typesetfiles = { module .. "-doc.tex" }
 
-textfiles = {"README.md"}
+textfiles = {"README.md", "LICENSE"}
 ctanreadme = "README.md"
 
 installfiles = {"*.sty", "*.tex", "*.code"}
@@ -91,6 +99,17 @@ packtdszip = false
 
 -- Preserve structure for CTAN
 flatten = true
+
+-- tests =============================================================
+-- fancyqr.sty and the fancyqr-style-*.code files are part of `installfiles`,
+-- so every check runs against the copies from this repository and not against
+-- whatever is installed in the TeX tree
+testfiledir    = "tests"
+supportdir     = testfiledir .. "/support"
+checksuppfiles = {"*.sty"}
+checkengines   = {"pdftex"}
+stdengine      = "pdftex"
+checkformat    = "latex"
 
 -- cleanup ===========================================================
 cleanfiles = { module .. "-ctan.curlopt", module .. "-ctan.zip"}

@@ -14,7 +14,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install TeX Live
+        uses: zauguin/install-texlive@v4
+        with:
+          package_file: tl_packages
+
+      - name: '✅ Run the test suite'
+        run: l3build check
+
+      - name: '🔍 Upload the test output for inspection'
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-output
+          path: |
+            build/test/*.pdf
+            build/test/*.diff
+          if-no-files-found: ignore
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

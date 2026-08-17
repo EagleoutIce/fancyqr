@@ -1,0 +1,60 @@
+% The tile outline: which corners are rounded outwards (A+), which inner corners
+% get the negative fillet (A-), and how the two `rounding' keys switch them off.
+\input{regression-test}
+\documentclass{article}
+\usepackage{fancyqr}
+\usepackage{fancyqrtest}
+\makeatletter
+% a bare tile, so the corner flags can be driven directly
+\newcommand*\Tile[1]{\begin{picture}(1,1)\fancyqr@rounded@rect#1\end{picture}}
+\newcommand*\Inner[4]{%
+  \def\fancyqr@inner@tl{#1}\def\fancyqr@inner@tr{#2}%
+  \def\fancyqr@inner@bl{#3}\def\fancyqr@inner@br{#4}}
+\begin{document}
+\START
+\section*{Roundings}
+
+\Inner0000
+\TestTrace{tile-enclosed}{MLLLLF}{\Tile{0000}}
+\TestTrace{tile-isolated}{MLA+LA+LA+LA+F}{\Tile{1111}}
+\TestTrace{tile-topleft}{MLLLA+LF}{\Tile{0010}}
+
+% an inner corner adds an arc plus the return to the corner it softens
+\TestTrace{inner-br}{MLA-LLLLF}{\Inner0001\Tile{0000}}
+\TestTrace{inner-tr}{MLLA-LLLF}{\Inner0100\Tile{0000}}
+\TestTrace{inner-tl}{MLLLA-LLF}{\Inner1000\Tile{0000}}
+\TestTrace{inner-bl}{MLLLLA-LF}{\Inner0010\Tile{0000}}
+\TestTrace{inner-all}{MLA-LLA-LLA-LLA-LF}{\Inner1111\Tile{0000}}
+% a corner that is rounded outwards is never an inner one
+\TestTrace{inner-ignored}{MLA+LA+LA+LA+F}{\Inner1111\Tile{1111}}
+
+\FancyQrLoad{default}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black]{abc}}%
+\edef\ArcsDefault{\fancyqrtest@n{A-}}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,inner rounding=0]{abc}}%
+\edef\ArcsOff{\fancyqrtest@n{A-}}
+\TestValue{inner-on-by-default}{yes}{\ifnum\ArcsDefault>0 yes\else no\fi}
+\TestValue{inner-rounding-0}{0}{\ArcsOff}
+
+% the `rounded' style is the default shape with hard inner corners
+\FancyQrLoad{rounded}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black]{abc}}%
+\TestValue{rounded-style-has-no-fillets}{0}{\fancyqrtest@n{A-}}
+
+% the flat style does not use the outline at all, so it opts out of the lookups
+\FancyQrLoad{flat}
+\TestCounts{flat-has-no-arcs}{P=230 M=230 L=920 A+=0 A-=0 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+% ... and frame strokes the outline, where a fillet would leave whiskers
+\FancyQrLoad{frame}
+\fancyqrtest@run{\fancyqr[size=2cm,tight,color=black]{abc}}%
+\TestValue{frame-has-no-fillets}{0}{\fancyqrtest@n{A-}}
+
+% `rounding' only changes the radius, the outline keeps its shape
+\FancyQrLoad{default}
+\TestCounts{rounding-0}{P=230 M=230 L=996 A+=172 A-=76 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black,rounding=0]{abc}}
+
+\TestSummary
+\END
+\end{document}

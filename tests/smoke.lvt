@@ -1,0 +1,67 @@
+% Proves the harness itself works: the drawing primitives are instrumented, the
+% trace survives the picture/\qr@for groups, and every shipped style draws what
+% it is supposed to draw.
+\input{regression-test}
+\documentclass{article}
+\usepackage{fancyqr}
+\usepackage{fancyqrtest}
+\begin{document}
+\START
+\section*{Smoke}
+
+% a single tile, drawn straight through the instrumented primitives
+\TestTrace{primitives}{MLA+CFSZ|POo}{%
+  \begin{picture}(1,1)%
+    \moveto(0,0)\lineto(1,0)\circlearc{1}{0}{1}{0}{90}\curveto(0,0)(1,1)(2,2)%
+    \fillpath\strokepath\closepath
+    \put(0,0){\circle{1}\circle*{1}}%
+  \end{picture}}
+% ... and the sign of the sweep, the reason this harness exists
+\TestTrace{arc-sign}{A+A-}{%
+  \begin{picture}(1,1)\circlearc{0}{0}{1}{90}{180}\circlearc{0}{0}{1}{180}{90}\end{picture}}
+\TestTrace{record}{M!L}{%
+  \begin{picture}(1,1)\moveto(0,0)\TestRecord{!}\lineto(1,1)\end{picture}}
+
+\TestValue{value}{42}{\number\numexpr40+2\relax}
+
+\FancyQrLoad{default}\FancyQrRoundCut
+\TestCounts{qr-default}{P=230 M=230 L=996 A+=172 A-=76 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+
+\FancyQrLoad{flat}
+\TestCounts{qr-flat}{P=230 M=230 L=920 A+=0 A-=0 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+
+% frame strokes only the sides that face white -- so a run of modules is one
+% outline, which is why there are far fewer \closepath than \strokepath here --
+% and puts a dot inside every module
+\FancyQrLoad{frame}\FancyQrRoundCut
+\TestCounts{qr-frame}{P=460 M=331 L=458 A+=172 A-=0 C=0 F=0 S=230 Z=11 O=0 o=230}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+
+% dots draws its position patterns as solid circles, otherwise a scanner has
+% nothing to lock onto
+\FancyQrLoad{dots}\FancyQrRoundCut
+\TestCounts{qr-dots}{P=265 M=0 L=0 A+=6 A-=0 C=0 F=3 S=3 Z=6 O=0 o=131}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+
+\FancyQrLoad{rounded}\FancyQrRoundCut
+\TestCounts{qr-rounded}{P=230 M=230 L=920 A+=172 A-=0 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+
+% four halo rings plus the tiles, i.e. five passes over every module
+\FancyQrLoad{glows}\FancyQrRoundCut
+\TestCounts{qr-glows}{P=1150 M=1150 L=4980 A+=860 A-=380 C=0 F=230 S=920 Z=920 O=0 o=0}{%
+  \fancyqr[size=2cm,tight,color=black]{abc}}
+
+% these use rand(), so only the fact that they typeset can be asserted
+\FancyQrLoad{blobs}\FancyQrRoundCut
+\TestRuns{qr-blobs}{\fancyqr[size=2cm,tight,color=black,seed=11]{abc}}
+\FancyQrLoad{glitch}\FancyQrRoundCut
+\TestRuns{qr-glitch}{\fancyqr[size=2cm,tight,color=black,seed=11]{abc}}
+\FancyQrLoad{goo}\FancyQrRoundCut
+\TestRuns{qr-goo}{\fancyqr[size=2cm,tight,color=black,seed=11]{abc}}
+
+\TestSummary
+\END
+\end{document}
