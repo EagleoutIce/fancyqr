@@ -25,7 +25,7 @@
 \TestValue{value}{42}{\number\numexpr40+2\relax}
 
 \FancyQrLoad{default}\FancyQrRoundCut
-\TestCounts{qr-default}{P=230 M=230 L=996 A+=172 A-=76 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+\TestCounts{qr-default}{P=230 M=230 L=1148 A+=172 A-=76 C=0 F=230 S=0 Z=0 O=0 o=0}{%
   \fancyqr[size=2cm,tight,color=black]{abc}}
 
 \FancyQrLoad{flat}
@@ -51,7 +51,7 @@
 
 % four halo rings plus the tiles, i.e. five passes over every module
 \FancyQrLoad{glows}\FancyQrRoundCut
-\TestCounts{qr-glows}{P=1150 M=1150 L=4980 A+=860 A-=380 C=0 F=230 S=920 Z=920 O=0 o=0}{%
+\TestCounts{qr-glows}{P=1150 M=1150 L=5740 A+=860 A-=380 C=0 F=230 S=920 Z=920 O=0 o=0}{%
   \fancyqr[size=2cm,tight,color=black]{abc}}
 
 % these use rand(), so only the fact that they typeset can be asserted

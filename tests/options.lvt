@@ -30,9 +30,9 @@
 \fancyqrtest@run{\fancyqr[size=2cm,tight,color=black,image=\rule{6mm}{6mm}]{abc}}%
 \edef\Image{\fancyqrtest@n{P}}
 \TestValue{image-cuts-out}{fewer}{\ifnum\Image<\Plain fewer\else not\fi}
-\TestCounts{image}{P=200 M=199 L=848 A+=160 A-=52 C=0 F=199 S=0 Z=0 O=0 o=0}{%
+\TestCounts{image}{P=200 M=199 L=952 A+=160 A-=52 C=0 F=199 S=0 Z=0 O=0 o=0}{%
   \fancyqr[size=2cm,tight,color=black,image=\rule{6mm}{6mm}]{abc}}
-\TestCounts{image-padding}{P=184 M=183 L=775 A+=143 A-=43 C=0 F=183 S=0 Z=0 O=0 o=0}{%
+\TestCounts{image-padding}{P=184 M=183 L=861 A+=143 A-=43 C=0 F=183 S=0 Z=0 O=0 o=0}{%
   \fancyqr[size=2cm,tight,color=black,image=\rule{6mm}{6mm},image padding=1]{abc}}
 
 % the tile overlap is relative to the module size unless `compensate' pins it

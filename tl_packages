@@ -50,7 +50,6 @@ listingsutf8
 ltxcmds
 luatex85
 ly1
-mdwtools
 microtype
 montserrat
 mptopdf
@@ -66,6 +65,7 @@ rerunfilecheck
 stringenc
 tcolorbox
 tikzfill
+tools
 trimspaces
 uniquecounter
 url

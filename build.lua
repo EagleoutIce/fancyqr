@@ -94,7 +94,6 @@ installfiles = {"*.sty", "*.tex", "*.code"}
 sourcefiles = installfiles
 unpackfiles = {}
 
--- Release a TDS-style zip
 packtdszip = false
 
 -- Preserve structure for CTAN

@@ -71,14 +71,18 @@
 \edef\fancyqr@rounding@other{\fpeval{1-\fancyqr@rounding@factor}}
 % fillet radius for a corner enclosed by two neighbours but not by the diagonal
 \def\fancyqr@overlap@factor{.045}% see \qrm below
-\def\fancyqr@inner@factor{.25}
-% the two legs of a fillet run along the edges of the neighbours it bridges;
-% drawing the arc wider by the tile overlap pushes them inside those neighbours,
-% where they cannot show up as a seam between two abutting fills
+\def\fancyqr@inner@factor{.4}
+% The arc of a fillet is tangent to the edges of the two neighbours it bridges,
+% which is what makes it meet them without a visible kink: its radius is the
+% factor itself and its center sits a radius away from either edge. Its two legs
+% would then run *along* those edges, where two abutting fills leave a seam, so
+% they are pushed into the neighbours by the tile overlap instead -- the arc,
+% and with it everything the fillet actually shows, stays where it was.
 \def\fancyqr@inner@setup{%
    \edef\fancyqr@inner@neg{\fpeval{-\fancyqr@inner@factor}}%
    \edef\fancyqr@inner@plus{\fpeval{1+\fancyqr@inner@factor}}%
-   \edef\fancyqr@inner@radius{\fpeval{\fancyqr@inner@factor+2*\fancyqr@overlap@factor}}%
+   \edef\fancyqr@inner@lo{\fpeval{2*\fancyqr@overlap@factor}}%
+   \edef\fancyqr@inner@hi{\fpeval{1-2*\fancyqr@overlap@factor}}%
 }
 \fancyqr@inner@setup
 \def\fancyqr@inner@tl{0}\def\fancyqr@inner@tr{0}% set by \fancyqr@setinner
@@ -118,27 +122,34 @@
 % then gets a fillet: a detour into the empty diagonal cell, traced counter-
 % clockwise like the outline so the non-zero fill rule adds it.
 % #1 flag, #2 inner flag, #3 point before the outward arc, #4 its center,
-% #5 its angles, #6 the corner, #7 the fillet center, #8 its angles -- all
-% literal, so a tile needs no arithmetic.
-\def\fancyqr@corner#1#2#3#4#5#6#7#8{%
+% #5 its angles, #6 the corner, #7 the fillet center, #8 its angles, #9 the two
+% leg points of the fillet -- all literal, so a tile needs no arithmetic.
+\def\fancyqr@corner#1#2#3#4#5#6#7#8#9{%
    \ifnum#1=\@ne \lineto#3\circlearc#4\fancyqr@rounding@factor#5%
    \else \lineto#6%
-      \ifnum#2=\@ne \circlearc#7\fancyqr@inner@radius#8\lineto#6\fi
+      \ifnum#2=\@ne \fancyqr@fillet#9{#7}{#8}{#6}\fi
    \fi}
+% into the first neighbour, arc (\circlearc joins it up), out of the second, back
+\def\fancyqr@fillet#1#2#3#4#5{%
+   \lineto#1\circlearc#3\fancyqr@inner@factor#4\lineto#2\lineto#5}
 \def\fancyqr@rounded@rect#1#2#3#4{%
    \ifnum#4=\@ne\relax \moveto(\fancyqr@rounding@factor,\z@)\else\moveto(\z@,\z@)\fi
    \fancyqr@corner#1\fancyqr@inner@br
       {(\fancyqr@rounding@other,\z@)}{{\fancyqr@rounding@other}{\fancyqr@rounding@factor}}{{270}{360}}%
       {(\@ne,\z@)}{{\fancyqr@inner@plus}{\fancyqr@inner@neg}}{{180}{90}}%
+      {{(\fancyqr@inner@hi,\fancyqr@inner@neg)}{(\fancyqr@inner@plus,\fancyqr@inner@lo)}}%
    \fancyqr@corner#2\fancyqr@inner@tr
       {(\@ne,\fancyqr@rounding@other)}{{\fancyqr@rounding@other}{\fancyqr@rounding@other}}{{0}{90}}%
       {(\@ne,\@ne)}{{\fancyqr@inner@plus}{\fancyqr@inner@plus}}{{270}{180}}%
+      {{(\fancyqr@inner@plus,\fancyqr@inner@hi)}{(\fancyqr@inner@hi,\fancyqr@inner@plus)}}%
    \fancyqr@corner#3\fancyqr@inner@tl
       {(\fancyqr@rounding@factor,\@ne)}{{\fancyqr@rounding@factor}{\fancyqr@rounding@other}}{{90}{180}}%
       {(\z@,\@ne)}{{\fancyqr@inner@neg}{\fancyqr@inner@plus}}{{360}{270}}%
+      {{(\fancyqr@inner@lo,\fancyqr@inner@plus)}{(\fancyqr@inner@neg,\fancyqr@inner@hi)}}%
    \fancyqr@corner#4\fancyqr@inner@bl
       {(\z@,\fancyqr@rounding@factor)}{{\fancyqr@rounding@factor}{\fancyqr@rounding@factor}}{{180}{270}}%
       {(\z@,\z@)}{{\fancyqr@inner@neg}{\fancyqr@inner@neg}}{{90}{0}}%
+      {{(\fancyqr@inner@neg,\fancyqr@inner@lo)}{(\fancyqr@inner@lo,\fancyqr@inner@neg)}}%
    \fancyqr@rounded@rect@close
 }
 \def\fancyqr@rounded@rect@close{\fillpath}

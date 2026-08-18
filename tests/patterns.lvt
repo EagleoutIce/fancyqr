@@ -35,15 +35,15 @@
 \TestValue{pattern-rings}{9}{\fancyqrtest@n{S}}
 \TestValue{pattern-shapes}{18}{\fancyqrtest@n{Z}}
 
-\TestCounts{finder-circle}{P=812 M=803 L=3553 A+=967 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-circle}{P=812 M=803 L=4235 A+=967 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=circle]{abc}}
-\TestCounts{finder-square}{P=812 M=821 L=3607 A+=949 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-square}{P=812 M=821 L=4289 A+=949 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=square]{abc}}
-\TestCounts{finder-rounded}{P=812 M=821 L=3625 A+=1021 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-rounded}{P=812 M=821 L=4307 A+=1021 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=rounded]{abc}}
-\TestCounts{finder-star}{P=812 M=821 L=3661 A+=985 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-star}{P=812 M=821 L=4343 A+=985 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=rounded,finder core=star]{abc}}
-\TestCounts{finder-mixed}{P=812 M=812 L=3580 A+=958 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-mixed}{P=812 M=812 L=4262 A+=958 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=square,finder core=circle]{abc}}
 
 % the map is torn down again, so the next code is unaffected

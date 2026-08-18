@@ -20,11 +20,11 @@
 \TestTrace{tile-topleft}{MLLLA+LF}{\Tile{0010}}
 
 % an inner corner adds an arc plus the return to the corner it softens
-\TestTrace{inner-br}{MLA-LLLLF}{\Inner0001\Tile{0000}}
-\TestTrace{inner-tr}{MLLA-LLLF}{\Inner0100\Tile{0000}}
-\TestTrace{inner-tl}{MLLLA-LLF}{\Inner1000\Tile{0000}}
-\TestTrace{inner-bl}{MLLLLA-LF}{\Inner0010\Tile{0000}}
-\TestTrace{inner-all}{MLA-LLA-LLA-LLA-LF}{\Inner1111\Tile{0000}}
+\TestTrace{inner-br}{MLLA-LLLLLF}{\Inner0001\Tile{0000}}
+\TestTrace{inner-tr}{MLLLA-LLLLF}{\Inner0100\Tile{0000}}
+\TestTrace{inner-tl}{MLLLLA-LLLF}{\Inner1000\Tile{0000}}
+\TestTrace{inner-bl}{MLLLLLA-LLF}{\Inner0010\Tile{0000}}
+\TestTrace{inner-all}{MLLA-LLLLA-LLLLA-LLLLA-LLF}{\Inner1111\Tile{0000}}
 % a corner that is rounded outwards is never an inner one
 \TestTrace{inner-ignored}{MLA+LA+LA+LA+F}{\Inner1111\Tile{1111}}
 
@@ -52,7 +52,7 @@
 
 % `rounding' only changes the radius, the outline keeps its shape
 \FancyQrLoad{default}
-\TestCounts{rounding-0}{P=230 M=230 L=996 A+=172 A-=76 C=0 F=230 S=0 Z=0 O=0 o=0}{%
+\TestCounts{rounding-0}{P=230 M=230 L=1148 A+=172 A-=76 C=0 F=230 S=0 Z=0 O=0 o=0}{%
   \fancyqr[size=2cm,tight,color=black,rounding=0]{abc}}
 
 \TestSummary
