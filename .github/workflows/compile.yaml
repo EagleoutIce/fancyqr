@@ -19,6 +19,21 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      # This repository deliberately stores every binary inline. Git LFS costs
+      # bandwidth on each build and must never come back.
+      - name: '🚫 Reject Git LFS'
+        run: |
+          if git grep -qI 'filter=lfs' HEAD -- .gitattributes; then
+            echo "::error file=.gitattributes::Git LFS tracking re-introduced"
+            exit 1
+          fi
+          pointers="$(git grep -lI '^version https://git-lfs\.github\.com/spec/' HEAD -- . || true)"
+          if [ -n "$pointers" ]; then
+            echo "::error::Git LFS pointer files committed:"
+            echo "$pointers"
+            exit 1
+          fi
+
       - name: Install TeX Live
         uses: zauguin/install-texlive@v4
         with:
@@ -40,6 +55,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
 
@@ -60,20 +77,32 @@ jobs:
       - name: 'Generate previews'
         run: pdftoppm -png -r 300 -f 1 -l 1 qr-example.pdf preview
 
-      - name: Commit
+      # gh-pages is published as a single orphan commit holding nothing but the
+      # generated artifacts. It is force-pushed, so the branch never accumulates
+      # history and the repository stays small.
+      - name: 'Publish artifacts to gh-pages'
         if: github.repository == 'EagleoutIce/fancyqr' && github.ref == 'refs/heads/main'
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -f "qr-example.pdf" "fancyqr-doc.pdf" "preview-1.png"
-          git commit -m "Newly compiled data"
-      - name: Push changes
-        if: github.repository == 'EagleoutIce/fancyqr' && github.ref == 'refs/heads/main'
-        uses: ad-m/github-push-action@master
-        with:
-          branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          force: true
+          pages="$(mktemp -d)"
+          cp qr-example.pdf fancyqr-doc.pdf preview-1.png "$pages/"
+          cat > "$pages/README.md" <<'EOF'
+          # fancyqr — generated artifacts
+
+          This branch is generated automatically by the `compile qr` workflow on every
+          push to `main`. It is force-pushed as a single orphan commit, so it carries no
+          history and stays small.
+
+          Do not commit here by hand — changes are overwritten on the next build.
+          EOF
+          cd "$pages"
+          git init -q -b gh-pages
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add -A
+          git commit -q -m "Newly compiled data"
+          git push -q --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            gh-pages
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
