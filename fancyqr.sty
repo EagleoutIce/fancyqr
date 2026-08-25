@@ -308,6 +308,7 @@
 \newif\iffancyqr@fixed@      % the patterns are treated specially at all
 \newif\iffancyqr@fixedshape@ % ... drawn as one shape instead of as modules
 \newif\iffancyqr@fixedmap@   % ... only recolored, which needs a module map
+\newif\iffancyqr@coreonly@   % ... left to the tiles except for their core
 \def\fancyqr@finder@style{inherit}
 \def\fancyqr@finder@core{auto}
 \def\fancyqr@finder@color{}
@@ -330,13 +331,19 @@
    \fancyqr@fixedshape@true
    \ifx\fancyqr@finder@style\fancyqr@finder@none\fancyqr@fixedshape@false\fi
    \ifx\fancyqr@finder@style\fancyqr@finder@inherit\fancyqr@fixedshape@false\fi
-   \fancyqr@fixedmap@false
+   \fancyqr@fixedmap@false \fancyqr@coreonly@false
    \iffancyqr@fixedshape@\else
       \ifx\fancyqr@finder@color\@empty\else\fancyqr@fixedmap@true\fi
       \ifx\fancyqr@content@color\@empty\else\fancyqr@fixedmap@true\fi
+      % a ring left to the tiles still has a core, and asking for one by name
+      % is unambiguous enough to draw it there too
+      \ifx\fancyqr@finder@core\fancyqr@finder@auto\else
+         \ifx\fancyqr@finder@core\fancyqr@finder@inherit\else
+            \fancyqr@coreonly@true\fi\fi
    \fi
    \iffancyqr@fixedshape@\fancyqr@fixed@true
-   \else\iffancyqr@fixedmap@\fancyqr@fixed@true\else\fancyqr@fixed@false\fi\fi
+   \else\iffancyqr@fixedmap@\fancyqr@fixed@true
+      \else\iffancyqr@coreonly@\fancyqr@fixed@true\else\fancyqr@fixed@false\fi\fi\fi
 }
 
 % applies \fancyqr@fixed@action{top row}{left column}{size} to every pattern
@@ -373,14 +380,35 @@
 \def\fancyqr@saveclear{\fancyqr@save\fancyqr@clear}
 
 \def\fancyqr@block#1#2#3{\fancyqr@rect{#1}{#2}{#3}{#3}}
+% the core of a pattern -- the 3x3 centre of a position one, the single module
+% of an alignment one -- i.e. the box \fancyqr@draw@block fills
+\def\fancyqr@core#1#2#3{%
+   \fancyqr@rect{\the\numexpr#1+\tw@\relax}{\the\numexpr#2+\tw@\relax}%
+      {\the\numexpr#3-4\relax}{\the\numexpr#3-4\relax}}
 \def\fancyqr@markfixed{%
-   \iffancyqr@fixedshape@\let\fancyqr@rect@action\fancyqr@saveclear
-   \else\let\fancyqr@rect@action\fancyqr@mark\fi
-   \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns}
+   \iffancyqr@fixedshape@
+      \let\fancyqr@rect@action\fancyqr@saveclear
+      \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns
+   \else
+      \iffancyqr@fixedmap@
+         \let\fancyqr@rect@action\fancyqr@mark
+         \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns\fi
+      \iffancyqr@coreonly@
+         \let\fancyqr@rect@action\fancyqr@saveclear
+         \let\fancyqr@fixed@action\fancyqr@core \fancyqr@fixedpatterns\fi
+   \fi}
 \def\fancyqr@unmarkfixed{%
-   \iffancyqr@fixedshape@\let\fancyqr@rect@action\fancyqr@restore
-   \else\let\fancyqr@rect@action\fancyqr@unmark\fi
-   \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns}
+   \iffancyqr@fixedshape@
+      \let\fancyqr@rect@action\fancyqr@restore
+      \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns
+   \else
+      \iffancyqr@fixedmap@
+         \let\fancyqr@rect@action\fancyqr@unmark
+         \let\fancyqr@fixed@action\fancyqr@block \fancyqr@fixedpatterns\fi
+      \iffancyqr@coreonly@
+         \let\fancyqr@rect@action\fancyqr@restore
+         \let\fancyqr@fixed@action\fancyqr@core \fancyqr@fixedpatterns\fi
+   \fi}
 % the round cut only ever clears modules inside the hidden rectangle
 \def\fancyqr@cutrect#1{\let\fancyqr@rect@action#1%
    \fancyqr@rect{\the\numexpr\@do@y@min+\@ne\relax}{\the\numexpr\@do@x@min+\@ne\relax}%
@@ -397,6 +425,9 @@
 % a shape is a path inscribed in (#1,#1)--(#2,#2) closed by #3, so the same five
 % macros serve the stroked ring and the filled core
 \def\fancyqr@shape@none#1#2#3{}
+% the ring of a pattern can be left to the tiles, and so can its core -- but a
+% core inside a ring that *is* a shape has no modules left to inherit from
+\let\fancyqr@shape@inherit\fancyqr@shape@none
 \def\fancyqr@shape@square#1#2#3{\moveto(#1,#1)\lineto(#2,#1)\lineto(#2,#2)\lineto(#1,#2)\closepath#3}
 \def\fancyqr@shape@circle#1#2#3{%
    \edef\@fq@c{\fpeval{(#1+#2)/2}}%
@@ -446,6 +477,16 @@
    }%
 }
 \def\fancyqr@drawfixed{\let\fancyqr@fixed@action\fancyqr@draw@block\fancyqr@fixedpatterns}
+% ... and the same core on its own, for a ring the tiles keep
+\def\fancyqr@draw@core#1#2#3{%
+   \fancyqr@gradient@row{\the\numexpr#1+(#3-\@ne)/\tw@\relax}%
+   \fancyqr@ci=\numexpr#2+(#3-\@ne)/\tw@\relax
+   \put(#2,\the\numexpr\@max@y-#1-#3+\@ne\relax){%
+      \fancyqr@fixedcolor{%
+         \fancyqr@shape\fancyqr@effective@core{2}{\fpeval{#3-2}}\fillpath}%
+   }%
+}
+\def\fancyqr@drawcores{\let\fancyqr@fixed@action\fancyqr@draw@core\fancyqr@fixedpatterns}
 
 \def\fancyqr@modules{%
    \qr@for \i=\@ne to \@max@y by \@ne{%
@@ -525,7 +566,8 @@
       \fancyqr@pass\z@
       \loop \advance\fancyqr@pass\@ne \fancyqr@modules
       \ifnum\fancyqr@pass<\fancyqr@passes\relax\repeat
-      \iffancyqr@fixedshape@\fancyqr@drawfixed\fi
+      \iffancyqr@fixedshape@\fancyqr@drawfixed
+      \else\iffancyqr@coreonly@\fancyqr@drawcores\fi\fi
       \if@fancyqr@image@
          % the cut-out is centered on module (\@half@max@y,\@half@max@x), whose
          % own center is half a module up and right of its origin

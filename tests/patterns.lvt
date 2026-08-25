@@ -46,6 +46,19 @@
 \TestCounts{finder-mixed}{P=812 M=812 L=4944 A+=958 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=square,finder core=circle]{abc}}
 
+% a core shape on its own leaves the ring to the tiles and replaces only the
+% 3*9+6*1 modules of the nine cores
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder core=star]{abc}}%
+\edef\CoreOnly{\fancyqrtest@n{P}}
+\TestValue{core-only-draws-cores}{9}{\fancyqrtest@n{Z}}
+\TestValue{core-only-keeps-rings}{0}{\fancyqrtest@n{S}}
+\TestValue{core-only-replaces-modules}{fewer}{\ifnum\CoreOnly<\Plain fewer\else not\fi}
+
+% ... and `inherit' asks for exactly what the tiles do anyway
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder core=inherit]{abc}}%
+\edef\CoreInherit{\fancyqrtest@n{P}}
+\TestValue{core-inherit-keeps-tiles}{same}{\ifx\Plain\CoreInherit same\else different\fi}
+
 % the map is torn down again, so the next code is unaffected
 \fancyqrtest@run{\Code}\edef\After{\fancyqrtest@n{P}}
 \TestValue{map-is-cleared}{same}{\ifx\Plain\After same\else different\fi}

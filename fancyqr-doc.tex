@@ -169,6 +169,8 @@
 	The modules of a pattern stay black in the matrix and only their drawing is replaced, so neighbouring tiles still merge into the shape wherever it allows it.
 	A |finder thickness| other than |1| leaves the 1:1:3:1:1 run a scanner looks for, so check that the code still reads.
 	|finder=inherit| is the default and leaves the patterns to the tiles of the loaded style, which is what fancyqr did before the shapes existed; |none| is accepted as a synonym.
+	A |finder core| set by name still applies there: the ring keeps its tiles and only the center block becomes a shape, which is often all a code needs to stop looking generic.
+	|finder core=inherit| hands the core back to the tiles, and leaves it empty when the ring is a shape and there are no tiles left to inherit from.
 	Loading a style resets |finder| and |finder core|, because a style owns its shapes.
 
 \begin{figure}[H]
@@ -186,7 +188,7 @@
 	\ShowFinder{finder=square,finder core=circle}{finder=square,\\finder core=circle}\\[2ex]
 	\ShowFinder{finder=circle,finder core=square}{finder=circle,\\finder core=square}\hfill
 	\ShowFinder{finder=rounded,finder radius=.15}{finder=rounded,\\finder radius=.15}\hfill
-	\ShowFinder{finder=inherit}{finder=inherit}
+	\ShowFinder{finder core=star}{finder core=star}
 	\caption{Styling the position and alignment patterns.}
 	\label{fig:finder}
 \end{figure}
@@ -204,7 +206,7 @@
 		finder color    & color   &          & Color of the position and alignment patterns. Without |finder| they keep their normal tiles and are only recolored. \\
 		content color   & color   &          & Color of everything that is not a position or alignment pattern, so that the patterns can keep the gradient while the data stays flat. \\
 		finder          & shape   & inherit  & Draw the three position (finder) patterns and all alignment patterns as one shape (|square|, |rounded|, or |circle|) instead of as single modules; |inherit| (synonym |none|) leaves them to the tiles of the style (\autoref{sec:finder}). \\
-		finder core     & shape   &  auto    & Shape of the center block of every pattern (|auto|, |none|, |square|, |rounded|, |circle|, or |star|); |auto| follows |finder|, which has to be set to a shape for this to take effect. \\
+		finder core     & shape   &  auto    & Shape of the center block of every pattern (|auto|, |inherit|, |none|, |square|, |rounded|, |circle|, or |star|); |auto| follows |finder|, any other value applies even when |finder| leaves the ring to the tiles (\autoref{sec:finder}). \\
 		finder radius   & number  &  0.5     & Corner radius of the |rounded| pattern shape, relative to the pattern radius. \\
 		finder thickness& number  &  1       & Width of the pattern ring, in modules. \\
 		gradient        & boolean &   true   & Toggle the color gradient                                    \\
