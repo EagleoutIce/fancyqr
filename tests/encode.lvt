@@ -1,0 +1,36 @@
+% Text beyond ASCII: the bytes, the ECI header that names UTF-8, and its cost.
+\input{regression-test}
+\documentclass{article}
+\usepackage{fancyqr}
+\usepackage{fancyqrtest}
+\makeatletter
+\begin{document}
+\START
+\section*{Encoding}
+
+% text beyond ASCII starts with the ECI header that names UTF-8 (0111 00011010)
+\begingroup
+  \fancyqrset{eci}\def\qr@texttoencode{Gr^^c3^^bc^^c3^^9fe}\fancyqr@bytes
+  \TestValue{eci-for-utf8}{on}{\iffancyqr@useeci@ on\else off\fi}
+  \def\qr@totaldatacodewords{13}\def\qr@charactercountbits@byte{8}%
+  \fancyqr@encode@eci{}%
+  \TestValue{eci-header}{71a4074772c3bcc39f6500ec11}{\qr@codetext}
+\endgroup
+% the header costs two bytes of capacity
+\begingroup
+  \fancyqr@useeci@false\qr@calculate@capacity{1}{0}\edef\Without{\qr@truecapacity}%
+  \fancyqr@useeci@true\qr@calculate@capacity{1}{0}\edef\With{\qr@truecapacity}%
+  \TestValue{eci-capacity}{14/12}{\Without/\With}
+\endgroup
+\begingroup
+  \fancyqrset{eci=false}\def\qr@texttoencode{Gr^^c3^^bce}\fancyqr@bytes
+  \TestValue{eci-switched-off}{off}{\iffancyqr@useeci@ on\else off\fi}
+\endgroup
+\begingroup
+  \def\qr@texttoencode{plain}\fancyqr@bytes
+  \TestValue{no-eci-for-ascii}{off}{\iffancyqr@useeci@ on\else off\fi}
+\endgroup
+
+\TestSummary
+\END
+\end{document}

@@ -1,0 +1,232 @@
+% style `snow': the default tiles with wavy snow on most upper edges and on the
+% finder rings; tunables \fancyqr@snow@color, \fancyqr@snow@line,
+% \fancyqr@snow@height, \fancyqr@snow@wave and \fancyqr@snow@chance (of a row
+% of tiles to get snow), \fancyqr@snow@icicle@chance (of a snow-covered tile to
+% get ice running down over it, and with white below drips on its lower edge)
+\@ifundefined{fancyqr@snow@color}{\def\fancyqr@snow@color{blue!5!white}}{}%
+\@ifundefined{fancyqr@snow@line}{\def\fancyqr@snow@line{blue!25!gray!55!white}}{}%
+\@ifundefined{fancyqr@snow@height}{\def\fancyqr@snow@height{.32}}{}%
+\@ifundefined{fancyqr@snow@wave}{\def\fancyqr@snow@wave{.1}}{}%
+\@ifundefined{fancyqr@snow@chance}{\def\fancyqr@snow@chance{.7}}{}%
+\@ifundefined{fancyqr@snow@icicle@chance}{\def\fancyqr@snow@icicle@chance{.25}}{}%
+\ifdefined\fancyqr@snow@c\else\newcount\fancyqr@snow@c\fi\ifdefined\fancyqr@snow@k\else\newcount\fancyqr@snow@k\fi
+\newif\iffancyqr@snow@
+% \fancyqr@snow@sin@<k> is sin(k/10), k = 0..62 covers one period
+\@tempcnta\z@
+\@whilenum\@tempcnta<63\do{\expandafter\xdef\csname fancyqr@snow@sin@\the\@tempcnta\endcsname
+   {\fpeval{round(sin(\@tempcnta/10),4)}}\advance\@tempcnta\@ne}%
+\def\fancyqr@snow@sin#1{\csname fancyqr@snow@sin@\fancyqr@snow@mod{#1}{63}\endcsname}%
+\def\fancyqr@snow@mod#1#2{\the\numexpr(#1)-#2*(((#1)-(#2-1)/2)/#2)\relax}%
+% the wave at column #2, row #3: its height \fancyqr@snow@h and slope \fancyqr@snow@s,
+% both 0 at a free end (#1 = 1), which meets the round corner
+\def\fancyqr@snow@wave@at#1#2#3{%
+   \ifnum#1=\@ne\def\fancyqr@snow@h{0}\def\fancyqr@snow@s{0}\else
+      \edef\fancyqr@snow@h{\fancyqr@snow@wave*\fancyqr@snow@sin{23*#2+17*#3}}%
+      \edef\fancyqr@snow@s{2.3*\fancyqr@snow@wave*\fancyqr@snow@sin{23*#2+17*#3+16}}\fi}%
+% the shape of a cap of width #1 on tiles with corner radius #2 and top at
+% \fancyqr@snow@one (tiles are drawn larger by their overlap); #3/#4 are 1 if the
+% left/right end is free, 0 if the snow runs on to the neighbour; cached
+\def\fancyqr@snow@setup#1#2#3#4{%
+   \def\fancyqr@snow@w{#1}\def\fancyqr@snow@l{#3}\def\fancyqr@snow@r{#4}%
+   \edef\@tempa{fancyqr@snow@m@#1@#2@#3#4@\fancyqr@snow@height @\fancyqr@snow@one}%
+   \ifcsname\@tempa\endcsname\else\fancyqr@snow@shape{#1}{#2}{#3}{#4}\fi
+   \csname\@tempa\endcsname}%
+% a free end runs out on the corner of radius r (centre (x, 1-r)) at the angle a
+% from the top, at (x-+dx, y); its upper edge is the circle around (x, cy) through
+% that point and the top (x, top)
+\def\fancyqr@snow@shape#1#2#3#4{%
+   \edef\fancyqr@snow@top{\fpeval{\fancyqr@snow@one+\fancyqr@snow@height}}%
+   \edef\@tempb{\fpeval{(#2)*\fancyqr@snow@one}}% r
+   \edef\fancyqr@snow@xl{\ifnum#3=\@ne\@tempb\else0\fi}%
+   \edef\fancyqr@snow@xr{\ifnum#4=\@ne\fpeval{#1*\fancyqr@snow@one-\@tempb}\else#1\fi}%
+   \edef\@tempc{\fpeval{\@tempb>0 ? min(63,acosd(max(0,1-.2/\@tempb))) : 0}}% a
+   \edef\@tempd{\fpeval{\@tempb*sind(\@tempc)}}% dx
+   \edef\@tempe{\fpeval{\fancyqr@snow@one-\@tempb+\@tempb*cosd(\@tempc)}}% y
+   \edef\@tempa{\fpeval{(\fancyqr@snow@top^2-\@tempd^2-\@tempe^2)/(2*(\fancyqr@snow@top-\@tempe))}}% cy
+   \edef\@tempf{\fpeval{atand(\@tempe-\@tempa,-\@tempd)+(\@tempe<\@tempa ? 360 : 0)}}% the end seen from (x, cy)
+   \edef\fancyqr@snow@end{(\fpeval{\fancyqr@snow@xl-\@tempd},\@tempe)}%
+   \edef\fancyqr@snow@lc{\noexpand\circlearc{\fancyqr@snow@xl}{\@tempa}{\fpeval{\fancyqr@snow@top-\@tempa}}{\@tempf}{90}}%
+   \edef\fancyqr@snow@rc{\noexpand\circlearc{\fancyqr@snow@xr}{\@tempa}{\fpeval{\fancyqr@snow@top-\@tempa}}{90}{\fpeval{180-\@tempf}}%
+      \noexpand\circlearc{\fancyqr@snow@xr}{\fpeval{\fancyqr@snow@one-\@tempb}}{\@tempb}{\fpeval{90-\@tempc}}{90}}%
+   \edef\fancyqr@snow@ll{\noexpand\circlearc{\fancyqr@snow@xl}{\fpeval{\fancyqr@snow@one-\@tempb}}{\@tempb}{90}{\fpeval{90+\@tempc}}}%
+   \def\fancyqr@snow@keep##1{\def\expandafter\noexpand\csname fancyqr@snow@##1\endcsname
+      {\unexpanded\expandafter\expandafter\expandafter{\csname fancyqr@snow@##1\endcsname}}}%
+   \global\expandafter\edef\csname fancyqr@snow@m@#1@#2@#3#4@\fancyqr@snow@height @\fancyqr@snow@one\endcsname{%
+      \fancyqr@snow@keep{top}\fancyqr@snow@keep{xl}\fancyqr@snow@keep{xr}\fancyqr@snow@keep{end}%
+      \fancyqr@snow@keep{lc}\fancyqr@snow@keep{rc}\fancyqr@snow@keep{ll}}}%
+% the upper edge: one Bezier curve between each two columns, with the heights and
+% slopes of the wave at its ends; #1 column, #2 row of the left end of the cap
+\def\fancyqr@snow@waves#1#2{%
+   \fancyqr@snow@wave@at\fancyqr@snow@l{#1}{#2}%
+   \edef\fancyqr@snow@tl{\fpeval{\fancyqr@snow@top+\fancyqr@snow@h}}%
+   \let\fancyqr@snow@px\fancyqr@snow@xl \let\fancyqr@snow@ph\fancyqr@snow@h \let\fancyqr@snow@ps\fancyqr@snow@s
+   \def\fancyqr@snow@up{}%
+   \fancyqr@snow@c\fpeval{ceil(\fancyqr@snow@xl+.01)}\relax
+   \@whilenum\fancyqr@snow@c<\fpeval{ceil(\fancyqr@snow@xr-.01)}\do{%
+      \fancyqr@snow@wave@at0{\the\numexpr#1+\fancyqr@snow@c\relax}{#2}\fancyqr@snow@seg{\the\fancyqr@snow@c}%
+      \advance\fancyqr@snow@c\@ne}%
+   \fancyqr@snow@wave@at\fancyqr@snow@r{\the\numexpr#1+\fancyqr@snow@w\relax}{#2}\fancyqr@snow@seg\fancyqr@snow@xr}%
+\def\fancyqr@snow@seg#1{%
+   \edef\@tempa{\noexpand\curveto
+      (\fpeval{(2*\fancyqr@snow@px+#1)/3},\fpeval{\fancyqr@snow@top+\fancyqr@snow@ph+\fancyqr@snow@ps*(#1-\fancyqr@snow@px)/3})%
+      (\fpeval{(\fancyqr@snow@px+2*#1)/3},\fpeval{\fancyqr@snow@top+\fancyqr@snow@h-\fancyqr@snow@s*(#1-\fancyqr@snow@px)/3})%
+      (#1,\fpeval{\fancyqr@snow@top+\fancyqr@snow@h})}%
+   \edef\fancyqr@snow@up{\unexpanded\expandafter{\fancyqr@snow@up}\unexpanded\expandafter{\@tempa}}%
+   \edef\fancyqr@snow@px{#1}\let\fancyqr@snow@ph\fancyqr@snow@h \let\fancyqr@snow@ps\fancyqr@snow@s}%
+% #1 is \lineto to fill and \moveto to outline: a seam to a neighbour has no outline
+\def\fancyqr@snow@path#1{%
+   \ifnum\fancyqr@snow@l=\@ne\expandafter\moveto\fancyqr@snow@end\fancyqr@snow@lc
+   \else\moveto(0,\fancyqr@snow@one)#1(0,\fancyqr@snow@tl)\fi
+   \fancyqr@snow@up
+   \ifnum\fancyqr@snow@r=\@ne\fancyqr@snow@rc\else#1(\fancyqr@snow@w,\fancyqr@snow@one)\fi
+   \lineto(\fancyqr@snow@xl,\fancyqr@snow@one)%
+   \ifnum\fancyqr@snow@l=\@ne\fancyqr@snow@ll\else\ifx#1\lineto\closepath\fi\fi}%
+% a cap at column #1, row #2, in module units, so that caps meet exactly at their
+% seams
+\def\fancyqr@snow@draw#1#2{%
+   \unitlength\qr@modulesize
+   \fancyqr@snow@waves{#1}{#2}%
+   \roundjoin\roundcap\linethickness{.05\unitlength}%
+   \color{\fancyqr@snow@color}\fancyqr@snow@path\lineto\fillpath
+   \color{\fancyqr@snow@line}\fancyqr@snow@path\moveto\strokepath}%
+% a row of tiles with white above gets snow as a whole: its left end (#1 row, #2
+% column) decides with a hash salted per code, and picks one of five heights and
+% wavinesses (see \fancyqr@style@begin)
+\def\fancyqr@snow@run#1#2{%
+   \fancyqr@snow@c#2\relax\fancyqr@snow@true
+   \@whilesw\iffancyqr@snow@\fi{\fancyqr@snow@false
+      \ifnum\fancyqr@snow@c>\@ne
+      \ifnum\qr@matrixentry\fancyqr@currprint{#1}{\the\numexpr\fancyqr@snow@c-\@ne}=\qr@black\relax
+      \ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr#1-\@ne}{\the\numexpr\fancyqr@snow@c-\@ne}=\qr@white\relax
+         \advance\fancyqr@snow@c\m@ne\fancyqr@snow@true\fi\fi\fi}%
+   \ifnum\fancyqr@snow@mod{#1*37+\fancyqr@snow@c*11+\fancyqr@snow@salt}{100}<\fancyqr@snow@percent\relax
+      \fancyqr@snow@true
+      \edef\fancyqr@snow@height{\csname fancyqr@snow@h\fancyqr@snow@mod{#1*13+\fancyqr@snow@c*29+\fancyqr@snow@salt}5\endcsname}%
+      \edef\fancyqr@snow@wave{\csname fancyqr@snow@v\fancyqr@snow@mod{#1*7+\fancyqr@snow@c*17+3*\fancyqr@snow@salt}5\endcsname}%
+   \else\fancyqr@snow@false\fi}%
+\def\fancyqr@snow@begin{%
+   \edef\fancyqr@snow@percent{\iffancyqr@gallery@100\else\fpeval{round(100*\fancyqr@snow@chance)}\fi}%
+   \edef\fancyqr@snow@ipercent{\fpeval{round(100*\fancyqr@snow@icicle@chance)}}%
+   \edef\fancyqr@snow@salt{\fpeval{randint(0,999)}}%
+   \edef\fancyqr@snow@scale{\fpeval{round(1+\strip@pt\fancyqr@edge@compensate/\strip@pt\qr@modulesize,3)}}%
+   \@tempcnta\z@
+   \@whilenum\@tempcnta<5\do{%
+      \expandafter\edef\csname fancyqr@snow@h\the\@tempcnta\endcsname{\fpeval{(.65+.175*\@tempcnta)*\fancyqr@snow@height}}%
+      \expandafter\edef\csname fancyqr@snow@v\the\@tempcnta\endcsname{\fpeval{(.5+.25*\@tempcnta)*\fancyqr@snow@wave}}%
+      \advance\@tempcnta\@ne}}%
+\let\fancyqr@style@begin\fancyqr@snow@begin
+% the snow is drawn in a second pass, on top of the tiles; a lone tile gets less;
+% an end at a dark neighbour ends flush, as the snow runs on or meets a wall;
+% nothing lies above the top row (but in the gallery of tiles) or hangs below the bottom one
+\def\fancyqr@snow@tile#1#2#3#4{%
+\ifnum\fancyqr@pass=\@ne\fancyqr@rounded@rect#1#2#3#4%
+\else\fancyqr@snow@cap\fi}%
+% now and then a pale snowflake in a free white module between the tiles (white
+% above it, so no icicle hangs into it), by the place
+\def\fancyqr@snow@nm{snow}%
+\def\fancyqr@snow@fall{\ifx\fancyqr@loaded@style\fancyqr@snow@nm{\unitlength\qr@modulesize
+   \fancyqr@mixcolor{\fancyqr@snow@line!55!white}\linethickness{.04\unitlength}\roundcap
+   \@tempcnta\@ne\@whilenum\@tempcnta<\@max@y\do{\advance\@tempcnta\@ne\@tempcntb\z@
+   \@whilenum\@tempcntb<\@max@x\do{\advance\@tempcntb\@ne
+      \edef\fancyqr@snow@ih{\fancyqr@snow@mod{\@tempcnta*29+\@tempcntb*47+5*\fancyqr@snow@salt}{97}}%
+      \ifnum\fancyqr@snow@ih<\iffancyqr@faint@30\else9\fi\relax
+      \ifnum\qr@matrixentry\fancyqr@currprint{\the\@tempcnta}{\the\@tempcntb}=\qr@white\relax
+      \ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr\@tempcnta-1}{\the\@tempcntb}=\qr@white\relax
+      \ifcsname fancyqr@B@\the\@tempcnta @\the\@tempcntb\endcsname\else
+      \ifnum\ifnum\@tempcnta<10 \ifnum\@tempcntb<10 1\else\ifnum\@tempcntb>\numexpr\@max@x-9\relax1\else0\fi\fi
+         \else\ifnum\@tempcnta>\numexpr\@max@y-9\relax\ifnum\@tempcntb<10 1\else0\fi\else0\fi\fi=\z@
+         \put(\the\@tempcntb,\the\numexpr\@max@y-\@tempcnta\relax){\fancyqr@snow@flake}\fi\fi\fi\fi\fi}}}\fi}%
+\def\fancyqr@snow@flake{\edef\h@r{\fpeval{15*\fancyqr@snow@ih}}%
+   \@for\@tempa:=0,60,120\do{\edef\@tempb{\fpeval{\@tempa+\h@r}}%
+      \moveto(\fpeval{.5-.22*cosd(\@tempb)},\fpeval{.5-.22*sind(\@tempb)})\lineto(\fpeval{.5+.22*cosd(\@tempb)},\fpeval{.5+.22*sind(\@tempb)})}%
+   \@for\@tempa:=0,60,120,180,240,300\do{\edef\@tempb{\fpeval{\@tempa+\h@r}}%
+      \moveto(\fpeval{.5+.14*cosd(\@tempb)+.07*cosd(\@tempb+50)},\fpeval{.5+.14*sind(\@tempb)+.07*sind(\@tempb+50)})%
+      \lineto(\fpeval{.5+.14*cosd(\@tempb)},\fpeval{.5+.14*sind(\@tempb)})%
+      \lineto(\fpeval{.5+.14*cosd(\@tempb)+.07*cosd(\@tempb-50)},\fpeval{.5+.14*sind(\@tempb)+.07*sind(\@tempb-50)})}%
+   \strokepath}%
+\FancyQrExtras{flakes}%
+% a host style may define \fancyqr@snow@host@<style>, run per tile to set
+% \fancyqr@snow@hk (0 no snow, else 1), \fancyqr@snow@hy (the module height of the
+% ledge the snow lies on), \fancyqr@snow@hs (factor for its depth) and
+% \fancyqr@snow@hd (1 if icicles may hang below)
+\def\fancyqr@snow@cap{\def\fancyqr@snow@hk{1}\def\fancyqr@snow@hy{1}\def\fancyqr@snow@hs{1}\def\fancyqr@snow@hd{1}%
+   \ifcsname fancyqr@snow@host@\fancyqr@loaded@style\endcsname\csname fancyqr@snow@host@\fancyqr@loaded@style\endcsname\fi
+   \ifnum\fancyqr@snow@hk>\z@\fancyqr@snow@cap@\fi}%
+\def\fancyqr@snow@cap@{\ifnum\@up\ifnum\i=\@ne\iffancyqr@gallery@\else1\fi\fi=\z@\fancyqr@snow@run{\the\i}{\the\j}\iffancyqr@snow@
+   \edef\fancyqr@snow@fl{\ifnum\@left=\@ne0\else1\fi}\edef\fancyqr@snow@fr{\ifnum\@right=\@ne0\else1\fi}%
+   \edef\fancyqr@snow@height{\fpeval{\fancyqr@snow@hs*\fancyqr@snow@height}}%
+   \ifnum\fancyqr@snow@fl\fancyqr@snow@fr=11 \edef\fancyqr@snow@height{\fpeval{.6*\fancyqr@snow@height}}\fi
+   \edef\fancyqr@snow@one{\fpeval{\fancyqr@snow@hy*\fancyqr@snow@scale}}%
+   \fancyqr@snow@setup1\fancyqr@rounding@factor\fancyqr@snow@fl\fancyqr@snow@fr
+   \fancyqr@snow@ice{\linethickness{.06\unitlength}\color{\fancyqr@snow@line}\fancyqr@snow@ip\strokepath}%
+   \fancyqr@snow@draw{\the\j}{\the\i}\fancyqr@snow@ice{\color{\fancyqr@snow@color}\fancyqr@snow@ip\closepath\fillpath}%
+   \ifnum\fancyqr@snow@hd>\z@\ifnum\@down\ifnum\i=\@max@y1\fi=\z@\fancyqr@snow@icicles\fi\fi
+\fi\fi}%
+% one or two pale drips of melting snow that run from the lower edge of a
+% snow-covered tile into the white module below, a narrow neck ending in a round
+% drop, from .15 to .7 modules long by the place
+\def\fancyqr@snow@icicles{%
+   \edef\fancyqr@snow@ih{\fancyqr@snow@mod{\i*53+\j*19+3*\fancyqr@snow@salt}{997}}%
+   \ifnum\fancyqr@snow@mod{\fancyqr@snow@ih}{100}<\fancyqr@snow@ipercent\relax
+   {\unitlength\qr@modulesize\roundjoin\linethickness{.02\unitlength}%
+   \fancyqr@snow@c\numexpr1+\fancyqr@snow@mod{\fancyqr@snow@ih/7}{2}\relax
+   \fancyqr@snow@k\z@
+   \@whilenum\fancyqr@snow@k<\fancyqr@snow@c\do{\advance\fancyqr@snow@k\@ne
+      \edef\fancyqr@snow@ix{\fpeval{(\ifnum\fancyqr@snow@c=\@ne.5\else.36+.28*(\the\fancyqr@snow@k-1)\fi)%
+         +.03*(\fancyqr@snow@mod{\fancyqr@snow@ih*\the\fancyqr@snow@k}{5}-2)}}%
+      \edef\fancyqr@snow@iy{\fpeval{.15+.55*\fancyqr@snow@mod{\fancyqr@snow@ih*(\the\fancyqr@snow@k+3)+11}{11}/10}}%
+      \def\fancyqr@snow@ip{\moveto(\fpeval{\fancyqr@snow@ix-.06},.03)%
+         \curveto(\fpeval{\fancyqr@snow@ix-.05},\fpeval{-.4*\fancyqr@snow@iy})(\fpeval{\fancyqr@snow@ix-.07},\fpeval{.07-.7*\fancyqr@snow@iy})%
+            (\fpeval{\fancyqr@snow@ix-.07},\fpeval{.07-\fancyqr@snow@iy})%
+         \circlearc{\fancyqr@snow@ix}{\fpeval{.07-\fancyqr@snow@iy}}{.07}{180}{360}%
+         \curveto(\fpeval{\fancyqr@snow@ix+.07},\fpeval{.07-.7*\fancyqr@snow@iy})(\fpeval{\fancyqr@snow@ix+.05},\fpeval{-.4*\fancyqr@snow@iy})%
+            (\fpeval{\fancyqr@snow@ix+.06},.03)}%
+      \color{\fancyqr@snow@color}\fancyqr@snow@ip\closepath\fillpath
+      \color{\fancyqr@snow@line}\fancyqr@snow@ip\strokepath}}\fi}%
+% ice that runs from under the snow down over the tile, by the place one or two
+% of .2 to .5 modules: a round drop on a neck, a sharp spike or a blunt one; #1
+% draws a path, the outline before the snow and the fill after it, so that the
+% ice and the snow form one shape
+\def\fancyqr@snow@ice#1{%
+   \edef\fancyqr@snow@ih{\fancyqr@snow@mod{\i*31+\j*43+7*\fancyqr@snow@salt}{997}}%
+   \ifnum\fancyqr@snow@mod{\fancyqr@snow@ih}{100}<\fancyqr@snow@ipercent\relax
+   {\unitlength\qr@modulesize\roundjoin
+   \fancyqr@snow@c\numexpr1+\fancyqr@snow@mod{\fancyqr@snow@ih/5}{2}\relax
+   \fancyqr@snow@k\z@
+   \@whilenum\fancyqr@snow@k<\fancyqr@snow@c\do{\advance\fancyqr@snow@k\@ne
+      \edef\h@x{\fpeval{(\ifnum\fancyqr@snow@c=\@ne.5\else.33+.34*(\the\fancyqr@snow@k-1)\fi)%
+         +.03*(\fancyqr@snow@mod{\fancyqr@snow@ih*\the\fancyqr@snow@k}{5}-2)}}%
+      \edef\h@t{\fpeval{\fancyqr@snow@one+.05}}%
+      \edef\h@b{\fpeval{\fancyqr@snow@one-.25-.35*\fancyqr@snow@mod{\fancyqr@snow@ih*(\the\fancyqr@snow@k+5)+3}{7}/6}}%
+      \edef\h@L{\fpeval{\h@t-\h@b}}%
+      \def\fancyqr@snow@ip{\ifcase\fancyqr@snow@mod{\fancyqr@snow@ih/3+\the\fancyqr@snow@k}{3}
+         \moveto(\fpeval{\h@x-.065},\h@t)\curveto(\fpeval{\h@x-.05},\fpeval{\h@t-.5*\h@L})(\fpeval{\h@x-.09},\fpeval{\h@b+.2*\h@L})%
+            (\fpeval{\h@x-.09},\fpeval{\h@b+.09})\circlearc{\h@x}{\fpeval{\h@b+.09}}{.09}{180}{360}%
+         \curveto(\fpeval{\h@x+.09},\fpeval{\h@b+.2*\h@L})(\fpeval{\h@x+.05},\fpeval{\h@t-.5*\h@L})(\fpeval{\h@x+.065},\h@t)%
+      \or\moveto(\fpeval{\h@x-.09},\h@t)\curveto(\fpeval{\h@x-.08},\fpeval{\h@t-.4*\h@L})(\fpeval{\h@x-.02},\fpeval{\h@b+.25*\h@L})(\h@x,\h@b)%
+         \curveto(\fpeval{\h@x+.02},\fpeval{\h@b+.25*\h@L})(\fpeval{\h@x+.08},\fpeval{\h@t-.4*\h@L})(\fpeval{\h@x+.09},\h@t)%
+      \else\moveto(\fpeval{\h@x-.09},\h@t)\curveto(\fpeval{\h@x-.09},\fpeval{\h@t-.4*\h@L})(\fpeval{\h@x-.04},\fpeval{\h@b+.3*\h@L})%
+            (\fpeval{\h@x-.035},\fpeval{\h@b+.035})\circlearc{\h@x}{\fpeval{\h@b+.035}}{.035}{180}{360}%
+         \curveto(\fpeval{\h@x+.04},\fpeval{\h@b+.3*\h@L})(\fpeval{\h@x+.09},\fpeval{\h@t-.4*\h@L})(\fpeval{\h@x+.09},\h@t)\fi}%
+      #1}}\fi}%
+% a ring (#1 top row, #2 left column, #3 size) gets snow unless tiles lie on it
+% or it is on the top edge, where snow would stand out of the code
+\def\fancyqr@snow@pattern#1#2#3{%
+   \ifnum#1=\@ne\fancyqr@snow@false\else\fancyqr@snow@true\fi\fancyqr@snow@c#2\relax
+   \@whilenum\fancyqr@snow@c<\numexpr#2+#3\relax\do{%
+      \ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr#1-\@ne}{\the\fancyqr@snow@c}=\qr@black\relax\fancyqr@snow@false\fi
+      \advance\fancyqr@snow@c\@ne}%
+   \iffancyqr@snow@\put(#2,\the\numexpr\@max@y-#1\relax){\def\fancyqr@snow@one{1}%
+      \fancyqr@snow@setup{#3}{\csname fancyqr@snow@r@\fancyqr@finder@style\endcsname{#3}}11%
+      \fancyqr@snow@draw{#2}{#1}}\fi}%
+\def\fancyqr@snow@r@square#1{0}%
+\def\fancyqr@snow@r@circle#1{(#1)/2}%
+\def\fancyqr@snow@r@rounded#1{(\fancyqr@finder@radius*(#1-\fancyqr@finder@thickness)/2+\fancyqr@finder@thickness/2)}%
+\def\fancyqr@fixed@extra{\fancyqr@drawpatterns\fancyqr@snow@pattern\FancyQrExtra{flakes}\fancyqr@snow@fall}%
+\FancyQrRoundedPatterns\fancyqr@snow@tile
+\FancyQrInnerRoundings
+\FancyQrPasses{2}%
+% what another style gets with add=snow: the caps on its tiles
+\FancyQrLend{begin}{\fancyqr@snow@begin}\FancyQrLend{tile}{\fancyqr@snow@lent}\FancyQrLend{extras}{snow}%
+\def\fancyqr@snow@lent#1#2#3#4{\FancyQrExtra{snow}{{\fancyqr@snow@cap}}}%
+\FancyQrStyleSet{finder=rounded}%

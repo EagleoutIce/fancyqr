@@ -1,5 +1,72 @@
 # Changelog
 
+## v2.5 (unreleased)
+
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.4...HEAD)
+
+**New features:**
+
+- Text beyond ASCII works with pdfLaTeX, LuaLaTeX and XeLaTeX. It is stored as UTF-8 and marked with an ECI header (on by default), so scanners no longer guess the character set; `eci=false` leaves the header out as a fallback for scanners that reject it (Google ML Kit reportedly does), at the cost that some scanners (ZBar) then garble non-ASCII text.
+- New `halloween` style: orange and purple tiles with slime drips, finder cores that are pumpkins, jack-o'-lanterns, ghosts or skulls, and figures in the tile colors on the blocks that fit them (grim reapers, graves, witch hats, bats, spiders, skulls, candies, broken bones, ghosts and more).
+- New `snow` style: snow lies on the top edges of the tiles, not on the top row, with ice running down over the tiles and merging with the snow (round drops, sharp and blunt spikes) and pale drips of melting snow of varied length below. The gradient is not changed.
+- New `castle` style: masonry in a running bond whose colors follow the gradient, with battlements, towers, turrets, keeps, gatehouses, halls, castles and citadels, and finder patterns drawn as fortresses with a moat and drawbridge.
+- New `christmas` style: pine and teal tiles with gold and cranberry accents, and snow on top by default that follows the tile edges. Tiered trees with trunks and stars, candy canes in six orientations, presents, baubles, sledges, a bench, toy trains, drums, stockings and nutcrackers. Light chains hang across the gaps between tiles, and stars, snowflakes and candles sit in open white, all of them pale so that scanners read the white modules safely. The timing patterns carry lights, and the finder cores are drawn at random (baubles, light rings, gifts, snowflakes, candy canes).
+- `christmas` and `halloween` ship more figures and finder designs, drawn from the seeded generator, so `seed=` reproduces a code.
+- `halloween` adds reapers, big and small jack-o'-lanterns, ghosts (including a happy big ghost), graves (rare), crosses, witch hats, witches with a cauldron, flying witches, brooms, fences, candelabras, scythes, lanterns, street lamps, bats (open-wing, flying, hanging), spiders in varied poses, skulls, eyeballs and eyes, bones with varied breaks, many candies, small single-module figures (pumpkins, potions, candles, a devil blob), and decorations: spider webs sized to the free white space, long hanging threads, slime and timing figures.
+- `castle` adds houses, tents, wells, huts, wooden watchposts on stilts, stone turrets under spires, trees, mountain ranges and volcanoes on free-standing modules, a rare dragon (two at most) and training grounds (an archery target, a dummy or both), crop fields, courtyards of packed earth that run on under the walls around them, banners, rivers with forks, ponds and faint waves, alignment patterns as ponds with a boat, finder fortresses with more windows and a drawbridge mostly at the bottom, archers and knights guarding the walls, figures on tower tops, and a rare princess in a tower window. It is on grass by default, and user colors are respected.
+- The `goo` style has drips of many kinds (sags, strands, double drips and more), varied per tile.
+- New `pumpkin` shape for `finder core`.
+- New `finder core color` option to color the cores apart from the rings.
+- New `alignment color` and `alignment core color` options, so the alignment patterns can differ from the finder patterns.
+- New `background` and `background radius` options: a fill behind the whole code, including the padding, with rounded corners by default (`background radius`, default `1` module; `0` for square).
+- New `\FancyQrIfTiming{<true>}{<false>}` for style authors: picks `<true>` if the current tile is part of a timing pattern.
+- New option `timing color` for the timing patterns, the dotted lines between the finder patterns.
+- New `alignment` option: `finder` (default) styles the alignment patterns like the finder patterns, `inherit` draws them like the data, and `hide` replaces them with modules that look like data.
+- New figure macros for style authors: `\FancyQrFigure` (with a starred form for grid positions), `\FancyQrFigureTile`, `\FancyQrFigureAt` and `\FancyQrDiagonals`.
+- `finder core` also applies when the rings keep the tiles of the style.
+- Data tiles merge into the straight sides of a finder ring instead of rounding off next to it.
+- `\FancyQrStyleSet` lets a style set colors and finder shapes that are undone when the next style is loaded.
+- Codes are recorded in files of their own (`<jobname>-fqr-<hash>.fqr`) and replayed in later runs (`persist`, on by default), so only the first run draws them; `externalize` also turns them into pdfs of their own. The manual is built that way.
+- New `figures`, `no figures`, `extras` and `no extras` options select the figures and decorations of a style by name, and `figure chance` sets how often figures are drawn. `\FancyQrListFigures`, `\FancyQrListExtras`, `\FancyQrShowFigure`, `\FancyQrShowPattern`, `\FancyQrFigureGallery`, `\FancyQrExtraGallery` and `\FancyQrTileGallery` list and draw them. The manual shows every figure, tile and decoration of each style, generated from the style files.
+- New `faint` option: the code in a faint grey, but the figures put with `place` in full colors.
+- The figure galleries print the default chance of every figure and draw the module grid over it.
+- `snow` puts a small snowflake on some tiles (extra `flakes`). Added to another style, its snow lies only on flat tops such as battlements, never on spires, roofs or figures, and no icicles hang below towers.
+- New `add` option and `\FancyQrAdd`: the decorations of `halloween` (webs, threads, slime), `christmas` (lights, stars, snowflakes, candles) and `snow` (snow on the tiles) on any other style, such as castle walls with spider webs. Style authors lend decorations with `\FancyQrLend`.
+- New `background margin` option (default `3.5pt`): the background reaches that far beyond the code.
+- New `place` option puts a figure at a module, or at the closest place it fits. New `style` option sets a style for one code only; the other options override it. New macros for style authors: `\FancyQrExtra`, `\FancyQrIfExtra`, `\FancyQrExtras` and `\FancyQrSince`.
+
+**Fixed bugs:**
+
+- Alignment patterns were not styled on the first LaTeX run, and could take the positions of a previous code.
+- With `\FancyQrDoNotPrintSquare` and finder shapes, the alignment shape was drawn inside the hole and damaged the cached matrix, so the next code with the same text failed with "Missing number". A shape that reaches into the hole is now left out.
+- `\FancyQrDoNotPrintRadius` hid only a few modules around the center instead of the rounded rectangle.
+- `\FancyQrLoad` in running text added stray spaces, because lines of the style files ended without `%`.
+- `\FancyQrLoadDefault` did not reset the drawing passes, so after `glows` every tile was drawn more than once.
+- Text beyond ASCII broke LuaLaTeX and XeLaTeX, and was read as the wrong character set on pdfLaTeX.
+- The random styles used a pdfTeX-only primitive, so they failed on LuaLaTeX and XeLaTeX. All styles now work with pdfLaTeX, LuaLaTeX and XeLaTeX.
+- Corrected the inner rounding of the `default` style.
+- The straight part of a round finder ring where data tiles merge is computed from its real corner radius, so there are no notches next to round rings.
+- `dots` and `blobs` left their finder settings to the next style. `\FancyQrStyleSet` now also restores finder thickness, finder radius and alignment colors when the next style loads.
+
+**Tests:**
+
+- New tests for the finder colors (counted per module), the alignment modes, merging into the rings, the pumpkin, style switching, the snow and halloween styles (skull and ghost counts checked against the matrix, snow caps), the hole fix, loading a style in running text, and alignment patterns on the first run.
+- The figure API is checked against a separate Python model of the placement. Castle and christmas have smoke tests. Snow cap counts are checked against the matrix, and alignment colors have their own tests.
+- Text beyond ASCII is tested on pdfTeX, LuaTeX and XeTeX (`config-unicode.lua`).
+- `l3build scan` (tests/scan/scancheck.py) scans 1000 random codes over all styles with zxing and ZBar at 100, 150 and 300 dpi.
+
+**Documentation:**
+
+- Rewritten in plain language, with a single table for the finder and alignment keys, a new section on text beyond ASCII, and an option table that breaks across pages instead of running into the footer.
+- The manual is built with `l3build doc` and uses the `xlistings` package, included as a git submodule (clone with `--recurse-submodules`). It has side-by-side examples and an index of commands and keys.
+- The manual links every command and key in the text and examples to its explanation (code links from the `xlistings` submodule).
+- Even spacing in the figure captions.
+
+**Closed issues and merged pull requests:**
+
+- chore\(deps\): bump actions/checkout from 6 to 7 [\#58](https://github.com/EagleoutIce/fancyqr/pull/58) ([dependabot[bot]](https://github.com/apps/dependabot))
+- The `gh-pages` branch is published as an orphan branch, and Git LFS is no longer used.
+
 ## [v2.4](https://github.com/EagleoutIce/fancyqr/tree/v2.4) (2026-08-17)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.3...v2.4)

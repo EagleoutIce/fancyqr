@@ -35,15 +35,15 @@
 \TestValue{pattern-rings}{9}{\fancyqrtest@n{S}}
 \TestValue{pattern-shapes}{18}{\fancyqrtest@n{Z}}
 
-\TestCounts{finder-circle}{P=812 M=803 L=4917 A+=967 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-circle}{P=812 M=803 L=4947 A+=959 A-=347 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=circle]{abc}}
-\TestCounts{finder-square}{P=812 M=821 L=4971 A+=949 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-square}{P=812 M=821 L=4991 A+=888 A-=345 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=square]{abc}}
-\TestCounts{finder-rounded}{P=812 M=821 L=4989 A+=1021 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-rounded}{P=812 M=821 L=5019 A+=1013 A-=347 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=rounded]{abc}}
-\TestCounts{finder-star}{P=812 M=821 L=5025 A+=985 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-star}{P=812 M=821 L=5055 A+=977 A-=347 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=rounded,finder core=star]{abc}}
-\TestCounts{finder-mixed}{P=812 M=812 L=4944 A+=958 A-=341 C=0 F=812 S=9 Z=18 O=0 o=0}{%
+\TestCounts{finder-mixed}{P=812 M=812 L=4964 A+=897 A-=345 C=0 F=812 S=9 Z=18 O=0 o=0}{%
   \fancyqr[size=3cm,tight,version=7,color=black,finder=square,finder core=circle]{abc}}
 
 % a core shape on its own leaves the ring to the tiles and replaces only the
@@ -58,6 +58,30 @@
 \fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder core=inherit]{abc}}%
 \edef\CoreInherit{\fancyqrtest@n{P}}
 \TestValue{core-inherit-keeps-tiles}{same}{\ifx\Plain\CoreInherit same\else different\fi}
+
+% a core color recolors, it does not change what is drawn
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder core color=red]{abc}}%
+\edef\CoreRecolored{\fancyqrtest@n{P}}
+\TestValue{core-color-keeps-tiles}{same}{\ifx\Plain\CoreRecolored same\else different\fi}
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=circle,finder core color=red]{abc}}%
+\TestValue{core-color-keeps-shapes}{18}{\fancyqrtest@n{Z}}
+
+% `alignment=inherit' leaves the six alignment patterns to the tiles
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=circle,alignment=inherit]{abc}}%
+\TestValue{alignment-inherit-rings}{3}{\fancyqrtest@n{S}}
+\TestValue{alignment-inherit-shapes}{6}{\fancyqrtest@n{Z}}
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder core=star,alignment=inherit]{abc}}%
+\TestValue{alignment-inherit-cores}{3}{\fancyqrtest@n{Z}}
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=circle,alignment=finder]{abc}}%
+\TestValue{alignment-finder-rings}{9}{\fancyqrtest@n{S}}
+
+% `alignment=hide' drops the 6*25 alignment modules without drawing anything
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,finder=circle,alignment=hide]{abc}}%
+\TestValue{alignment-hide-rings}{3}{\fancyqrtest@n{S}}
+\TestValue{alignment-hide-shapes}{6}{\fancyqrtest@n{Z}}
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=7,color=black,alignment=hide]{abc}}%
+\edef\Hidden{\fancyqrtest@n{P}}
+\TestValue{alignment-hide-drops-tiles}{fewer}{\ifnum\Hidden<\Plain fewer\else not\fi}
 
 % the map is torn down again, so the next code is unaffected
 \fancyqrtest@run{\Code}\edef\After{\fancyqrtest@n{P}}

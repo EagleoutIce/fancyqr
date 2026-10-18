@@ -1,0 +1,1040 @@
+% style `castle': a fortress of rounded stones in dark mortar, two courses per
+% module in a running bond that follows the absolute position; the stone drifts
+% between tints over the code. Runs of tiles with white above get battlements
+% (now and then a guard), lone columns towers or trees, walls the odd window,
+% door or banner; blocks with white above become towers, citadels, halls,
+% castles, gatehouses and keeps, lone pairs houses. White regions that walls
+% enclose are fields, the rest is grass with streams, small fields and
+% training grounds. The finders are ring walls around a moat with a keep and a
+% drawbridge. Tunables \fancyqr@<figure>@chance (figure: the ones below, guard, princess).
+% Free bars become mountain ranges, and a rare dragon (two at most) spreads its wings.
+\FancyQrSince{2.5}%
+\def\fancyqr@cs@ch#1#2{\@ifundefined{fancyqr@#1@chance}{\@namedef{fancyqr@#1@chance}{#2}}{}}%
+\fancyqr@cs@ch{keep}{.6}\fancyqr@cs@ch{gatehouse}1\fancyqr@cs@ch{castle}1\fancyqr@cs@ch{citadel}1%
+\fancyqr@cs@ch{watchpost}{.17}\fancyqr@cs@ch{trees}{.2}\fancyqr@cs@ch{tent}{.25}\fancyqr@cs@ch{well}{.33}\fancyqr@cs@ch{hut}{.5}\fancyqr@cs@ch{turret}1%
+\fancyqr@cs@ch{mountains}{.6}\fancyqr@cs@ch{dragon}{.12}\fancyqr@cs@ch{volcano}{.3}%
+\fancyqr@cs@ch{hall}1\fancyqr@cs@ch{tower}1\fancyqr@cs@ch{house}{.7}\fancyqr@cs@ch{princess}{.25}\fancyqr@cs@ch{guard}{.7}%
+\def\fancyqr@cs@mortar{\fancyqr@mixcolor{.!86!black}}%
+\def\fancyqr@cs@light{\fancyqr@mixcolor{.!97!white}}%
+\def\fancyqr@cs@lit{\fancyqr@mixcolor{.!96!white}}%
+\def\fancyqr@cs@deep{\fancyqr@mixcolor{.!93!black}}%
+\def\fancyqr@cs@dark{\fancyqr@mixcolor{.!30!black}}%
+% two slow triangle waves over the position give the shares (0 to 6) of grey
+% and red in the stone; roofs, banners and pennants take a matching hue
+\definecolor{fancyqr@cs@grey}{rgb}{.3,.3,.3}\definecolor{fancyqr@cs@red}{rgb}{.45,.15,.1}%
+\def\fancyqr@cs@roof{\fancyqr@mixcolor{.!36!\fancyqr@cs@rh!72!black}}%
+\def\fancyqr@cs@roofs{\fancyqr@mixcolor{.!36!\fancyqr@cs@rh!50!black}}%
+\def\fancyqr@cs@banner{\fancyqr@mixcolor{.!10!\ifcase\numexpr\i+2*\j-3*((\i+2*\j)/3)\relax
+   magenta!70!red!72!black\or\fancyqr@cs@bh!76!black\else yellow!70!orange!70!black\fi}}%
+\def\fancyqr@cs@gold{\fancyqr@mixcolor{.!30!orange!75!black}}%
+\def\fancyqr@cs@trunk{\fancyqr@mixcolor{.!40!brown!45!black}}%
+\def\fancyqr@cs@leafa{\fancyqr@mixcolor{.!25!green!42!black}}%
+\def\fancyqr@cs@leafb{\fancyqr@mixcolor{.!25!green!52!black}}%
+\def\fancyqr@cs@leafc{\fancyqr@mixcolor{.!25!green!66!black}}%
+% the tints and hues only go with the style's own colours: for colours of the
+% user the stone keeps them, and the roofs, banners, trees are shades of them
+\colorlet{fancyqr@cs@dtl}{brown!52!black}\colorlet{fancyqr@cs@dbr}{brown!40!gray!45!black}%
+\def\fancyqr@cs@user{\let\fancyqr@cs@field\fancyqr@cs@plainfield
+   \def\fancyqr@cs@roof{\fancyqr@mixcolor{.!62!black}}\def\fancyqr@cs@roofs{\fancyqr@mixcolor{.!45!black}}%
+   \def\fancyqr@cs@banner{\fancyqr@mixcolor{.!50!black}}\def\fancyqr@cs@trunk{\fancyqr@mixcolor{.!55!black}}%
+   \def\fancyqr@cs@leafa{\fancyqr@mixcolor{.!70!black}}\def\fancyqr@cs@leafb{\fancyqr@mixcolor{.!85!black}}%
+   \def\fancyqr@cs@leafc{\fancyqr@mixcolor{.!90!white}}}%
+\def\fancyqr@cs@plainfield{\fancyqr@cs@ta\z@\fancyqr@cs@tb\z@}%
+\def\fancyqr@cs@own{\let\fancyqr@cs@nx\fancyqr@cs@user
+   \if@fancyqr@gradient\if@fancyqr@randomcolor@\else\ifx\fancyqr@content@color\@empty
+   \ifx\fancyqr@timing@color\@empty
+   \expandafter\ifx\csname\string\color@qr@fancy@gradient@tl\expandafter\endcsname
+      \csname\string\color@fancyqr@cs@dtl\endcsname
+   \expandafter\ifx\csname\string\color@qr@fancy@gradient@br\expandafter\endcsname
+      \csname\string\color@fancyqr@cs@dbr\endcsname
+      \let\fancyqr@cs@nx\relax\fi\fi\fi\fi\fi\fi\fancyqr@cs@nx}%
+\def\fancyqr@cs@hue#1{\def\fancyqr@cs@rh{#1}\def\fancyqr@cs@bh{#1}}\fancyqr@cs@hue{red}%
+% the share at the position #2 along a wave of period 2*#1 (4*#1 positions,
+% read from a table): none for half of it, rising to the full 6 and staying
+\def\fancyqr@cs@wave#1#2{\csname fancyqr@cs@T#1@\the\numexpr#2-4*#1*((2*(#2)-4*#1+1)/(8*#1))\endcsname}%
+\def\fancyqr@cs@table#1{\@tempcnta\z@
+   \@whilenum\@tempcnta<\numexpr4*#1\do{%
+      \@tempcntb\ifnum\@tempcnta>\numexpr2*#1\relax\numexpr4*#1-\@tempcnta\relax\else\@tempcnta\fi
+      \@tempcntb\numexpr(\@tempcntb*12)/#1-12\relax
+      \ifnum\@tempcntb<\z@\@tempcntb\z@\fi\ifnum\@tempcntb>6 \@tempcntb6 \fi
+      \expandafter\xdef\csname fancyqr@cs@T#1@\the\@tempcnta\endcsname{\the\@tempcntb}%
+      \advance\@tempcnta\@ne}}%
+\ifcsname fancyqr@cs@T17@0\endcsname\else\fancyqr@cs@table{17}\fancyqr@cs@table{14}\fi
+\def\fancyqr@cs@field{%
+   \fancyqr@cs@ta\fancyqr@cs@wave{17}{\i*3+\j*2+30}\relax
+   \fancyqr@cs@tb\fancyqr@cs@wave{14}{\j*3+150-\i*2}\relax}%
+\def\fancyqr@cs@tint{%
+   \ifnum\numexpr\fancyqr@cs@ta+\fancyqr@cs@tb>\z@
+      \edef\fancyqr@cs@mix{.!\the\numexpr100-7*\fancyqr@cs@ta!fancyqr@cs@grey%
+         !\the\numexpr100-7*\fancyqr@cs@tb!fancyqr@cs@red}%
+      \fancyqr@mixcolor\fancyqr@cs@mix\fi
+   \ifnum\fancyqr@cs@ta>3 \fancyqr@cs@hue{blue}\else\ifnum\fancyqr@cs@tb>3 \fancyqr@cs@hue{orange}%
+   \else\ifnum\numexpr\fancyqr@cs@ta+\fancyqr@cs@tb=\z@\fancyqr@cs@hue{green!70!teal}\fi\fi\fi}%
+\ifdefined\fancyqr@cs@ta\else\newcount\fancyqr@cs@ta\newcount\fancyqr@cs@tb\fi
+% a value mod 7, #1 an expression that is not negative
+\def\fancyqr@cs@m#1{(#1-7*((#1-3)/7))}%
+% a rounded rectangle [#1,#3]x[#2,#4] with the corner radii #5 (bottom left),
+% #6 (bottom right), #7 (top right), #8 (top left); the path is kept, and so is
+% what pict2e makes of it, see \fancyqr@cs@g; rq: all radii #5
+\def\fancyqr@cs@rq#1#2#3#4#5{\fancyqr@cs@rr{#1}{#2}{#3}{#4}{#5}{#5}{#5}{#5}}%
+\def\fancyqr@cs@rr#1#2#3#4#5#6#7#8{%
+   \fancyqr@cs@g{#1/#2/#3/#4/#5/#6/#7/#8}{%
+      \ifcsname fancyqr@cs@@#1/#2/#3/#4/#5/#6/#7/#8\endcsname\else
+         \fancyqr@cs@mk{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}\fi
+      \csname fancyqr@cs@@#1/#2/#3/#4/#5/#6/#7/#8\endcsname}}%
+% adds the path #2 to the one pict2e builds, built once per name #1 and
+% \unitlength with the plain commands below (pict2e's own are the bulk of the work)
+\def\fancyqr@cs@g#1#2{%
+   \ifcsname fancyqr@cs@g@\the\unitlength @#1\endcsname\else
+      \begingroup\let\moveto\fancyqr@cs@Mt\let\lineto\fancyqr@cs@Lt\let\curveto\fancyqr@cs@Ct
+      \let\closepath\fancyqr@cs@Zt\def\fancyqr@cs@gz{}#2%
+      \global\expandafter\let\csname fancyqr@cs@g@\the\unitlength @#1\endcsname\fancyqr@cs@gz\endgroup\fi
+   \expandafter\expandafter\expandafter\fancyqr@cs@gq\csname fancyqr@cs@g@\the\unitlength @#1\endcsname\relax}%
+% appended unexpanded: pict2e's addtoGraph would expand everything before it again
+\def\fancyqr@cs@gq#1\relax{\global\pIIe@GRAPH\expandafter{\the\pIIe@GRAPH#1}}%
+% pict2e's output for the path commands, without its bookkeeping
+\def\fancyqr@cs@pn#1{\space\strip@pt\dimexpr#1\unitlength\relax}%
+\def\fancyqr@cs@Mt(#1,#2){\edef\fancyqr@cs@gz{\fancyqr@cs@gz\fancyqr@cs@pn{#1}\fancyqr@cs@pn{#2}\space m}}%
+\def\fancyqr@cs@Lt(#1,#2){\edef\fancyqr@cs@gz{\fancyqr@cs@gz\fancyqr@cs@pn{#1}\fancyqr@cs@pn{#2}\space l}}%
+\def\fancyqr@cs@Ct(#1,#2)(#3,#4)(#5,#6){\edef\fancyqr@cs@gz{\fancyqr@cs@gz\fancyqr@cs@pn{#1}\fancyqr@cs@pn{#2}%
+   \fancyqr@cs@pn{#3}\fancyqr@cs@pn{#4}\fancyqr@cs@pn{#5}\fancyqr@cs@pn{#6}\space c}}%
+\def\fancyqr@cs@Zt{\edef\fancyqr@cs@gz{\fancyqr@cs@gz\space h}}%
+\def\fancyqr@cs@mk#1#2#3#4#5#6#7#8{%
+   \global\expandafter\edef\csname fancyqr@cs@@#1/#2/#3/#4/#5/#6/#7/#8\endcsname{%
+      \noexpand\moveto(\fancyqr@cs@a{#1}1{#5},#2)\noexpand\lineto(\fancyqr@cs@a{#3}{-1}{#6},#2)%
+      \fancyqr@cs@corner{#6}{(#3,\fancyqr@cs@a{#2}1{#6})}%
+         {(\fancyqr@cs@a{#3}{-.45}{#6},#2)(#3,\fancyqr@cs@a{#2}{.45}{#6})}%
+      \noexpand\lineto(#3,\fancyqr@cs@a{#4}{-1}{#7})%
+      \fancyqr@cs@corner{#7}{(\fancyqr@cs@a{#3}{-1}{#7},#4)}%
+         {(#3,\fancyqr@cs@a{#4}{-.45}{#7})(\fancyqr@cs@a{#3}{-.45}{#7},#4)}%
+      \noexpand\lineto(\fancyqr@cs@a{#1}1{#8},#4)%
+      \fancyqr@cs@corner{#8}{(#1,\fancyqr@cs@a{#4}{-1}{#8})}%
+         {(\fancyqr@cs@a{#1}{.45}{#8},#4)(#1,\fancyqr@cs@a{#4}{-.45}{#8})}%
+      \noexpand\lineto(#1,\fancyqr@cs@a{#2}1{#5})%
+      \fancyqr@cs@corner{#5}{(\fancyqr@cs@a{#1}1{#5},#2)}%
+         {(#1,\fancyqr@cs@a{#2}{.45}{#5})(\fancyqr@cs@a{#1}{.45}{#5},#2)}%
+      \noexpand\closepath}}%
+% #1 plus #2 times #3, all numbers, and the value of the dimension expression
+% #1 in points: dimension arithmetic, fast and fine enough
+\def\fancyqr@cs@a#1#2#3{\strip@pt\dimexpr#1\p@+#2\dimexpr#3\p@\relax\relax}%
+\def\fancyqr@cs@dx#1{\strip@pt\dimexpr#1\relax}%
+% a corner of radius #1 to #2, small ones (which print alike) cut straight
+\def\fancyqr@cs@corner#1#2#3{\ifdim#1\p@>\z@
+   \ifdim#1\p@>.06\p@\noexpand\curveto#3#2\else\noexpand\lineto#2\fi\fi}%
+% the paths #2 (made of rounded rectangles) kept as one under the name #1
+\def\fancyqr@cs@P#1#2{\fancyqr@cs@g{P#1}{\ifcsname fancyqr@cs@P@#1\endcsname\else
+      \begingroup\global\let\fancyqr@cs@acc\@empty\let\fancyqr@cs@rr\fancyqr@cs@rrc#2\endgroup
+      \global\expandafter\let\csname fancyqr@cs@P@#1\endcsname\fancyqr@cs@acc\fi
+   \csname fancyqr@cs@P@#1\endcsname}}%
+\def\fancyqr@cs@rrc#1#2#3#4#5#6#7#8{%
+   \ifcsname fancyqr@cs@@#1/#2/#3/#4/#5/#6/#7/#8\endcsname\else
+      \fancyqr@cs@mk{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}\fi
+   \xdef\fancyqr@cs@acc{\unexpanded\expandafter{\fancyqr@cs@acc}\unexpanded\expandafter\expandafter
+      \expandafter{\csname fancyqr@cs@@#1/#2/#3/#4/#5/#6/#7/#8\endcsname}}}%
+% a stone #3 (a path) of course #1, number #2 along it, in one of the shades
+\def\fancyqr@cs@b#1#2#3{%
+   \ifcase\numexpr\fancyqr@cs@m{((#1)*(#1)*5+(#2)*11+(#1)*(#2)*3+(#2)*(#2)*2)}\relax
+      #3\fillpath\or#3\fillpath\or#3\fillpath\or#3\fillpath
+   \or{\fancyqr@cs@light#3\fillpath}\or{\fancyqr@cs@light#3\fillpath}%
+   \else{\fancyqr@cs@deep#3\fillpath}\fi}%
+% a pointed roof from #1 to #2 at height #3 up to height #4, its right half in
+% shade
+\def\fancyqr@cs@spire#1#2#3#4{%
+   \ifcsname fancyqr@cs@s#1/#2/#3/#4\endcsname\else{%
+      \@tempdima\dimexpr#2\p@-#1\p@\relax\@tempdimb\dimexpr(#1\p@+#2\p@)/2\relax\@tempdimc\dimexpr#4\p@-#3\p@\relax
+      \edef\fancyqr@cs@sa{\fancyqr@cs@dx{#2\p@-.12\@tempdima},\fancyqr@cs@dx{#3\p@+.22\@tempdimc}}%
+      \edef\fancyqr@cs@sb{\fancyqr@cs@dx{\@tempdimb+.05\@tempdima},\fancyqr@cs@dx{#4\p@-.35\@tempdimc}}%
+      \edef\fancyqr@cs@sc{\fancyqr@cs@dx{\@tempdimb},#4}%
+      \edef\fancyqr@cs@sd{\fancyqr@cs@dx{\@tempdimb-.05\@tempdima},\fancyqr@cs@dx{#4\p@-.35\@tempdimc}}%
+      \edef\fancyqr@cs@se{\fancyqr@cs@dx{#1\p@+.12\@tempdima},\fancyqr@cs@dx{#3\p@+.22\@tempdimc}}%
+      \global\expandafter\edef\csname fancyqr@cs@s#1/#2/#3/#4\endcsname{\noexpand\moveto(#1,#3)\noexpand\lineto(#2,#3)%
+         \noexpand\curveto(\fancyqr@cs@sa)(\fancyqr@cs@sb)(\fancyqr@cs@sc)%
+         \noexpand\curveto(\fancyqr@cs@sd)(\fancyqr@cs@se)(#1,#3)\noexpand\closepath}%
+      \global\expandafter\edef\csname fancyqr@cs@S#1/#2/#3/#4\endcsname{\noexpand\moveto(\fancyqr@cs@dx{\@tempdimb},#3)\noexpand\lineto(#2,#3)%
+         \noexpand\curveto(\fancyqr@cs@sa)(\fancyqr@cs@sb)(\fancyqr@cs@sc)\noexpand\closepath}}\fi
+   {\fancyqr@cs@roof\fancyqr@cs@g{s#1/#2/#3/#4}{\csname fancyqr@cs@s#1/#2/#3/#4\endcsname}\fillpath
+    \fancyqr@cs@roofs\fancyqr@cs@g{S#1/#2/#3/#4}{\csname fancyqr@cs@S#1/#2/#3/#4\endcsname}\fillpath}}%
+% the path #2 (with \noexpand'ed commands) kept under the name #1
+\def\fancyqr@cs@E#1#2{\fancyqr@cs@g{E#1}{\ifcsname fancyqr@cs@E@#1\endcsname\else
+      \global\expandafter\edef\csname fancyqr@cs@E@#1\endcsname{#2}\fi
+   \csname fancyqr@cs@E@#1\endcsname}}%
+% openings from #1 to #2 over #3 up to #4, round top included: a window in a
+% frame of lit stones over a sill, a gate with a portcullis instead
+\def\fancyqr@cs@hf#1#2{((#2-#1)/2)}%
+\def\fancyqr@cs@frame#1#2#3#4#5{\fancyqr@cs@rr{\fpeval{#1-#5}}{#3}{\fpeval{#2+#5}}{\fpeval{#4+#5}}00%
+   {\fpeval{\fancyqr@cs@hf{#1}{#2}+#5}}{\fpeval{\fancyqr@cs@hf{#1}{#2}+#5}}}%
+\def\fancyqr@cs@arch#1#2#3#4{%
+   {\fancyqr@cs@lit\fancyqr@cs@P{Af#1/#2/#3/#4}{\fancyqr@cs@frame{#1}{#2}{#3}{#4}{.05}%
+      \fancyqr@cs@rq{\fpeval{#1-.08}}{\fpeval{#3-.06}}{\fpeval{#2+.08}}{\fpeval{#3+.01}}{.02}}\fillpath}%
+   \fancyqr@cs@hole{#1}{#2}{#3}{#4}}%
+\def\fancyqr@cs@dk#1#2#3#4{\fancyqr@cs@dark\fancyqr@cs@P{Ah#1/#2/#3/#4}{%
+   \fancyqr@cs@rr{#1}{#3}{#2}{#4}00{\fpeval{\fancyqr@cs@hf{#1}{#2}}}{\fpeval{\fancyqr@cs@hf{#1}{#2}}}}\fillpath}%
+\def\fancyqr@cs@hole#1#2#3#4{{\fancyqr@cs@dk{#1}{#2}{#3}{#4}\fancyqr@cs@mortar\fancyqr@cs@P{Ad#1/#2/#3/#4}{%
+   \fancyqr@cs@rq{\fpeval{#1+.3*(#2-#1)}}{#3}{#2}{\fpeval{#4-\fancyqr@cs@hf{#1}{#2}}}0}\fillpath}}%
+\def\fancyqr@cs@gate#1#2#3#4{%
+   {\fancyqr@cs@lit\fancyqr@cs@P{Gf#1/#2/#3/#4}{\fancyqr@cs@frame{#1}{#2}{\fpeval{#3+.03}}{#4}{.06}}\fillpath}%
+   {\fancyqr@cs@dk{#1}{#2}{#3}{#4}\fancyqr@cs@mortar\fancyqr@cs@E{G#1/#2/#3/#4}{%
+      \fancyqr@cs@vbar{#1}{#2}{#3}{#4}{.2}\fancyqr@cs@vbar{#1}{#2}{#3}{#4}{.4}\fancyqr@cs@vbar{#1}{#2}{#3}{#4}{.6}%
+      \fancyqr@cs@vbar{#1}{#2}{#3}{#4}{.8}\fancyqr@cs@hbar{#1}{#2}{#3}{#4}{.3}\fancyqr@cs@hbar{#1}{#2}{#3}{#4}{.6}%
+      \fancyqr@cs@hbar{#1}{#2}{#3}{#4}{.88}}\fillpath}}%
+% a bar of the portcullis of the gate #1--#4: upright at #5 of its width, up to
+% the arch, or across at #5 of its height, between the sides or the arch
+\def\fancyqr@cs@vbar#1#2#3#4#5{\fancyqr@cs@box{\fpeval{#1+#5*(#2-#1)-.016}}{#3}{\fpeval{#1+#5*(#2-#1)+.016}}%
+   {\fpeval{#4-\fancyqr@cs@hf{#1}{#2}+sqrt(\fancyqr@cs@hf{#1}{#2}^2-((#5-.5)*(#2-#1))^2)-.005}}}%
+\def\fancyqr@cs@hbar#1#2#3#4#5{\fancyqr@cs@box{\fpeval{(#1+#2)/2-\fancyqr@cs@hw{#1}{#2}{#3}{#4}{#5}}}{\fpeval{#3+#5*(#4-#3)-.016}}%
+   {\fpeval{(#1+#2)/2+\fancyqr@cs@hw{#1}{#2}{#3}{#4}{#5}}}{\fpeval{#3+#5*(#4-#3)+.016}}}%
+\def\fancyqr@cs@hw#1#2#3#4#5{(min(\fancyqr@cs@hf{#1}{#2},sqrt(max(0,\fancyqr@cs@hf{#1}{#2}^2-(#3+#5*(#4-#3)-#4+\fancyqr@cs@hf{#1}{#2})^2)))-.005)}%
+\def\fancyqr@cs@box#1#2#3#4{\noexpand\moveto(#1,#2)\noexpand\lineto(#3,#2)\noexpand\lineto(#3,#4)\noexpand\lineto(#1,#4)\noexpand\closepath}%
+% a small window from #1 to #2 over #3 (up to .26 higher), lit warm at random
+% but never in the patterns
+\def\fancyqr@cs@sw#1#2#3{\fancyqr@cs@arch{#1}{#2}{#3}{\fpeval{#3+.26}}%
+   \ifnum\ifcsname fancyqr@B@\the\i @\the\j\endcsname1\else\csname int_rand:nn\endcsname{0}{2}\fi=\z@{\color{fancyqr@cs@glow}%
+      \fancyqr@cs@P{Sw#1/#2/#3}{\fancyqr@cs@rr{\fpeval{#1+.015}}{\fpeval{#3+.015}}{\fpeval{#2-.015}}{\fpeval{#3+.245}}00%
+         {\fpeval{(#2-#1)/2-.015}}{\fpeval{(#2-#1)/2-.015}}}\fillpath}\fi}%
+\def\fancyqr@cs@rose{{\fancyqr@cs@lit\fancyqr@cs@rq{.32}{.42}{.68}{.78}{.18}\fillpath
+   \fancyqr@cs@dark\fancyqr@cs@rq{.36}{.46}{.64}{.74}{.14}\fillpath
+   \fancyqr@cs@mortar\fancyqr@cs@P{Ro}{\fancyqr@cs@rq{.485}{.46}{.515}{.74}0\fancyqr@cs@rq{.36}{.585}{.64}{.615}0%
+      \fancyqr@cs@rq{.46}{.56}{.54}{.64}{.04}}\fillpath}}%
+\def\fancyqr@cs@slit{{\fancyqr@cs@dark\fancyqr@cs@P{S}{%
+   \fancyqr@cs@rq{.45}{.2}{.55}{.72}{.05}%
+   \fancyqr@cs@rq{.36}{.42}{.64}{.5}{.04}}\fillpath}}%
+% a banner hanging from #1 (top), swallow-tailed, with a golden lozenge
+\def\fancyqr@cs@banner@#1{\FancyQrExtra{wall/banner}{\fancyqr@cs@banner@@{#1}}}%
+\def\fancyqr@cs@banner@@#1{{\fancyqr@cs@banner
+   \fancyqr@cs@E{b#1}{\noexpand\moveto(.31,#1)\noexpand\lineto(.69,#1)\noexpand\lineto(.69,.14)%
+      \noexpand\lineto(.5,.25)\noexpand\lineto(.31,.14)\noexpand\closepath}\fillpath
+   \fancyqr@cs@gold\fancyqr@cs@E{B#1}{%
+   \noexpand\moveto(.5,\fpeval{#1-.13})\noexpand\lineto(.58,\fpeval{#1-.25})\noexpand\lineto(.5,\fpeval{#1-.37})%
+   \noexpand\lineto(.42,\fpeval{#1-.25})\noexpand\closepath}\fillpath
+   \fancyqr@cs@rr{.27}{\fpeval{#1-.05}}{.73}{\fpeval{#1+.01}}{.02}{.02}{.02}{.02}\fillpath}}%
+% the lower course: #1/#2 1 for a neighbour left/right, #3 1 for one below,
+% #4 the course, #5 the column; a stone across the right border is drawn whole
+% by the tile left of it, which leaves that half to it
+\def\fancyqr@cs@lr#1{\ifnum#1=0 .18\else.05\fi}%
+\def\fancyqr@cs@lower#1#2#3#4#5{%
+   \ifnum#1=0 \fancyqr@cs@b{#4}{#5}{\fancyqr@cs@P{l#3\ifx\fancyqr@cs@mo\@empty\else s\fi}{\fancyqr@cs@rr{\fancyqr@cs@sx#1{.025}{.145}}{.025}{.475}{.475}{\fancyqr@cs@lr{#3}}{.05}{.05}{.05}}}\fi
+   \ifnum#2=0 \fancyqr@cs@b{#4}{#5+1}{\fancyqr@cs@P{r#3\ifx\fancyqr@cs@mo\@empty\else s\fi}{\fancyqr@cs@rr{.525}{.025}{\fancyqr@cs@sx#2{.975}{.855}}{.475}{.05}{\fancyqr@cs@lr{#3}}{.05}{.05}}}%
+   \else\fancyqr@cs@b{#4}{#5+1}{\fancyqr@cs@P{s}{\fancyqr@cs@rq{.525}{.025}{1.475}{.475}{.05}}}\fi}%
+% the sides of a coping drawn for a tower rising from it: #1 neighbour, else the value #3
+\def\fancyqr@cs@sx#1#2#3{\ifx\fancyqr@cs@mo\@empty#2\else\ifnum#1=0 #3\else#2\fi\fi}%
+% the mortar under the stones the stones, #1/#2/#3 1 for a neighbour left/right/below, #4
+% its top; it reaches a little into the neighbours drawn later
+\def\fancyqr@cs@bed#1#2#3#4{\fancyqr@cs@bed@#1#2#3{#4}00}%
+\def\fancyqr@cs@bedx#1#2#3#4#5#6{\fancyqr@cs@bed@#3#4#5{#6}#1#2}%
+% ... #5 1 if the neighbour right has stone as high as this one, #6 1 if the
+% one below is as wide: the joints between tiles then lie in mortar of both
+\def\fancyqr@cs@bed@#1#2#3#4#5#6{%
+   \fancyqr@cs@rr{\ifnum#1=0 \fancyqr@cs@sx#10{.12}\else.49\fi}{0}{\ifnum#2=0 \fancyqr@cs@sx#21{.88}\else1.5\fi}{.5}{\ifnum#1#3=0 .2\else0\fi}{\ifnum#2#3=0 .2\else0\fi}00%
+   \fancyqr@cs@rr{\fancyqr@cs@sx#10{.12}}{.49}{\fancyqr@cs@sx#21{.88}}{#4}0000%
+   \ifnum#2=1 \fancyqr@cs@rq{.98}{.49}{1.02}{\ifnum#5=1 #4\else.72\fi}0\fi
+   \ifnum#3=1 \fancyqr@cs@rq{\ifnum#6=1 0\else.12\fi}{-.02}{\ifnum#6=1 1\else.88\fi}{.02}0\fi}%
+% a stone module, #1 up, #2 left, #3 right, #4 down (1 for stone), #5 its row,
+% #6 its column (expressions); the lower course lies half a module off the upper
+\def\fancyqr@cs@mod#1#2#3#4#5#6{%
+   \edef\fancyqr@cs@hi{\ifnum#1#3=11 \fancyqr@cs@at@{#5-1}{#6+1}\else0\fi
+      \ifnum#4=1 \ifcsname fancyqr@B@\the\numexpr#5+1\relax @\the\numexpr#6\relax\endcsname1\else
+         \ifnum\fancyqr@cs@at@{#5+1}{#6-1}\fancyqr@cs@at@{#5+1}{#6+1}>\z@1\else0\fi\fi\else0\fi}%
+   \edef\fancyqr@cs@ml{\ifx\fancyqr@cs@mo\@empty#2#3\else\fancyqr@cs@mo\fi}%
+   \edef\fancyqr@cs@mt{\ifnum\fancyqr@fig@hash{19}{(#5)}{(#6)}<30 .9\else1\fi}% some merlons are lower
+   {\fancyqr@cs@mortar\fancyqr@cs@P{M#1#2#3#4\fancyqr@cs@hi\fancyqr@cs@ml\fancyqr@cs@mt}{%
+       \expandafter\fancyqr@cs@bedx\fancyqr@cs@hi#2#3#4{\ifnum#1=0 .72\else1\fi}%
+       \ifnum#1=0 \expandafter\fancyqr@cs@mpx\fancyqr@cs@ml{0}{0}{.1}\fi}\fillpath}%
+   \fancyqr@cs@lower#2#3#4{2*(#5)+1}{#6}%
+   \ifnum#1=0
+      {\fancyqr@cs@lit\fancyqr@cs@P{C\fancyqr@cs@ml\fancyqr@cs@mt\ifx\fancyqr@cs@mo\@empty\else s#2#3\fi}{\fancyqr@cs@rq{\fancyqr@cs@sx#2{.025}{.145}}{.525}{\fancyqr@cs@sx#3{.975}{.855}}{.695}{.04}%
+         \expandafter\fancyqr@cs@mpx\fancyqr@cs@ml{.025}{.745}{.08}}\fillpath}%
+   \else
+      \fancyqr@cs@b{2*(#5)}{#6}{\fancyqr@cs@P{t}{\fancyqr@cs@rq{.025}{.525}{.975}{.975}{.05}}}%
+   \fi}%
+\let\fancyqr@cs@mo\@empty % merlons as if there were neighbours #1#2 when not empty
+\def\fancyqr@cs@mpx#1#2#3#4#5{\fancyqr@cs@mp{#3}{#4}{#5}#1#2}%
+% the merlons over a coping by the neighbours left (#4) and right (#5), inset by
+% #1 from their bottom #2 (0 for the mortar), with the radius #3 at the top
+\def\fancyqr@cs@mp#1#2#3#4#5{\def\fancyqr@cs@q##1##2{\fancyqr@cs@mq{##1}{##2}{#1}{#2}{#3}}%
+   \ifnum#4#5=11 \fancyqr@cs@q{.25}{.75}\fi
+   \ifnum#4#5=01 \fancyqr@cs@q{0}{.3}\fancyqr@cs@q{.48}{.75}\fi
+   \ifnum#4#5=10 \fancyqr@cs@q{.25}{.52}\fancyqr@cs@q{.7}{1}\fi
+   \ifnum#4#5=0 \fancyqr@cs@q{0}{.3}\fancyqr@cs@q{.38}{.62}\fancyqr@cs@q{.7}{1}\fi}%
+\def\fancyqr@cs@mq#1#2#3#4#5{\ifdim#4\p@=\z@
+   \fancyqr@cs@rr{#1}{.7}{#2}\fancyqr@cs@mt{0}{0}{#5}{#5}\else
+   \fancyqr@cs@rr{\fpeval{#1+#3}}{#4}{\fpeval{#2-#3}}{\fpeval{\fancyqr@cs@mt-.025}}{.03}{.03}{#5}{#5}\fi}\def\fancyqr@cs@mt{1}%
+% a pennant on a pole at #1 from #2 up, in the color #3
+\def\fancyqr@cs@flag#1#2#3{{\fancyqr@cs@dark\linethickness{.03\unitlength}%
+   \moveto(#1,\fpeval{#2-.02})\lineto(#1,.99)\strokepath#3%
+   \fancyqr@cs@E{F#1}{\noexpand\moveto(\fpeval{#1+.01},.99)\noexpand\lineto(\fpeval{#1+.34},.94)\noexpand\lineto(\fpeval{#1+.25},.915)%
+      \noexpand\lineto(\fpeval{#1+.31},.87)\noexpand\lineto(\fpeval{#1+.01},.85)\noexpand\closepath}\fillpath}}%
+% the top of a tower over a module: its lower course, the lit coping and a roof
+% on it; #1/#2 1 for a neighbour left/right, #3 row, #4 column
+\def\fancyqr@cs@rooftop#1#2#3#4{\fancyqr@cs@eaves#1#2{#3}{#4}1\fancyqr@cs@spire{.04}{.96}{.72}{1}}%
+% the same up to the coping, #5 1 if there is stone below
+\def\fancyqr@cs@eaves#1#2#3#4#5{%
+   {\fancyqr@cs@mortar\fancyqr@cs@P{K#1#2#5}{\fancyqr@cs@bed@#1#2#5{.72}0#5}\fillpath}%
+   \fancyqr@cs@lower#1#2#5{2*(#3)+1}{#4}%
+   {\fancyqr@cs@lit\fancyqr@cs@rq{.025}{.525}{.975}{.695}{.04}\fillpath}}%
+% a narrow tower: #1 up, #2 down (1 for stone), #3 row, #4 column
+\def\fancyqr@cs@tower#1#2#3#4{%
+   {\fancyqr@cs@mortar
+    \ifnum#2=0
+       \fancyqr@cs@rq{.12}{.2}{.88}{1}0\fillpath
+       \moveto(0,0)\lineto(1,0)\lineto(1,.05)\curveto(.9,.1)(.88,.2)(.88,.35)%
+       \lineto(.12,.35)\curveto(.12,.2)(.1,.1)(0,.05)\closepath\fillpath
+    \else\fancyqr@cs@rq{.12}{-.02}{.88}{1}0\fillpath\fi}%
+   \ifnum#2=0 % the lower stones follow the flared foot
+      \fancyqr@cs@b{2*(#3)+1}{#4}{\fancyqr@cs@E{fa}{\noexpand\moveto(.025,.025)\noexpand\lineto(.475,.025)%
+         \noexpand\lineto(.475,.475)\noexpand\lineto(.145,.475)\noexpand\lineto(.145,.35)%
+         \noexpand\curveto(.145,.22)(.12,.12)(.025,.075)\noexpand\closepath}}%
+      \fancyqr@cs@b{2*(#3)+1}{#4+1}{\fancyqr@cs@E{fb}{\noexpand\moveto(.975,.025)\noexpand\lineto(.525,.025)%
+         \noexpand\lineto(.525,.475)\noexpand\lineto(.855,.475)\noexpand\lineto(.855,.35)%
+         \noexpand\curveto(.855,.22)(.88,.12)(.975,.075)\noexpand\closepath}}%
+   \else
+      \fancyqr@cs@b{2*(#3)+1}{#4}{\fancyqr@cs@P{a}{\fancyqr@cs@rq{.145}{.025}{.475}{.475}{.04}}}%
+      \fancyqr@cs@b{2*(#3)+1}{#4+1}{\fancyqr@cs@P{b}{\fancyqr@cs@rq{.525}{.025}{.855}{.475}{.04}}}%
+   \fi
+   \fancyqr@cs@b{2*(#3)}{#4}{\fancyqr@cs@P{c}{\fancyqr@cs@rq{.145}{.525}{.855}{.975}{.05}}}%
+   \ifnum#2=0\else
+      \ifcase\numexpr\fancyqr@cs@m{((#3)*13+(#4)*5+(#3)*(#4))}\relax
+         \fancyqr@cs@banner@{.9}\or\or\else\fancyqr@cs@slit\fi\fi}%
+% a tower rising from the battlements of a wall below it
+\def\fancyqr@cs@shaft{{\fancyqr@cs@mortar\fancyqr@cs@rq{.12}{.49}{.88}{1}0\fillpath}%
+   \fancyqr@cs@b{2*\i}\j{\fancyqr@cs@P{c}{\fancyqr@cs@rq{.145}{.525}{.855}{.975}{.05}}}}%
+% the top of a narrow tower, a roof (some with a pennant) on a cornice or
+% battlements on corbels; #3 the radius of its bottom corners, 0 on a tower
+\def\fancyqr@cs@towertop#1#2#3{%
+   {\fancyqr@cs@mortar\fancyqr@cs@rr{.12}{\ifdim#3\p@=\z@-.02\else0\fi}{.88}{.5}{#3}{#3}00\fillpath}%
+   \fancyqr@cs@b{2*(#1)+1}{#2}{\fancyqr@cs@P{d#3}{\fancyqr@cs@rr{.145}{.025}{.475}{.455}{#3}{.04}{.04}{.04}}}%
+   \fancyqr@cs@b{2*(#1)+1}{#2+1}{\fancyqr@cs@P{e#3}{\fancyqr@cs@rr{.525}{.025}{.855}{.455}{.04}{#3}{.04}{.04}}}%
+   \ifodd\numexpr(#1)*3+(#2)*5+(#1)*(#2)\relax
+      {\fancyqr@cs@mortar\fancyqr@cs@rr{.04}{.46}{.96}{.6}{.04}{.04}00\fillpath
+       \fancyqr@cs@lit\fancyqr@cs@rr{.06}{.48}{.94}{.6}{.03}{.03}00\fillpath}%
+      \ifodd\numexpr((#1)*7+(#2)*3+(#1)*(#2))/3\relax
+         \fancyqr@cs@spire{.05}{.95}{.6}{.88}\fancyqr@cs@flag{.5}{.88}\fancyqr@cs@banner
+      \else\fancyqr@cs@spire{.05}{.95}{.6}{1}\fi
+   \else\fancyqr@cs@cap\fancyqr@cs@who\fi}%
+% now and then an archer with a bow or a knight with a lance and a pennant on the
+% battlements, facing either way (the sign \fancyqr@cs@sg), 0.3 high on the coping
+\definecolor{fancyqr@cs@tunic}{rgb}{.14,.36,.12}\definecolor{fancyqr@cs@steel}{rgb}{.34,.37,.42}%
+\definecolor{fancyqr@cs@skn}{rgb}{.86,.66,.52}\definecolor{fancyqr@cs@hood}{rgb}{.52,.34,.16}%
+\definecolor{fancyqr@cs@bow}{rgb}{.66,.5,.28}\definecolor{fancyqr@cs@cord}{rgb}{.9,.88,.8}%
+% drawing in the facing: X an x mirrored by the sign, M move, L line, C curve,
+% R rounded rectangle around x, D filled dot
+\def\fancyqr@cs@X#1{\fpeval{.5+\fancyqr@cs@sg*(#1)}}%
+\def\fancyqr@cs@M#1#2{\moveto(\fancyqr@cs@X{#1},#2)}\def\fancyqr@cs@L#1#2{\lineto(\fancyqr@cs@X{#1},#2)}%
+\def\fancyqr@cs@C#1#2#3#4#5#6{\curveto(\fancyqr@cs@X{#1},#2)(\fancyqr@cs@X{#3},#4)(\fancyqr@cs@X{#5},#6)}%
+\def\fancyqr@cs@R#1#2#3#4#5{\fancyqr@cs@rq{\fpeval{\fancyqr@cs@X{#1}-#3}}{#2}{\fpeval{\fancyqr@cs@X{#1}+#3}}{#4}{#5}\fillpath}%
+\def\fancyqr@cs@D#1#2#3{\fancyqr@cs@dot{\fancyqr@cs@X{#1}}{#2}{#3}\fillpath}%
+\def\fancyqr@cs@who{\FancyQrExtra{people/tower}{\ifcsname fancyqr@B@\the\i @\the\j\endcsname\else
+      \ifnum\csname int_rand:nn\endcsname{1}{\fancyqr@cs@fb}=\@ne
+         \edef\fancyqr@cs@k{\csname int_rand:nn\endcsname{0}{3}}\fancyqr@cs@man\fi\fi}}%
+% #1 mod 4: archer right, left, knight right, left
+\def\fancyqr@cs@man{\edef\fancyqr@cs@sg{\ifodd\fancyqr@cs@k-\fi1}%
+   \ifnum\fancyqr@cs@k<\tw@\fancyqr@cs@archer\else\fancyqr@cs@knight\fi}%
+\def\fancyqr@cs@archer{%
+   \color{fancyqr@cs@tunic}\fancyqr@cs@M{-.12}{.7}\fancyqr@cs@L{.12}{.7}\fancyqr@cs@L{.09}{.86}\fancyqr@cs@L{-.09}{.86}\closepath\fillpath
+   \color{fancyqr@cs@hood}\fancyqr@cs@D0{.92}{.07}\fancyqr@cs@M{-.06}{.9}\fancyqr@cs@L{-.15}{.86}\fancyqr@cs@L{-.04}{.83}\closepath\fillpath
+   \color{fancyqr@cs@skn}\fancyqr@cs@D{.025}{.9}{.048}%
+   \color{fancyqr@cs@bow}\linethickness{.035\unitlength}\fancyqr@cs@M{.12}{.74}\fancyqr@cs@C{.24}{.8}{.24}{.92}{.12}{.98}\strokepath
+   \color{fancyqr@cs@cord}\linethickness{.012\unitlength}\fancyqr@cs@M{.12}{.74}\fancyqr@cs@L{.12}{.98}\strokepath}%
+\def\fancyqr@cs@knight{%
+   \color{fancyqr@cs@steel}\fancyqr@cs@R0{.7}{.1}{.86}{.02}\fancyqr@cs@D0{.9}{.058}%
+   \fancyqr@cs@M{-.058}{.9}\fancyqr@cs@L{.058}{.9}\fancyqr@cs@L{.058}{.86}\fancyqr@cs@L{-.058}{.86}\closepath\fillpath
+   \fancyqr@cs@banner\fancyqr@cs@M{.02}{.93}\fancyqr@cs@C{.03}{.99}{-.04}{1.01}{-.11}{.98}\fancyqr@cs@C{-.07}{.97}{-.04}{.95}{-.035}{.93}\closepath\fillpath
+   \fancyqr@cs@M{-.19}{.86}\fancyqr@cs@L{-.09}{.86}\fancyqr@cs@L{-.09}{.78}\fancyqr@cs@C{-.09}{.74}{-.12}{.72}{-.14}{.7}%
+   \fancyqr@cs@C{-.16}{.72}{-.19}{.74}{-.19}{.78}\closepath\fillpath
+   \color{fancyqr@cs@bow}\fancyqr@cs@R{.17}{.7}{.011}{.99}0%
+   \fancyqr@cs@banner\fancyqr@cs@M{.18}{.99}\fancyqr@cs@L{.3}{.96}\fancyqr@cs@L{.18}{.93}\closepath\fillpath}%
+% a guard on a wall of the module at hand if the code picked it (see below)
+\def\fancyqr@cs@guard{\ifcsname\fancyqr@cs@yk G\i\j\endcsname
+   {\iffancyqr@faint@\iffancyqr@fk@\else\fancyqr@faint@false\fancyqr@gal@fqc{}\fi\fi\definecolor{fancyqr@cs@steel}{rgb}{.72,.76,.82}\definecolor{fancyqr@cs@tunic}{rgb}{.3,.66,.25}%
+    \edef\fancyqr@cs@k{\the\numexpr\fancyqr@fig@hash{14}\i\j/25\relax}\fancyqr@cs@man}\fi}%
+\def\fancyqr@cs@cap{{\def\fancyqr@cs@mt{1}\fancyqr@cs@mortar
+       \moveto(.12,.48)\lineto(.88,.48)\lineto(1,.6)\lineto(1,.72)\lineto(0,.72)\lineto(0,.6)\closepath
+       \fancyqr@cs@P{T}{\fancyqr@cs@mp{0}{0}{.1}00}\fillpath}%
+   {\def\fancyqr@cs@mt{1}\fancyqr@cs@lit\fancyqr@cs@P{U}{\fancyqr@cs@rq{.025}{.6}{.975}{.695}{.03}%
+       \fancyqr@cs@mp{.025}{.745}{.08}00}\fillpath}}%
+% a watch post: a timber cabin under a pitched roof on braced stilts
+\def\fancyqr@cs@post{{\fancyqr@cs@trunk
+   \moveto(.16,0)\lineto(.28,0)\lineto(.34,.4)\lineto(.22,.4)\closepath
+   \moveto(.84,0)\lineto(.72,0)\lineto(.66,.4)\lineto(.78,.4)\closepath\fillpath
+   \linethickness{.05\unitlength}\moveto(.3,.08)\lineto(.7,.32)\moveto(.7,.08)\lineto(.3,.32)\strokepath
+   \fancyqr@cs@P{Wc}{\fancyqr@cs@rq{.14}{.34}{.86}{.7}{.03}}\fillpath
+   \fancyqr@cs@mortar\fancyqr@cs@P{Wp}{\fancyqr@cs@rq{.14}{.52}{.86}{.56}0\fancyqr@cs@rq{.3}{.34}{.34}{.7}0\fancyqr@cs@rq{.66}{.34}{.7}{.7}0}\fillpath
+   \fancyqr@cs@roof\moveto(.04,.7)\lineto(.96,.7)\lineto(.5,.99)\closepath\fillpath
+   \fancyqr@cs@roofs\moveto(.5,.7)\lineto(.96,.7)\lineto(.5,.99)\closepath\fillpath}}%
+% a turret: a round stone tower under a spire, now and then with a pennant
+\def\fancyqr@cs@turret{%
+   {\fancyqr@cs@mortar\fancyqr@cs@rr{.2}{0}{.8}{.62}{.1}{.1}00\fillpath}%
+   \fancyqr@cs@b{2*\i+1}\j{\fancyqr@cs@P{Ta}{\fancyqr@cs@rr{.225}{.025}{.475}{.3}{.1}{.04}{.04}{.04}}}%
+   \fancyqr@cs@b{2*\i+1}{\j+1}{\fancyqr@cs@P{Tb}{\fancyqr@cs@rr{.525}{.025}{.775}{.3}{.04}{.1}{.04}{.04}}}%
+   \fancyqr@cs@b{2*\i}\j{\fancyqr@cs@P{Tc}{\fancyqr@cs@rq{.225}{.33}{.775}{.6}{.04}}}%
+   {\fancyqr@cs@lit\fancyqr@cs@rq{.16}{.6}{.84}{.66}{.02}\fillpath}%
+   \ifodd\numexpr\fancyqr@fig@hash9\i\j/7\relax\fancyqr@cs@spire{.14}{.86}{.66}{.88}\fancyqr@cs@flag{.5}{.88}\fancyqr@cs@banner
+   \else\fancyqr@cs@spire{.14}{.86}{.66}{1}\fi}%
+% #1 up, #2 left, #3 right, #4 down; the tiles are drawn at their true size,
+% the tiles of the patterns and around the hidden center keep their full width
+% and get towers at their top corners
+\def\fancyqr@castle@tile#1#2#3#4{\advance\unitlength-\fancyqr@edge@compensate
+\ifcsname fancyqr@B@\the\i @\the\j\endcsname
+   \fancyqr@cs@pos
+   \ifnum\fancyqr@cs@r<\z@\fancyqr@cs@field\fancyqr@cs@tint\fancyqr@cs@pool
+   \else\ifcase\fancyqr@cs@v\fancyqr@cs@hue{green!70!teal}\or\fancyqr@cs@hue{blue}\else\fancyqr@cs@hue{orange}\fi
+      \ifnum\numexpr\fancyqr@cs@r+\fancyqr@cs@c=\z@\FancyQrExtra{water/moat}\fancyqr@cs@moat\fi
+      \ifnum\fancyqr@cs@r=3 \ifnum\numexpr\fancyqr@cs@c*10+\fancyqr@cs@gw=1 \FancyQrExtra{water/moat}{\fancyqr@cs@hbridge{.5}{2.1}}\fi
+         \ifnum\numexpr\fancyqr@cs@c*10+\fancyqr@cs@gw=42 \FancyQrExtra{water/moat}{\fancyqr@cs@hbridge{.9}{2.1}}\fi\fi\fi
+   \ifnum#1#4=1
+      \ifnum#2#3=11 \fancyqr@cs@mod#1#2#3#4\i\j
+      \else\ifnum\numexpr\fancyqr@cs@v*10+\fancyqr@cs@r=10 \fancyqr@cs@mod#1#2#3#4\i\j
+      \else\ifnum\numexpr\fancyqr@cs@v*10+\fancyqr@cs@r=22 \fancyqr@cs@mod#1#2#3#4\i\j
+      \else\fancyqr@cs@rooftop#2#3\i\j\fi\fi\fi
+   \else\ifnum#1#2#3#4=0 \ifnum\fancyqr@cs@r<\z@\FancyQrExtra{water/boat}\fancyqr@cs@boat\else\fancyqr@cs@towertop\i\j{.1}\fi
+   \else\fancyqr@cs@mod#1#2#3#4\i\j\fi\fi
+   \ifnum\fancyqr@cs@r<\z@\else\fancyqr@cs@finder\fi
+\else\fancyqr@cs@plain#1#2#3#4\fi}%
+\def\fancyqr@cs@plain#1#2#3#4{\fancyqr@cs@field\fancyqr@cs@tint
+\ifcsname fancyqr@cs@C\the\fancyqr@cs@id\endcsname\else\FancyQrExtra{land/court}\fancyqr@cs@courts
+   \global\expandafter\let\csname fancyqr@cs@C\the\fancyqr@cs@id\endcsname\@empty\FancyQrExtra{people/guard}\fancyqr@cs@guards\fi
+\expandafter\ifnum\fancyqr@cs@at@{\i+1}\j=\z@\FancyQrExtra{land/court}\fancyqr@cs@yard\fancyqr@cs@ground
+   \ifnum#2#3=11 \FancyQrExtra{land/river}\fancyqr@cs@spring\fi\fi
+\FancyQrFigureTile{%
+\ifnum#2#3=0 %
+   \ifnum#1=0
+      \ifnum#4=0
+         \fancyqr@cs@towertop\i\j{.1}
+      \else\fancyqr@cs@towertop\i\j0\fi
+   \else\fancyqr@cs@tower1#4\i\j\fi
+\else
+   \ifnum#1=1 \ifnum\fancyqr@cs@at@{\i-1}{\j-1}\fancyqr@cs@at@{\i-1}{\j+1}=\z@
+      {\def\fancyqr@cs@mo{11}\fancyqr@cs@mod0#2#3#4\i\j}\fancyqr@cs@shaft\else\fancyqr@cs@mod#1#2#3#4\i\j\fi
+   \else\fancyqr@cs@mod#1#2#3#4\i\j\fi
+   \ifnum#2#3=11 \ifnum#1=0 \fancyqr@cs@guard\fi\fi
+   \ifnum#2#3=11
+      \ifcase\numexpr\fancyqr@fig@hash7\i\j/8\relax
+         \ifnum#1#4=11 \fancyqr@cs@arch{.4}{.6}{.24}{.72}\fi
+      \or\ifnum#1#4=10 \fancyqr@cs@gate{.32}{.68}{0}{.7}\fi
+      \or\ifnum#1=0 \fancyqr@cs@banner@{.7}\fi\fi
+   \fi
+\fi}}%
+% the ground: the white run in the row below a module (its columns \fancyqr@cs@ga
+% to \fancyqr@cs@gb), looked at once, by the first module above it that is
+% stone; some long runs get a stream along their middle or a training ground
+% at their start, all pale enough to stay white to scanners
+\definecolor{fancyqr@cs@post}{rgb}{.89,.82,.7}\definecolor{fancyqr@cs@sack}{rgb}{.94,.89,.8}%
+\definecolor{fancyqr@cs@ring}{rgb}{.96,.8,.78}\definecolor{fancyqr@cs@inner}{rgb}{1,.97,.95}%
+\definecolor{fancyqr@cs@bull}{rgb}{.98,.9,.62}%
+\def\fancyqr@cs@at@#1#2{\qr@matrixentry\fancyqr@currprint{\the\numexpr#1}{\the\numexpr#2}}%
+\def\fancyqr@cs@ground{%
+   \fancyqr@cs@ga\j\fancyqr@cs@gb\j\fancyqr@cs@gl
+   \ifnum\fancyqr@cs@gb>\z@\fancyqr@cs@gr
+      \ifnum\numexpr\fancyqr@cs@gb-\fancyqr@cs@ga>2
+         \edef\fancyqr@cs@gx{\the\numexpr\fancyqr@cs@ga-\j}\edef\fancyqr@cs@gy{\the\numexpr\fancyqr@cs@gb-\j+1}%
+         \ifnum\fancyqr@fig@hash9\i\fancyqr@cs@ga<\iffancyqr@faint@100\else16\fi\relax\FancyQrExtra{land/training}\fancyqr@cs@gt\fi\fi
+      \ifnum\fancyqr@fig@hash5\i\fancyqr@cs@ga<\iffancyqr@faint@100\else7\fi\relax\FancyQrExtra{land/field}\fancyqr@cs@gf\fi
+   \fi}%
+% by the place a dummy and a target on two modules, or one of them on one
+\def\fancyqr@cs@gt{\fancyqr@cs@free{\i+1}\fancyqr@cs@ga\ifnum\fancyqr@cs@ok=\@ne
+   \edef\fancyqr@cs@tk{\ifnum\fancyqr@fig@hash{11}\i\fancyqr@cs@ga<40 0\else\ifnum\fancyqr@fig@hash{11}\i\fancyqr@cs@ga<70 1\else2\fi\fi}%
+   \ifnum\fancyqr@cs@tk=\z@\fancyqr@cs@free{\i+1}{\fancyqr@cs@ga+1}\ifnum\fancyqr@cs@ok=\@ne
+      \fancyqr@cs@mark T{\i+1}{\fancyqr@cs@ga+1}\else\def\fancyqr@cs@tk{1}\fi\fi
+   \fancyqr@cs@mark T{\i+1}\fancyqr@cs@ga
+   \put(\fancyqr@cs@gx,-1){\ifcase\fancyqr@cs@tk\fancyqr@cs@training\or\fancyqr@cs@tdummy\else\fancyqr@cs@ttarget\fi}\fi}%
+\def\fancyqr@cs@gf{\fancyqr@cs@free{\i+1}\fancyqr@cs@ga\ifnum\fancyqr@cs@ok=\@ne
+   \fancyqr@cs@mark T{\i+1}\fancyqr@cs@ga
+   \put(\the\numexpr\fancyqr@cs@ga-\j\relax,-1){\fancyqr@cs@crop}\fi}%
+\ifdefined\fancyqr@cs@ga\else\newcount\fancyqr@cs@ga\newcount\fancyqr@cs@gb\fi
+% the walks to the ends of the run; a stone module over it to the left gives
+% up, as that one looks at the run
+\def\fancyqr@cs@gl{\let\fancyqr@cs@nx\relax
+   \ifnum\fancyqr@cs@ga>\@ne\ifnum\fancyqr@cs@at@{\i+1}{\fancyqr@cs@ga-1}=\z@
+      \advance\fancyqr@cs@ga\m@ne
+      \ifnum\fancyqr@cs@at@\i\fancyqr@cs@ga=\@ne\fancyqr@cs@gb\m@ne\else\let\fancyqr@cs@nx\fancyqr@cs@gl\fi
+   \fi\fi\fancyqr@cs@nx}%
+\def\fancyqr@cs@gr{\let\fancyqr@cs@nx\relax
+   \ifnum\fancyqr@cs@gb<\@max@x\ifnum\fancyqr@cs@at@{\i+1}{\fancyqr@cs@gb+1}=\z@
+      \advance\fancyqr@cs@gb\@ne\let\fancyqr@cs@nx\fancyqr@cs@gr\fi\fi\fancyqr@cs@nx}%
+% rivers (a couple per code at most, at random): from below the foot of a
+% wall a walk over white modules that keeps on or turns, forks off short
+% branches and ends in a pond if it runs into a dead end; it never enters the
+% patterns, a training ground or itself. #1 kind (R, T), #2 row, #3 column
+\def\fancyqr@cs@key#1#2#3{fancyqr@cs@#1\the\fancyqr@cs@id @\the\numexpr#2@\the\numexpr#3}%
+\def\fancyqr@cs@mark#1#2#3{\global\expandafter\let\csname\fancyqr@cs@key{#1}{#2}{#3}\endcsname\@empty}%
+\def\fancyqr@cs@free#1#2{\def\fancyqr@cs@ok{0}%
+   \ifnum\numexpr#1>\z@\ifnum\numexpr#2>\z@\ifnum\numexpr#1>\@max@y\else\ifnum\numexpr#2>\@max@x\else
+   \ifnum\fancyqr@cs@at@{#1}{#2}=\z@
+   \ifcsname fancyqr@B@\the\numexpr#1@\the\numexpr#2\endcsname\else
+   \ifcsname\fancyqr@cs@key R{#1}{#2}\endcsname\else\ifcsname\fancyqr@cs@key T{#1}{#2}\endcsname\else
+   \ifcsname\fancyqr@cs@yk Z{#1}{#2}\endcsname\else
+      \def\fancyqr@cs@ok{1}\fi\fi\fi\fi\fi\fi\fi\fi\fi}%
+\definecolor{fancyqr@cs@bank}{rgb}{.8,.89,.97}%
+\def\fancyqr@cs@rd#1{\ifcase\numexpr#1\relax0\or1\or0\else-1\fi}%
+\def\fancyqr@cs@cd#1{\ifcase\numexpr#1\relax1\or0\or-1\else0\fi}%
+% a free neighbour in the direction #1 (0 right, 1 down, 2 left, 3 up)?
+\def\fancyqr@cs@try#1{\fancyqr@cs@free{\fancyqr@cs@wr+\fancyqr@cs@rd{#1}}{\fancyqr@cs@wc+\fancyqr@cs@cd{#1}}}%
+\def\fancyqr@cs@spring{\ifnum\fancyqr@cs@rb>\z@\ifnum\csname int_rand:nn\endcsname{1}{30}=\@ne
+   \fancyqr@cs@free{\i+1}\j\ifnum\fancyqr@cs@ok=\@ne
+   {\let\fancyqr@cs@forks\@empty\let\fancyqr@cs@all\@empty
+    \def\fancyqr@cs@pre{\fancyqr@cs@p{.5}{-.2}\fancyqr@cs@p{.5}{-.5}}\def\fancyqr@cs@ws{0}%
+    \fancyqr@cs@river{\i+1}\j1{\csname int_rand:nn\endcsname{5}{11}}{.4}%
+    \ifnum\fancyqr@cs@ws>\tw@\xdef\fancyqr@cs@rb{\the\numexpr\fancyqr@cs@rb-1}% too short a river is left out
+    \def\fancyqr@cs@f##1##2##3##4{\fancyqr@cs@fk{##1}{##2}{##3}{##4}%
+       \fancyqr@cs@river{##1}{##2}{##3}{\csname int_rand:nn\endcsname{2}{4}}{.27}}%
+    \fancyqr@cs@forks
+    \def\fancyqr@cs@one##1##2##3{\def\fancyqr@cs@pl{##2}\fancyqr@cs@draw{\fpeval{##1+.06}}}%
+    {\color{fancyqr@cs@bank}\fancyqr@cs@all}%
+    \def\fancyqr@cs@one##1##2##3{\def\fancyqr@cs@pl{##2}\fancyqr@cs@draw{##1}##3}%
+    {\color{fancyqr@cs@water}\fancyqr@cs@all}%
+    \def\fancyqr@cs@one##1##2##3{\ifdim##1\p@>.3\p@\def\fancyqr@cs@n{0}\let\fancyqr@cs@p\fancyqr@cs@wv##2\fi}%
+    {\color{fancyqr@cs@bank}\fancyqr@cs@all}\fi}\fi\fi\fi}%
+% a faint wave on every second module of a river
+\def\fancyqr@cs@wv#1#2{\edef\fancyqr@cs@n{\the\numexpr\fancyqr@cs@n+1}%
+   \ifnum\fancyqr@cs@n>\tw@\ifodd\fancyqr@cs@n\fancyqr@cs@ripple{#1}{#2}\fi\fi}%
+\def\fancyqr@cs@ripple#1#2{{\linethickness{.03\unitlength}\roundcap
+   \moveto(\fpeval{#1-.1},\fpeval{#2-.01})\curveto(\fpeval{#1-.07},\fpeval{#2+.03})(\fpeval{#1-.03},\fpeval{#2+.03})(#1,\fpeval{#2})%
+   \curveto(\fpeval{#1+.03},\fpeval{#2-.03})(\fpeval{#1+.07},\fpeval{#2-.03})(\fpeval{#1+.1},\fpeval{#2+.01})\strokepath}}%
+% a river from the module #1, #2 heading #3 for #4 modules, #5 wide, kept in
+% \fancyqr@cs@all (all banks are drawn before all water), a pond at a dead end
+\def\fancyqr@cs@river#1#2#3#4#5{\fancyqr@cs@wr\numexpr#1\relax\fancyqr@cs@wc\numexpr#2\relax
+   \fancyqr@cs@wd#3\relax\fancyqr@cs@wn#4\relax\fancyqr@cs@mark R\fancyqr@cs@wr\fancyqr@cs@wc
+   \ifx\fancyqr@cs@pre\relax\edef\fancyqr@cs@pl{\fancyqr@cs@pt}\else\edef\fancyqr@cs@pl{\unexpanded\expandafter{\fancyqr@cs@pre}}\fi
+   \let\fancyqr@cs@pre\relax\def\fancyqr@cs@wt{0}\fancyqr@cs@walk
+   \edef\fancyqr@cs@all{\unexpanded\expandafter{\fancyqr@cs@all}\noexpand\fancyqr@cs@one{#5}%
+      {\unexpanded\expandafter{\fancyqr@cs@pl}}{\ifnum\fancyqr@cs@wn=-1 \ifdim#5\p@>.3\p@\noexpand\fancyqr@cs@dot
+      {\fancyqr@cs@a{\the\numexpr\fancyqr@cs@wc-\j}1{.5}}{\fancyqr@cs@a{\the\numexpr\i-\fancyqr@cs@wr}1{.5}}{.46}%
+      \noexpand\fillpath\fi\fi}}}%
+\let\fancyqr@cs@pre\relax
+% a branch heading #3 off a river that came heading #4 to the module #1, #2
+% starts on the river a little before it and bends away gently: a Y, not a T
+\def\fancyqr@cs@fk#1#2#3#4{\ifnum#3=#4 \let\fancyqr@cs@pre\relax\else
+   \edef\fancyqr@cs@pre{\noexpand\fancyqr@cs@p
+      {\fancyqr@cs@dx{\the\numexpr#2-\j\relax\p@+.5\p@-.5\dimexpr\fancyqr@cs@cd{#4}\p@\relax}}%
+      {\fancyqr@cs@dx{\the\numexpr\i-#1\relax\p@+.5\p@+.5\dimexpr\fancyqr@cs@rd{#4}\p@\relax}}%
+      \noexpand\fancyqr@cs@p
+      {\fancyqr@cs@dx{\the\numexpr#2-\j\relax\p@+.5\p@+.0\dimexpr\fancyqr@cs@cd{#4}\p@\relax+.32\dimexpr\fancyqr@cs@cd{#3}\p@\relax}}%
+      {\fancyqr@cs@dx{\the\numexpr\i-#1\relax\p@+.5\p@-.0\dimexpr\fancyqr@cs@rd{#4}\p@\relax-.32\dimexpr\fancyqr@cs@rd{#3}\p@\relax}}}\fi}%
+\ifdefined\fancyqr@cs@wr\else\newcount\fancyqr@cs@wr\newcount\fancyqr@cs@wc\newcount\fancyqr@cs@wd
+   \newcount\fancyqr@cs@wn\newcount\fancyqr@cs@id\fi
+\def\fancyqr@cs@pt{\noexpand\fancyqr@cs@p{\fancyqr@cs@a{\the\numexpr\fancyqr@cs@wc-\j}1{.5}}%
+   {\fancyqr@cs@a{\the\numexpr\i-\fancyqr@cs@wr}1{.5}}}%
+% a step: on (two times in three) or a turn, the first free way, but straight on
+% after a turn, so that it never doubles back; a second free way may fork off;
+% no way left: a pond then, #4 set to -1
+\def\fancyqr@cs@walk{\let\fancyqr@cs@nx\relax\ifnum\fancyqr@cs@wn>\z@
+   \ifnum\fancyqr@cs@wt=\@ne\edef\fancyqr@cs@ds{{\the\fancyqr@cs@wd}{\the\fancyqr@cs@wd}{\the\fancyqr@cs@wd}}%
+   \else\ifnum\csname int_rand:nn\endcsname{1}{3}<3
+      \edef\fancyqr@cs@ds{{\the\fancyqr@cs@wd}{\the\numexpr\fancyqr@cs@wd+1}{\the\numexpr\fancyqr@cs@wd+3}}%
+   \else\edef\fancyqr@cs@ds{{\the\numexpr\fancyqr@cs@wd+3}{\the\numexpr\fancyqr@cs@wd+1}{\the\fancyqr@cs@wd}}\fi\fi
+   \def\fancyqr@cs@nd{-1}\def\fancyqr@cs@fd{-1}%
+   \expandafter\fancyqr@cs@pick\fancyqr@cs@ds
+   \ifnum\fancyqr@cs@nd<\z@\fancyqr@cs@wn\m@ne
+   \else
+      \ifnum\fancyqr@cs@fd<\z@\else\ifnum\csname int_rand:nn\endcsname{1}{4}=\@ne
+         \edef\fancyqr@cs@forks{\unexpanded\expandafter{\fancyqr@cs@forks}\noexpand\fancyqr@cs@f
+            {\the\fancyqr@cs@wr}{\the\fancyqr@cs@wc}{\fancyqr@cs@fd}{\the\fancyqr@cs@wd}}\fi\fi
+      \edef\fancyqr@cs@wt{\ifnum\fancyqr@cs@wd=\fancyqr@cs@nd\space0\else1\fi}%
+      \fancyqr@cs@wd\fancyqr@cs@nd\relax
+      \advance\fancyqr@cs@wr\fancyqr@cs@rd\fancyqr@cs@wd\relax
+      \advance\fancyqr@cs@wc\fancyqr@cs@cd\fancyqr@cs@wd\relax
+      \fancyqr@cs@mark R\fancyqr@cs@wr\fancyqr@cs@wc
+      \edef\fancyqr@cs@pl{\unexpanded\expandafter{\fancyqr@cs@pl}\fancyqr@cs@pt}%
+      \advance\fancyqr@cs@wn\m@ne\edef\fancyqr@cs@ws{\the\numexpr\fancyqr@cs@ws+1}\let\fancyqr@cs@nx\fancyqr@cs@walk
+   \fi\fi\fancyqr@cs@nx}%
+\def\fancyqr@cs@pick#1#2#3{\fancyqr@cs@pk{#1}\fancyqr@cs@pk{#2}\fancyqr@cs@pk{#3}}%
+\def\fancyqr@cs@pk#1{\edef\fancyqr@cs@dd{\the\numexpr#1-4*((#1)/4)\relax}%
+   \ifnum\fancyqr@cs@dd<\z@\edef\fancyqr@cs@dd{\the\numexpr\fancyqr@cs@dd+4}\fi
+   \fancyqr@cs@try\fancyqr@cs@dd\ifnum\fancyqr@cs@ok=\@ne
+      \ifnum\fancyqr@cs@nd<\z@\let\fancyqr@cs@nd\fancyqr@cs@dd\else
+      \ifnum\fancyqr@cs@fd<\z@\let\fancyqr@cs@fd\fancyqr@cs@dd\fi\fi\fi}%
+% the path through the points, round over every middle (a curve between the
+% middles of the borders), stroked #1 wide with round ends
+\def\fancyqr@cs@draw#1{\linethickness{#1\unitlength}\roundcap\roundjoin
+   \def\fancyqr@cs@n{0}\let\fancyqr@cs@p\fancyqr@cs@pa\fancyqr@cs@pl
+   \ifnum\fancyqr@cs@n>\@ne\lineto(\fancyqr@cs@bx,\fancyqr@cs@by)\strokepath\else\global\pIIe@GRAPH{}\fi}%
+\def\fancyqr@cs@pa#1#2{\ifcase\fancyqr@cs@n\moveto(#1,#2)\def\fancyqr@cs@n{1}%
+   \or\def\fancyqr@cs@n{2}\let\fancyqr@cs@ax\fancyqr@cs@bx\let\fancyqr@cs@ay\fancyqr@cs@by
+   \else\lineto(\fancyqr@cs@dx{(\fancyqr@cs@ax\p@+\fancyqr@cs@bx\p@)/2},\fancyqr@cs@dx{(\fancyqr@cs@ay\p@+\fancyqr@cs@by\p@)/2})%
+      \curveto(\fancyqr@cs@bx,\fancyqr@cs@by)(\fancyqr@cs@bx,\fancyqr@cs@by)%
+         (\fancyqr@cs@dx{(\fancyqr@cs@bx\p@+#1\p@)/2},\fancyqr@cs@dx{(\fancyqr@cs@by\p@+#2\p@)/2})%
+      \let\fancyqr@cs@ax\fancyqr@cs@bx\let\fancyqr@cs@ay\fancyqr@cs@by\fi
+   \edef\fancyqr@cs@bx{#1}\edef\fancyqr@cs@by{#2}}%
+% a round dot at #1, #2 of radius #3
+\def\fancyqr@cs@dot#1#2#3{\fancyqr@cs@E{o#1/#2/#3}{\noexpand\moveto(\fpeval{#1+#3},#2)%
+   \noexpand\curveto(\fpeval{#1+#3},\fpeval{#2+.55*#3})(\fpeval{#1+.55*#3},\fpeval{#2+#3})(#1,\fpeval{#2+#3})%
+   \noexpand\curveto(\fpeval{#1-.55*#3},\fpeval{#2+#3})(\fpeval{#1-#3},\fpeval{#2+.55*#3})(\fpeval{#1-#3},#2)%
+   \noexpand\curveto(\fpeval{#1-#3},\fpeval{#2-.55*#3})(\fpeval{#1-.55*#3},\fpeval{#2-#3})(#1,\fpeval{#2-#3})%
+   \noexpand\curveto(\fpeval{#1+.55*#3},\fpeval{#2-#3})(\fpeval{#1+#3},\fpeval{#2-.55*#3})(\fpeval{#1+#3},#2)\noexpand\closepath}}%
+% fields, pale: wheat with furrows across or along, a meadow with tufts and
+% blooms, a bed of vegetables; one square of side 1 with corners of radius #3,
+% kind #1 (0 wheat, 1 meadow, 2 vegetables), #2 the direction or the variant
+\definecolor{fancyqr@cs@pave}{rgb}{.97,.94,.8}\definecolor{fancyqr@cs@joint}{rgb}{.91,.86,.66}%
+\definecolor{fancyqr@cs@ear}{rgb}{.99,.97,.88}\definecolor{fancyqr@cs@meadow}{rgb}{.9,.96,.8}%
+\definecolor{fancyqr@cs@blade}{rgb}{.7,.85,.58}\definecolor{fancyqr@cs@bloom}{rgb}{.99,.95,.66}%
+\definecolor{fancyqr@cs@soil}{rgb}{.95,.9,.8}\definecolor{fancyqr@cs@row}{rgb}{.92,.85,.72}%
+\definecolor{fancyqr@cs@leaf}{rgb}{.72,.86,.6}\definecolor{fancyqr@cs@root}{rgb}{.97,.78,.54}%
+\def\fancyqr@cs@ln#1#2#3#4{\ifnum#3=0 \fancyqr@cs@rq{\fpeval{#1-#2}}{#4}{\fpeval{#1+#2}}{\fpeval{1-#4}}0\else
+   \fancyqr@cs@rq{#4}{\fpeval{#1-#2}}{\fpeval{1-#4}}{\fpeval{#1+#2}}0\fi}%
+\def\fancyqr@cs@tf#1#2{\fancyqr@cs@rq{\fpeval{#1-.05}}{#2}{\fpeval{#1-.02}}{\fpeval{#2+.09}}{.01}%
+   \fancyqr@cs@rq{\fpeval{#1-.015}}{#2}{\fpeval{#1+.015}}{\fpeval{#2+.15}}{.01}%
+   \fancyqr@cs@rq{\fpeval{#1+.02}}{#2}{\fpeval{#1+.05}}{\fpeval{#2+.09}}{.01}}%
+\def\fancyqr@cs@fld#1#2#3{{\ifcase#1
+      \color{fancyqr@cs@pave}\fancyqr@cs@rq{0}{0}{1}{1}{#3}\fillpath
+      \color{fancyqr@cs@ear}\fancyqr@cs@P{Wl#2#3}{\fancyqr@cs@ln{.2}{.015}{#2}{#3}\fancyqr@cs@ln{.4}{.015}{#2}{#3}%
+         \fancyqr@cs@ln{.6}{.015}{#2}{#3}\fancyqr@cs@ln{.8}{.015}{#2}{#3}}\fillpath
+      \color{fancyqr@cs@joint}\fancyqr@cs@P{Wd#2#3}{\fancyqr@cs@ln{.1}{.025}{#2}{#3}\fancyqr@cs@ln{.3}{.025}{#2}{#3}%
+         \fancyqr@cs@ln{.5}{.025}{#2}{#3}\fancyqr@cs@ln{.7}{.025}{#2}{#3}\fancyqr@cs@ln{.9}{.025}{#2}{#3}}\fillpath
+   \or
+      \color{fancyqr@cs@meadow}\fancyqr@cs@rq{0}{0}{1}{1}{#3}\fillpath
+      \color{fancyqr@cs@blade}\ifnum#2=0 \fancyqr@cs@P{Gt0}{\fancyqr@cs@tf{.22}{.16}\fancyqr@cs@tf{.7}{.1}\fancyqr@cs@tf{.45}{.5}%
+         \fancyqr@cs@tf{.15}{.72}\fancyqr@cs@tf{.8}{.64}}\else
+         \fancyqr@cs@P{Gt1}{\fancyqr@cs@tf{.32}{.2}\fancyqr@cs@tf{.78}{.3}\fancyqr@cs@tf{.5}{.6}%
+         \fancyqr@cs@tf{.2}{.8}\fancyqr@cs@tf{.74}{.84}}\fi\fillpath
+      \color{fancyqr@cs@bloom}\ifnum#2=0 \fancyqr@cs@dot{.5}{.28}{.045}\fillpath\fancyqr@cs@dot{.25}{.5}{.045}\fillpath
+         \fancyqr@cs@dot{.7}{.8}{.045}\fillpath\else
+         \fancyqr@cs@dot{.22}{.38}{.045}\fillpath\fancyqr@cs@dot{.6}{.15}{.045}\fillpath
+         \fancyqr@cs@dot{.8}{.58}{.045}\fillpath\fi
+   \else
+      \color{fancyqr@cs@soil}\fancyqr@cs@rq{0}{0}{1}{1}{#3}\fillpath
+      \color{fancyqr@cs@row}\fancyqr@cs@P{Bd#3}{\fancyqr@cs@ln{.2}{.08}{1}{#3}\fancyqr@cs@ln{.5}{.08}{1}{#3}%
+         \fancyqr@cs@ln{.8}{.08}{1}{#3}}\fillpath
+      \color{fancyqr@cs@leaf}\fancyqr@cs@bedrow{.2}\fancyqr@cs@bedrow{.8}%
+      \color{fancyqr@cs@root}\fancyqr@cs@dot{.26}{.5}{.05}\fillpath\fancyqr@cs@dot{.5}{.5}{.045}\fillpath
+      \fancyqr@cs@dot{.74}{.5}{.045}\fillpath
+   \fi}}%
+\def\fancyqr@cs@bedrow#1{\fancyqr@cs@dot{.14}{#1}{.08}\fillpath\fancyqr@cs@dot{.38}{#1}{.08}\fillpath
+   \fancyqr@cs@dot{.62}{#1}{.08}\fillpath\fancyqr@cs@dot{.86}{#1}{.08}\fillpath}%
+% a small field in one white module, as the others in a smaller square
+\def\fancyqr@cs@crop{\put(.16,.16){{\unitlength.68\unitlength\ifcase\numexpr\fancyqr@fig@hash6\i\j/25\relax
+   \fancyqr@cs@fld00{.09}\or\fancyqr@cs@fld01{.09}\or\fancyqr@cs@fld10{.09}\else\fancyqr@cs@fld20{.09}\fi}}}%
+% the courtyards: white regions of 1 to 18 modules that no walk of white modules
+% leaves, not touching the border or a pattern above, are paved (the module
+% below a stone one paints its region first, before all later tiles); a cell
+% is marked Y when seen, Z when it belongs to a courtyard
+\definecolor{fancyqr@cs@pave}{rgb}{.96,.94,.8}\definecolor{fancyqr@cs@joint}{rgb}{.91,.87,.69}%
+\def\fancyqr@cs@yk#1#2#3{fancyqr@cs@#1\the\fancyqr@cs@id @\the\numexpr#2\relax @\the\numexpr#3\relax}%
+\def\fancyqr@cs@wh#1#2{\def\fancyqr@cs@ok{0}\ifnum\fancyqr@cs@at@{#1}{#2}=\z@
+   \ifcsname fancyqr@B@\the\numexpr#1@\the\numexpr#2\endcsname\else\def\fancyqr@cs@ok{1}\fi\fi}%
+\def\fancyqr@cs@courts{\fancyqr@cs@ga\z@\global\expandafter\let\csname fancyqr@cs@C\the\fancyqr@cs@id\endcsname\@empty
+   \fancyqr@cs@wr\z@
+   \@whilenum\fancyqr@cs@wr<\@max@y\do{\advance\fancyqr@cs@wr\@ne\fancyqr@cs@wc\z@
+      \@whilenum\fancyqr@cs@wc<\@max@x\do{\advance\fancyqr@cs@wc\@ne
+         \fancyqr@cs@wh\fancyqr@cs@wr\fancyqr@cs@wc
+         \ifnum\fancyqr@cs@ok=\@ne\ifcsname\fancyqr@cs@yk Y\fancyqr@cs@wr\fancyqr@cs@wc\endcsname\else
+            \fancyqr@cs@flood\fi\fi}}%
+   \fancyqr@cs@wr\z@
+   \@whilenum\fancyqr@cs@wr<\@max@y\do{\advance\fancyqr@cs@wr\@ne\fancyqr@cs@wc\z@
+      \@whilenum\fancyqr@cs@wc<\@max@x\do{\advance\fancyqr@cs@wc\@ne
+         \ifnum\fancyqr@cs@at@\fancyqr@cs@wr\fancyqr@cs@wc=\@ne
+         \ifcsname fancyqr@B@\the\fancyqr@cs@wr @\the\fancyqr@cs@wc\endcsname\else
+            \fancyqr@cs@under{\the\fancyqr@cs@wr}{\the\fancyqr@cs@wc}\fi\fi}}}%
+\def\fancyqr@cs@flood{\advance\fancyqr@cs@ga\@ne
+   \edef\fancyqr@cs@stk{{\the\fancyqr@cs@wr}{\the\fancyqr@cs@wc}}\let\fancyqr@cs@cells\fancyqr@cs@stk
+   \fancyqr@cs@wd\@ne \fancyqr@cs@wn\z@
+   \global\expandafter\edef\csname\fancyqr@cs@yk Y\fancyqr@cs@wr\fancyqr@cs@wc\endcsname{\the\fancyqr@cs@ga}%
+   \ifnum\fancyqr@cs@wr=\@ne\fancyqr@cs@wn\@ne\else
+      \ifcsname fancyqr@B@\the\numexpr\fancyqr@cs@wr-1\relax @\the\fancyqr@cs@wc\endcsname\fancyqr@cs@wn\@ne\fi\fi
+   \fancyqr@cs@step
+   \ifnum\fancyqr@cs@wn=\z@\fancyqr@cs@keep\fi}%
+\def\fancyqr@cs@step{\ifnum\fancyqr@cs@wn=\z@\ifx\fancyqr@cs@stk\@empty\else
+   \expandafter\fancyqr@cs@pop\fancyqr@cs@stk\relax\fi\fi}%
+\def\fancyqr@cs@pop#1#2#3\relax{\def\fancyqr@cs@stk{#3}%
+   \fancyqr@cs@nb{\the\numexpr#1-1\relax}{#2}\fancyqr@cs@nb{\the\numexpr#1+1\relax}{#2}%
+   \fancyqr@cs@nb{#1}{\the\numexpr#2-1\relax}\fancyqr@cs@nb{#1}{\the\numexpr#2+1\relax}\fancyqr@cs@step}%
+% the neighbour #1, #2 of a cell: outside the code or in a region seen before
+% (which is then not closed) opens it, a new white cell joins it
+\def\fancyqr@cs@nb#1#2{\ifnum#1<\@ne\fancyqr@cs@wn\@ne\else\ifnum#1>\@max@y\fancyqr@cs@wn\@ne\else
+   \ifnum#2<\@ne\fancyqr@cs@wn\@ne\else\ifnum#2>\@max@x\fancyqr@cs@wn\@ne\else
+   \fancyqr@cs@wh{#1}{#2}\ifnum\fancyqr@cs@ok=\@ne
+      \ifcsname\fancyqr@cs@yk Y{#1}{#2}\endcsname
+         \ifnum\csname\fancyqr@cs@yk Y{#1}{#2}\endcsname=\fancyqr@cs@ga\else\fancyqr@cs@wn\@ne\fi
+      \else
+         \global\expandafter\edef\csname\fancyqr@cs@yk Y{#1}{#2}\endcsname{\the\fancyqr@cs@ga}%
+         \advance\fancyqr@cs@wd\@ne\ifnum\fancyqr@cs@wd>18 \fancyqr@cs@wn\@ne\fi
+         \edef\fancyqr@cs@stk{\unexpanded\expandafter{\fancyqr@cs@stk}{\the\numexpr#1}{\the\numexpr#2}}%
+         \edef\fancyqr@cs@cells{\unexpanded\expandafter{\fancyqr@cs@cells}{\the\numexpr#1}{\the\numexpr#2}}%
+      \fi\fi\fi\fi\fi\fi}%
+\def\fancyqr@cs@keep{\global\expandafter\let\csname\fancyqr@cs@yk{YC}0\fancyqr@cs@ga\endcsname\fancyqr@cs@cells
+   \expandafter\fancyqr@cs@zm\fancyqr@cs@cells{0}{0}}%
+\def\fancyqr@cs@zm#1#2{\ifnum#1>\z@
+   \global\expandafter\edef\csname\fancyqr@cs@yk Z{#1}{#2}\endcsname{\the\fancyqr@cs@ga}%
+   \expandafter\fancyqr@cs@zm\fi}%
+% the courtyard below the module at hand, if it is not painted yet
+\def\fancyqr@cs@yard{\ifcsname\fancyqr@cs@yk Z{\i+1}\j\endcsname
+   \edef\fancyqr@cs@yn{\csname\fancyqr@cs@yk Z{\i+1}\j\endcsname}%
+   \ifcsname\fancyqr@cs@yk{YD}0\fancyqr@cs@yn\endcsname\else
+      \global\expandafter\let\csname\fancyqr@cs@yk{YD}0\fancyqr@cs@yn\endcsname\@empty
+      \expandafter\expandafter\expandafter\fancyqr@cs@yp\csname\fancyqr@cs@yk{YC}0\fancyqr@cs@yn\endcsname{0}{0}
+   \fi\fi}%
+\def\fancyqr@cs@yp#1#2{\ifnum#1>\z@
+   \put(\the\numexpr#2-\j\relax,\the\numexpr\i-#1\relax){\fancyqr@cs@pv{#1}{#2}}%
+   \expandafter\fancyqr@cs@yp\fi}%
+% a field cell inside the walls, of a kind picked by its place
+\def\fancyqr@cs@pv#1#2{\fancyqr@cs@ct{\fancyqr@fig@hash8{#1}{#2}/10}{\numexpr\fancyqr@fig@hash3{#1}{#2}/34\relax}}%
+% a courtyard cell: pale packed earth with a few cobbles (#2 the variant), now and
+% then hay bales (#1 = 7) or a small well (#1 = 8)
+\definecolor{fancyqr@cs@earth}{rgb}{.96,.92,.83}\definecolor{fancyqr@cs@cobble}{rgb}{.88,.82,.72}%
+\definecolor{fancyqr@cs@hay}{rgb}{.97,.89,.62}\definecolor{fancyqr@cs@strap}{rgb}{.9,.8,.6}%
+\definecolor{fancyqr@cs@curb}{rgb}{.88,.81,.71}\definecolor{fancyqr@cs@wwater}{rgb}{.8,.9,.97}%
+\def\fancyqr@cs@ct#1#2{{\color{fancyqr@cs@earth}\fancyqr@cs@rq{0}{0}{1}{1}0\fillpath
+   \ifnum\numexpr#1*(2-#2)\relax=14 \color{fancyqr@cs@hay}\fancyqr@cs@rq{.12}{.2}{.88}{.8}{.1}\fillpath
+      \color{fancyqr@cs@strap}\fancyqr@cs@rq{.3}{.2}{.35}{.8}0\fillpath\fancyqr@cs@rq{.65}{.2}{.7}{.8}0\fillpath
+   \else\ifnum\numexpr#1*(1-#2)*(1+(\fancyqr@fig@hash7{#1}{#2}/25)*8)\relax=8 \color{fancyqr@cs@curb}\fancyqr@cs@dot{.5}{.5}{.36}\fillpath
+      \color{fancyqr@cs@wwater}\fancyqr@cs@dot{.5}{.5}{.22}\fillpath
+   \else\color{fancyqr@cs@cobble}\ifcase#2
+      \fancyqr@cs@dot{.22}{.3}{.07}\fillpath\fancyqr@cs@dot{.6}{.2}{.06}\fillpath\fancyqr@cs@dot{.75}{.65}{.08}\fillpath
+      \fancyqr@cs@dot{.3}{.78}{.06}\fillpath
+   \or\fancyqr@cs@dot{.2}{.2}{.08}\fillpath\fancyqr@cs@dot{.5}{.28}{.07}\fillpath\fancyqr@cs@dot{.8}{.22}{.08}\fillpath
+      \fancyqr@cs@dot{.3}{.6}{.07}\fillpath\fancyqr@cs@dot{.68}{.55}{.08}\fillpath\fancyqr@cs@dot{.45}{.85}{.07}\fillpath
+   \else\fancyqr@cs@dot{.15}{.5}{.07}\fillpath\fancyqr@cs@dot{.4}{.15}{.06}\fillpath\fancyqr@cs@dot{.85}{.4}{.07}\fillpath
+      \fancyqr@cs@dot{.6}{.8}{.08}\fillpath\fancyqr@cs@dot{.5}{.5}{.05}\fillpath\fi\fi\fi}}%
+\def\fancyqr@cs@fl#1#2{\fancyqr@cs@fld{#1}{#2}0}%
+% a few guards (a bowman or a knight, see the figures above) on walls, picked at
+% random from the wall modules with white above and stone left and right
+\def\fancyqr@cs@guards{\fancyqr@cs@wn\z@\fancyqr@cs@wd\z@
+   \edef\fancyqr@cs@x{\fpeval{round(100*(\fancyqr@guard@chance))}}%
+   \edef\fancyqr@cs@gt{\the\numexpr\ifnum\fancyqr@cs@x>\z@3\else0\fi
+      +\ifnum\csname int_rand:nn\endcsname{1}{100}>\fancyqr@cs@x0\else1\fi
+      +\ifnum\csname int_rand:nn\endcsname{1}{100}>\fancyqr@cs@x0\else1\fi
+      +\ifnum\csname int_rand:nn\endcsname{1}{100}>\fancyqr@cs@x0\else1\fi+\fancyqr@cs@fg\relax}%
+   \@whilenum\fancyqr@cs@wd<400 \do{\advance\fancyqr@cs@wd\@ne
+      \ifnum\fancyqr@cs@wn<\fancyqr@cs@gt\relax
+         \edef\fancyqr@cs@pr{\csname int_rand:nn\endcsname{2}{\the\numexpr\@max@y-1\relax}}%
+         \edef\fancyqr@cs@pc{\csname int_rand:nn\endcsname{2}{\the\numexpr\@max@x-1\relax}}%
+         \ifnum\fancyqr@cs@at@\fancyqr@cs@pr\fancyqr@cs@pc\fancyqr@cs@at@{\fancyqr@cs@pr-1}\fancyqr@cs@pc
+            \fancyqr@cs@at@\fancyqr@cs@pr{\fancyqr@cs@pc-1}\fancyqr@cs@at@\fancyqr@cs@pr{\fancyqr@cs@pc+1}=1011
+         \ifcsname fancyqr@B@\fancyqr@cs@pr @\fancyqr@cs@pc\endcsname\else
+         \ifcsname fancyqr@F@\fancyqr@cs@pr @\fancyqr@cs@pc\endcsname\else
+            \global\expandafter\let\csname\fancyqr@cs@yk G\fancyqr@cs@pr\fancyqr@cs@pc\endcsname\@empty
+            \advance\fancyqr@cs@wn\@ne\fi\fi\fi\fi}}%
+\def\fancyqr@cs@training{{\color{fancyqr@cs@post}\fancyqr@cs@P{Tp}{%
+      \fancyqr@cs@rq{.53}{.1}{.57}{.72}0\fancyqr@cs@rq{.32}{.56}{.78}{.6}{.02}%
+      \fancyqr@cs@rq{1.3}{.08}{1.34}{.42}0\fancyqr@cs@rq{1.56}{.08}{1.6}{.42}0%
+      \fancyqr@cs@rq{.12}{.1}{1.88}{.14}0\fancyqr@cs@rq{.12}{.06}{.17}{.3}{.02}\fancyqr@cs@rq{.98}{.06}{1.03}{.3}{.02}%
+      \fancyqr@cs@rq{1.83}{.06}{1.88}{.3}{.02}\fancyqr@cs@rq{.12}{.22}{1.88}{.25}0}\fillpath
+   \color{fancyqr@cs@sack}\fancyqr@cs@P{Td}{\fancyqr@cs@rq{.43}{.32}{.67}{.62}{.08}\fancyqr@cs@rq{.47}{.66}{.63}{.82}{.08}}\fillpath
+   \color{fancyqr@cs@ring}\fancyqr@cs@rq{1.17}{.32}{1.73}{.88}{.28}\fillpath
+   \color{fancyqr@cs@inner}\fancyqr@cs@rq{1.25}{.4}{1.65}{.8}{.2}\fillpath
+   \color{fancyqr@cs@ring}\fancyqr@cs@rq{1.33}{.48}{1.57}{.72}{.12}\fillpath
+   \color{fancyqr@cs@bull}\fancyqr@cs@rq{1.4}{.55}{1.5}{.65}{.05}\fillpath}}%
+\def\fancyqr@cs@tdummy{{\color{fancyqr@cs@post}\fancyqr@cs@P{Tq}{%
+      \fancyqr@cs@rq{.48}{.1}{.52}{.72}0\fancyqr@cs@rq{.27}{.56}{.73}{.6}{.02}%
+      \fancyqr@cs@rq{.12}{.1}{.88}{.14}0\fancyqr@cs@rq{.12}{.06}{.17}{.3}{.02}\fancyqr@cs@rq{.83}{.06}{.88}{.3}{.02}%
+      \fancyqr@cs@rq{.12}{.22}{.88}{.25}0}\fillpath
+   \color{fancyqr@cs@sack}\fancyqr@cs@P{Te}{\fancyqr@cs@rq{.38}{.32}{.62}{.62}{.08}\fancyqr@cs@rq{.42}{.66}{.58}{.82}{.08}}\fillpath}}%
+\def\fancyqr@cs@ttarget{{\color{fancyqr@cs@post}\fancyqr@cs@P{Tr}{%
+      \fancyqr@cs@rq{.35}{.08}{.39}{.42}0\fancyqr@cs@rq{.61}{.08}{.65}{.42}0}\fillpath
+   \color{fancyqr@cs@ring}\fancyqr@cs@rq{.22}{.32}{.78}{.88}{.28}\fillpath
+   \color{fancyqr@cs@inner}\fancyqr@cs@rq{.3}{.4}{.7}{.8}{.2}\fillpath
+   \color{fancyqr@cs@ring}\fancyqr@cs@rq{.38}{.48}{.62}{.72}{.12}\fillpath
+   \color{fancyqr@cs@bull}\fancyqr@cs@rq{.45}{.55}{.55}{.65}{.05}\fillpath}}%
+\def\fancyqr@cs@tent{%
+   {\fancyqr@cs@banner\fancyqr@cs@rq{.14}{0}{.86}{.56}{.02}\fillpath
+    \fancyqr@cs@roofs\fancyqr@cs@rq{.3}{0}{.38}{.56}0\fillpath\fancyqr@cs@rq{.62}{0}{.7}{.56}0\fillpath
+    \fancyqr@cs@dark\moveto(.43,0)\lineto(.57,0)\lineto(.5,.38)\closepath\fillpath}%
+   \fancyqr@cs@spire{.04}{.96}{.52}{.88}\fancyqr@cs@flag{.5}{.88}\fancyqr@cs@banner}%
+\def\fancyqr@cs@well{%
+   {\fancyqr@cs@mortar\fancyqr@cs@rr{.1}{0}{.9}{.58}{.1}{.1}00\fillpath}%
+   \fancyqr@cs@b{2*\i+1}\j{\fancyqr@cs@P{Wa}{\fancyqr@cs@rr{.125}{.025}{.475}{.27}{.08}{.03}{.03}{.03}}}%
+   \fancyqr@cs@b{2*\i+1}{\j+1}{\fancyqr@cs@P{Wb}{\fancyqr@cs@rr{.525}{.025}{.875}{.27}{.03}{.08}{.03}{.03}}}%
+   {\fancyqr@cs@lit\fancyqr@cs@rq{.125}{.31}{.875}{.555}{.03}\fillpath}%
+   {\fancyqr@cs@trunk\fancyqr@cs@P{Wp}{\fancyqr@cs@rq{.16}{.58}{.22}{.8}0%
+      \fancyqr@cs@rq{.78}{.58}{.84}{.8}0\fancyqr@cs@rq{.16}{.7}{.84}{.73}0}\fillpath}%
+   {\fancyqr@cs@roof\moveto(.04,.76)\lineto(.96,.76)\lineto(.5,.98)\closepath\fillpath
+    \fancyqr@cs@roofs\moveto(.5,.76)\lineto(.96,.76)\lineto(.5,.98)\closepath\fillpath}}%
+\def\fancyqr@cs@hut{%
+   {\fancyqr@cs@mortar\fancyqr@cs@rr{.08}{0}{.92}{.52}{.1}{.1}00\fillpath}%
+   \fancyqr@cs@b{2*\i+1}\j{\fancyqr@cs@P{Ha}{\fancyqr@cs@rr{.105}{.025}{.475}{.475}{.08}{.04}{.04}{.04}}}%
+   \fancyqr@cs@b{2*\i+1}{\j+1}{\fancyqr@cs@P{Hb}{\fancyqr@cs@rr{.525}{.025}{.895}{.475}{.04}{.08}{.04}{.04}}}%
+   {\fancyqr@cs@roof\moveto(.02,.5)\lineto(.98,.5)\lineto(.76,.92)\lineto(.24,.92)\closepath\fillpath
+    \fancyqr@cs@roofs\moveto(.5,.5)\lineto(.98,.5)\lineto(.76,.92)\lineto(.5,.92)\closepath\fillpath}%
+   {\fancyqr@cs@mortar\fancyqr@cs@rq{.6}{.74}{.74}{.99}{.02}\fillpath\fancyqr@cs@lit\fancyqr@cs@rq{.58}{.94}{.76}{.99}{.02}\fillpath}%
+   \fancyqr@cs@gate{.38}{.6}{0}{.34}}%
+\def\fancyqr@cs@trees{%
+   {\fancyqr@cs@trunk\fancyqr@cs@P{Ft}{%
+      \fancyqr@cs@rq{.46}{0}{.54}{.4}0\fancyqr@cs@rq{.17}{0}{.23}{.2}0%
+      \fancyqr@cs@rq{.77}{0}{.83}{.2}0}\fillpath
+    \fancyqr@cs@leafa\fancyqr@cs@P{Fb}{%
+      \fancyqr@cs@rq{.23}{.45}{.77}{.99}{.27}\fancyqr@cs@rq{.07}{.34}{.51}{.78}{.22}\fancyqr@cs@rq{.49}{.34}{.93}{.78}{.22}\fancyqr@cs@rq{.28}{.25}{.72}{.69}{.22}}\fillpath
+    \fancyqr@cs@leafb\fancyqr@cs@P{Ff}{%
+      \fancyqr@cs@rq{.01}{.15}{.39}{.53}{.19}\fancyqr@cs@rq{0}{.13}{.24}{.37}{.12}\fancyqr@cs@rq{.17}{.11}{.43}{.37}{.13}%
+      \fancyqr@cs@rq{.61}{.16}{.99}{.54}{.19}\fancyqr@cs@rq{.57}{.11}{.83}{.37}{.13}\fancyqr@cs@rq{.76}{.13}{1}{.37}{.12}}\fillpath
+    \fancyqr@cs@leafc\fancyqr@cs@P{Fl}{%
+      \fancyqr@cs@rq{.3}{.69}{.52}{.91}{.11}\fancyqr@cs@rq{.07}{.33}{.23}{.49}{.08}\fancyqr@cs@rq{.66}{.34}{.82}{.5}{.08}}\fillpath}}%
+% a mountain range over a free bar of #1 modules: a dark peak over every
+% module, its right face in shadow, a small snow cap on top; the heights by the
+% place
+\def\fancyqr@cs@rock{\fancyqr@mixcolor{.!35!gray!40!black}}%
+\def\fancyqr@cs@crag{\fancyqr@mixcolor{.!35!gray!24!black}}%
+\def\fancyqr@cs@mount#1{{\@tempcnta\z@
+   \@whilenum\@tempcnta<#1\do{\advance\@tempcnta\@ne
+      \expandafter\edef\csname fancyqr@cs@h\the\@tempcnta\endcsname
+         {\fpeval{.64+.34*\the\fancyqr@fig@hash{\@tempcnta*7}\i{\j+3*\@tempcnta}/99}}%
+      \expandafter\edef\csname fancyqr@cs@v\the\@tempcnta\endcsname
+         {\ifnum\@tempcnta=#1 .1\else\ifodd\@tempcnta.52\else.58\fi\fi}}%
+   \expandafter\def\csname fancyqr@cs@v0\endcsname{.1}%
+   \let\fancyqr@cs@mpath\@empty\@tempcnta\z@
+   \@whilenum\@tempcnta<#1\do{\advance\@tempcnta\@ne
+      \edef\fancyqr@cs@mpath{\unexpanded\expandafter{\fancyqr@cs@mpath}%
+         \noexpand\lineto(\fpeval{\@tempcnta-.5},\csname fancyqr@cs@h\the\@tempcnta\endcsname)%
+         \noexpand\lineto(\the\@tempcnta,\csname fancyqr@cs@v\the\@tempcnta\endcsname)}}%
+   \fancyqr@cs@rock\moveto(0,0)\lineto(0,.1)\fancyqr@cs@mpath\lineto(#1,0)\closepath\fillpath
+   \@tempcnta\z@
+   \@whilenum\@tempcnta<#1\do{\advance\@tempcnta\@ne
+      \edef\fancyqr@cs@ph{\csname fancyqr@cs@h\the\@tempcnta\endcsname}%
+      \edef\fancyqr@cs@pr{\csname fancyqr@cs@v\the\@tempcnta\endcsname}%
+      \edef\fancyqr@cs@pl{\csname fancyqr@cs@v\the\numexpr\@tempcnta-1\endcsname}%
+      \edef\fancyqr@cs@px{\fpeval{\@tempcnta-.5}}%
+      \fancyqr@cs@crag\moveto(\fancyqr@cs@px,\fancyqr@cs@ph)\lineto(\the\@tempcnta,\fancyqr@cs@pr)%
+         \lineto(\the\@tempcnta,0)\lineto(\fpeval{\@tempcnta-.4},0)\closepath\fillpath
+      \fancyqr@mixcolor{.!35!gray!55!black}\linethickness{.03\unitlength}\roundcap
+         \moveto(\fancyqr@cs@px,\fpeval{\fancyqr@cs@ph-.12})\curveto(\fpeval{\fancyqr@cs@px-.05},\fpeval{\fancyqr@cs@ph-.25})%
+         (\fpeval{\fancyqr@cs@px-.02},\fpeval{\fancyqr@cs@ph-.38})(\fpeval{\fancyqr@cs@px-.12},\fpeval{\fancyqr@cs@ph-.5})\strokepath
+      \color{white!90!blue}\moveto(\fancyqr@cs@px,\fancyqr@cs@ph)%
+         \lineto(\fpeval{\fancyqr@cs@px+min(.16,.075/(\fancyqr@cs@ph-\fancyqr@cs@pr))},\fpeval{\fancyqr@cs@ph-.15})%
+         \lineto(\fpeval{\fancyqr@cs@px+.04},\fpeval{\fancyqr@cs@ph-.11})\lineto(\fancyqr@cs@px,\fpeval{\fancyqr@cs@ph-.17})%
+         \lineto(\fpeval{\fancyqr@cs@px-.05},\fpeval{\fancyqr@cs@ph-.1})%
+         \lineto(\fpeval{\fancyqr@cs@px-min(.16,.075/(\fancyqr@cs@ph-\fancyqr@cs@pl))},\fpeval{\fancyqr@cs@ph-.15})\closepath\fillpath}}}%
+% a volcano on a module with white all around: a dark cone, glowing lava in
+% its crater and a thin stream of it down one flank, a puff of smoke
+\def\fancyqr@cs@volcano{{\fancyqr@cs@rock
+   \moveto(0,0)\curveto(.2,.12)(.3,.5)(.36,.74)\lineto(.64,.74)\curveto(.7,.5)(.8,.12)(1,0)\closepath\fillpath
+   \fancyqr@cs@crag\moveto(.5,.74)\lineto(.64,.74)\curveto(.7,.5)(.8,.12)(1,0)\lineto(.62,0)\closepath\fillpath
+   \fancyqr@mixcolor{.!20!orange!85!red}\moveto(.4,.74)\curveto(.44,.8)(.56,.8)(.6,.74)\closepath\fillpath
+   \linethickness{.045\unitlength}\roundcap\moveto(.42,.74)\curveto(.38,.6)(.34,.46)(.27,.34)\strokepath
+   \color{gray!35!white}\fancyqr@cs@dot{.5}{.88}{.06}\fillpath\fancyqr@cs@dot{.58}{.94}{.045}\fillpath\fancyqr@cs@dot{.43}{.95}{.035}\fillpath}}%
+% the place of a module in a finder pattern (row and column from 0 to 6, -1
+% for the alignment patterns and the hidden center) and the design of that one
+\def\fancyqr@cs@pos{\fancyqr@cs@v\z@
+   \ifnum\i<8 \fancyqr@cs@r\numexpr\i-1\relax
+   \else\fancyqr@cs@r\numexpr\i-\fancyqr@cs@lo\relax\fancyqr@cs@v\tw@\fi
+   \ifnum\j<8 \fancyqr@cs@c\numexpr\j-1\relax\else\fancyqr@cs@c\numexpr\j-\fancyqr@cs@lo\relax
+      \ifnum\i<8 \fancyqr@cs@v\@ne\else\fancyqr@cs@r\m@ne\fi\fi
+   \ifnum\fancyqr@cs@c<\z@\fancyqr@cs@r\m@ne\fi\ifnum\fancyqr@cs@c>6 \fancyqr@cs@r\m@ne\fi
+   \ifnum\fancyqr@cs@r>6 \fancyqr@cs@r\m@ne\fi
+   \fancyqr@cs@gw\expandafter\fancyqr@cs@sel\fancyqr@cs@G\relax
+   \fancyqr@cs@v\expandafter\fancyqr@cs@sel\fancyqr@cs@V\relax}%
+\def\fancyqr@cs@sel#1#2#3{\ifcase\fancyqr@cs@v#1\or#2\else#3\fi}%
+% the features of the finder patterns by their place in them, lit from the top
+% left: the inner faces of the side walls, the moat (one pool drawn before the
+% first tile, darker in the shadow of the walls), slits or banners in the ring,
+% a window and the gate with a drawbridge in the keep
+\definecolor{fancyqr@cs@water}{rgb}{.86,.93,.99}\definecolor{fancyqr@cs@shade}{rgb}{.8,.89,.97}%
+\definecolor{fancyqr@cs@wood}{rgb}{.9,.8,.64}\definecolor{fancyqr@cs@plank}{rgb}{.77,.65,.5}%
+\def\fancyqr@cs@finder{%
+   \ifnum\fancyqr@cs@r>\z@
+      \edef\fancyqr@cs@fy{\ifnum\fancyqr@cs@r=6 .7\else0\fi}%
+      \ifnum\fancyqr@cs@c=\z@{\fancyqr@mixcolor{.!80!black}\fancyqr@cs@rq{.86}\fancyqr@cs@fy{1}{1}0\fillpath}\fi
+      \ifnum\fancyqr@cs@c=6 {\fancyqr@cs@lit\fancyqr@cs@rq{0}\fancyqr@cs@fy{.1}{1}0\fillpath}\fi\fi
+   \ifcase\numexpr\fancyqr@cs@r*7+\fancyqr@cs@c\relax\or\or\fancyqr@cs@sw{.43}{.57}{.12}\or\or\fancyqr@cs@sw{.43}{.57}{.12}\or\or
+   \or\fancyqr@cs@slit\or\or\or\or\or\or\fancyqr@cs@slit
+   \or\or\or\or\or\or\or
+   \or\fancyqr@cs@side\or\or\fancyqr@cs@sw{.43}{.57}{.56}\or\fancyqr@cs@rose\or\fancyqr@cs@sw{.43}{.57}{.56}\or\or\fancyqr@cs@side
+   \or\or\or\fancyqr@cs@sw{.26}{.4}{.12}\or\fancyqr@cs@gs0{\fancyqr@cs@kgate\FancyQrExtra{water/moat}\fancyqr@cs@ridge}{\fancyqr@cs@sw{.43}{.57}{.12}}\or\fancyqr@cs@sw{.6}{.74}{.12}\or\or
+   \or\fancyqr@cs@slit\or\or\or\or\or\or\fancyqr@cs@slit
+   \or\or\or\or\fancyqr@cs@gs0{\fancyqr@cs@gate{.3}{.7}{0}{.44}}{}\fi}%
+% the side of the gate of this finder: #1 the side, then what to draw there or
+% else; a side gate is not seen from the front, only its bridge under both walls
+\def\fancyqr@cs@gs#1{\ifnum\fancyqr@cs@gw=#1 \expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi}%
+\def\fancyqr@cs@kgate{\fancyqr@cs@gate{.22}{.78}{0}{.78}}%
+\def\fancyqr@cs@rgate{\fancyqr@cs@gate{.3}{.7}{.06}{.6}}%
+% a drawbridge across, from #1 to #2, drawn before the ring wall that covers its end
+\def\fancyqr@cs@hbridge#1#2{{\color{fancyqr@cs@wood}\fancyqr@cs@rq{#1}{.27}{#2}{.73}0\fillpath
+   \color{fancyqr@cs@plank}\fancyqr@cs@rq{#1}{.27}{#2}{.31}0\fillpath\fancyqr@cs@rq{#1}{.69}{#2}{.73}0\fillpath
+   \fancyqr@cs@E{hb#1}{\fancyqr@cs@box{\fpeval{#1+.25}}{.31}{\fpeval{#1+.27}}{.69}\fancyqr@cs@box{\fpeval{#1+.5}}{.31}{\fpeval{#1+.52}}{.69}%
+      \fancyqr@cs@box{\fpeval{#1+.75}}{.31}{\fpeval{#1+.77}}{.69}\fancyqr@cs@box{\fpeval{#1+1}}{.31}{\fpeval{#1+1.02}}{.69}%
+      \fancyqr@cs@box{\fpeval{#1+1.25}}{.31}{\fpeval{#1+1.27}}{.69}}\fillpath}}%
+% the alignment patterns: a pool inside the ring, drawn before its first tile,
+% and a boat on it in the middle
+\def\fancyqr@cs@pool{\FancyQrExtra{water/pool}\fancyqr@cs@pool@}%
+\def\fancyqr@cs@pool@{\ifcsname fancyqr@B@\the\numexpr\i+4\relax @\the\numexpr\j+4\relax\endcsname
+   \ifcsname fancyqr@B@\the\i @\the\numexpr\j+4\relax\endcsname
+   \ifcsname fancyqr@B@\the\numexpr\i+4\relax @\the\j\endcsname
+   \ifnum\fancyqr@cs@at@{\i+1}{\j+1}\fancyqr@cs@at@{\i+2}{\j+2}\fancyqr@cs@at@{\i+3}{\j+3}%
+      \fancyqr@cs@at@{\i+4}{\j+4}=101
+      {\color{fancyqr@cs@water}\fancyqr@cs@rq{.5}{-3.5}{4.5}{.5}{.25}\fillpath
+       \color{fancyqr@cs@bank}\fancyqr@cs@ripple{2.1}{-.45}\fancyqr@cs@ripple{3.2}{-2.55}\fancyqr@cs@ripple{1.5}{-1.7}}\fi\fi\fi\fi}%
+\def\fancyqr@cs@boat{{\fancyqr@cs@trunk\moveto(.04,.56)\lineto(.96,.56)\curveto(.86,.3)(.8,.1)(.66,.1)%
+    \lineto(.34,.1)\curveto(.2,.1)(.14,.3)(.04,.56)\closepath\fillpath
+   \fancyqr@cs@mortar\fancyqr@cs@rq{.47}{.56}{.53}{.97}0\fillpath
+   \fancyqr@cs@banner\moveto(.55,.62)\lineto(.55,.94)\lineto(.86,.66)\closepath\fillpath
+   \moveto(.45,.66)\lineto(.45,.88)\lineto(.2,.68)\closepath\fillpath}}%
+% banners on a finder ring are darker, as the ring must read dark
+\def\fancyqr@cs@side{\ifnum\fancyqr@cs@v=\z@\fancyqr@cs@slit\else
+   {\let\fancyqr@cs@bn\fancyqr@cs@banner\def\fancyqr@cs@banner{\fancyqr@cs@bn\fancyqr@mixcolor{.!62!black}}%
+    \def\fancyqr@cs@gold{\fancyqr@mixcolor{.!30!orange!55!black}}\fancyqr@cs@banner@{.9}}\fi}%
+\def\fancyqr@cs@moat{{\color{fancyqr@cs@water}\fancyqr@cs@rq{.5}{-5.5}{6.5}{.5}{.3}\fillpath
+   \color{fancyqr@cs@shade}\fancyqr@cs@P{w}{%
+      \fancyqr@cs@rq{1}{-.16}{6}{0}0\fancyqr@cs@rq{1}{-5.5}{1.14}{0}0%
+      \fancyqr@cs@rr{2.14}{-4.14}{5.14}{-1.14}{.2}{.2}00}\fillpath}}%
+% the drawbridge from the gate over the moat and under the ring wall, which is
+% drawn later and covers its end
+\def\fancyqr@cs@ridge{{\color{fancyqr@cs@wood}%
+   \fancyqr@cs@rq{.27}{-1.5}{.73}{0}0\fillpath
+   \color{fancyqr@cs@plank}\fancyqr@cs@P{D}{%
+      \fancyqr@cs@rq{.27}{-1.5}{.31}{0}0\fancyqr@cs@rq{.69}{-1.5}{.73}{0}0%
+      \fancyqr@cs@rq{.31}{-.27}{.69}{-.25}0\fancyqr@cs@rq{.31}{-.52}{.69}{-.5}0%
+      \fancyqr@cs@rq{.31}{-.77}{.69}{-.75}0}\fillpath}}%
+\ifdefined\fancyqr@cs@r\else\newcount\fancyqr@cs@r\newcount\fancyqr@cs@c\newcount\fancyqr@cs@v\newcount\fancyqr@cs@gw\fi
+\def\fancyqr@cs@rnd{\the\numexpr\csname int_rand:nn\endcsname{0}{2}\relax}%
+% the side of a gate, mostly the one at the bottom
+\def\fancyqr@cs@grnd{\ifcase\numexpr\csname int_rand:nn\endcsname{0}{5}\relax1\or2\else0\fi}%
+\def\fancyqr@style@begin{\edef\fancyqr@cs@fb{\iffancyqr@faint@1\else10\fi}\edef\fancyqr@cs@fg{\iffancyqr@faint@9\else0\fi}\edef\fancyqr@cs@lo{\the\numexpr\@max@x-6}\fancyqr@cs@own
+   \edef\fancyqr@cs@V{{\fancyqr@cs@rnd}{\fancyqr@cs@rnd}{\fancyqr@cs@rnd}}%
+   \edef\fancyqr@cs@G{{\fancyqr@cs@grnd}{\fancyqr@cs@grnd}{\fancyqr@cs@grnd}}%
+   \global\advance\fancyqr@cs@id\@ne\xdef\fancyqr@cs@rb{\csname int_rand:nn\endcsname{1}{3}}%
+   \edef\fancyqr@cs@x{\fpeval{round(100*(\fancyqr@princess@chance))}}%
+   \xdef\fancyqr@cs@dq{\iffancyqr@faint@1\else2\fi}%
+   \xdef\fancyqr@cs@pq{\iffancyqr@faint@1\else\ifnum\csname int_rand:nn\endcsname{1}{100}>\fancyqr@cs@x0\else1\fi\fi}}%
+% the figures are drawn from the top left of the block (rows go down), each module
+% from the same stones as the tiles
+\def\fancyqr@cs@at#1#2#3{\put(#2,-#1){#3}}%
+% a block of #1 rows and #2 columns: corner towers and battlements on top, the
+% rest walls, grass at the foot
+\def\fancyqr@cs@blk#1#2{\fancyqr@cs@r\z@
+   \@whilenum\fancyqr@cs@r<#1\do{\fancyqr@cs@c\z@
+      \@whilenum\fancyqr@cs@c<#2\do{%
+         \edef\fancyqr@cs@bf{\ifnum\fancyqr@cs@r>\z@1\else0\fi\ifnum\fancyqr@cs@c>\z@1\else0\fi
+            \ifnum\fancyqr@cs@c<\numexpr#2-1\relax1\else0\fi\ifnum\fancyqr@cs@r<\numexpr#1-1\relax1\else0\fi}%
+         \expandafter\fancyqr@cs@bt\fancyqr@cs@bf
+         \advance\fancyqr@cs@c\@ne}%
+      \advance\fancyqr@cs@r\@ne}}%
+% a module with the neighbours up, left, right and down, 1 for stone
+\def\fancyqr@cs@bt#1#2#3#4{\put(\the\fancyqr@cs@c,-\the\fancyqr@cs@r){%
+   \ifnum#1=0 \ifnum#2#3<11 \fancyqr@cs@rooftop#2#3{\i+\the\fancyqr@cs@r}{\j+\the\fancyqr@cs@c}\else\fancyqr@cs@bm#1#2#3#4\fi
+   \else\fancyqr@cs@bm#1#2#3#4\fi}}%
+\def\fancyqr@cs@bm#1#2#3#4{\fancyqr@cs@mod#1#2#3#4{\i+\the\fancyqr@cs@r}{\j+\the\fancyqr@cs@c}}%
+% tall towers on bars of four or five: a spire with a pennant on a cornice over
+% corbels, slits or banners and a foot
+\def\fancyqr@cs@tall#1{%
+   \fancyqr@cs@spire{.02}{.98}{0}{.88}\fancyqr@cs@flag{.5}{.88}\fancyqr@cs@banner
+   \fancyqr@cs@at10{\fancyqr@cs@tower11{\i+1}\j
+      {\fancyqr@cs@mortar\moveto(.12,.7)\lineto(.88,.7)\lineto(1,.8)\lineto(1,1)\lineto(0,1)\lineto(0,.8)\closepath\fillpath}%
+      {\fancyqr@cs@lit\fancyqr@cs@rr{.025}{.83}{.975}{1}{.02}{.02}00\fillpath}}%
+   \ifnum\fancyqr@cs@pq>\z@\FancyQrIfExtra{people/princess}{\xdef\fancyqr@cs@pq{\the\numexpr\fancyqr@cs@pq-1}%
+      \fancyqr@cs@at20{{\let\fancyqr@cs@slit\relax\let\fancyqr@cs@banner@\@gobble\fancyqr@cs@tower11{\i+2}\j}%
+         \fancyqr@cs@princess}}{\fancyqr@cs@at20{\fancyqr@cs@tower11{\i+2}\j}}%
+   \else\fancyqr@cs@at20{\fancyqr@cs@tower11{\i+2}\j}\fi
+   \ifnum#1=5 \fancyqr@cs@at30{\fancyqr@cs@tower11{\i+3}\j}\fi
+   \fancyqr@cs@at{\the\numexpr#1-1}0{\fancyqr@cs@tower10{\i+#1-1}\j}}%
+% at most one per code (drawn at random), a princess in a lit window high in a
+% tower: long hair, her face, a hennin with a veil and a dress
+\definecolor{fancyqr@cs@glow}{rgb}{.98,.86,.52}\definecolor{fancyqr@cs@skin}{rgb}{.96,.8,.68}%
+\definecolor{fancyqr@cs@dress}{rgb}{.74,.12,.38}\definecolor{fancyqr@cs@hat}{rgb}{.5,.28,.7}%
+\definecolor{fancyqr@cs@hair}{rgb}{.5,.3,.14}\definecolor{fancyqr@cs@veil}{rgb}{.86,.8,.96}%
+\def\fancyqr@cs@princess{%
+   {\fancyqr@cs@lit\fancyqr@cs@rr{.28}{.45}{.72}{.96}00{.22}{.22}\fillpath}%
+   {\color{fancyqr@cs@glow}\fancyqr@cs@rr{.33}{.5}{.67}{.92}00{.17}{.17}\fillpath
+    \color{fancyqr@cs@hair}\fancyqr@cs@rq{.395}{.56}{.605}{.77}{.06}\fillpath
+    \color{fancyqr@cs@dress}\moveto(.37,.5)\lineto(.63,.5)\lineto(.56,.66)\lineto(.44,.66)\closepath\fillpath
+    \color{fancyqr@cs@skin}\fancyqr@cs@dot{.5}{.725}{.065}\fillpath
+    \color{fancyqr@cs@veil}\moveto(.5,.895)\lineto(.62,.8)\lineto(.6,.6)\lineto(.56,.66)\lineto(.55,.78)\closepath\fillpath
+    \color{fancyqr@cs@hat}\moveto(.44,.775)\lineto(.56,.775)\lineto(.5,.895)\closepath\fillpath}}%
+\FancyQrFigure{tower}{\fancyqr@tower@chance}{000/.x./.x./.x./.x./.0.}{\fancyqr@cs@tall4}%
+\def\fancyqr@cs@wins#1#2#3{\fancyqr@cs@arch{.4}{.6}{#2}{#3}\fancyqr@cs@arch{#1.4}{#1.6}{#2}{#3}}%
+\FancyQrFigure{citadel}{\fancyqr@citadel@chance}{0000/xxxx/xxxx/xxxx/xxxx}{\fancyqr@cs@blk{4}{4}%
+   \fancyqr@cs@gate{1.55}{2.45}{-3}{-1.8}\fancyqr@cs@wins3{-.74}{-.24}\fancyqr@cs@wins3{-1.74}{-1.24}%
+   \fancyqr@cs@sw{1.13}{1.27}{-1.5}\fancyqr@cs@sw{2.73}{2.87}{-1.5}\fancyqr@cs@sw{.43}{.57}{-2.7}\fancyqr@cs@sw{3.43}{3.57}{-2.7}%
+   \put(1,-1){\fancyqr@cs@banner@{.9}}\put(2,-1){\fancyqr@cs@banner@{.9}}}%
+\FancyQrFigure{hall}{\fancyqr@hall@chance}{0000/xxxx/xxxx/xxxx}{\fancyqr@cs@blk{3}{4}%
+   \fancyqr@cs@gate{1.6}{2.4}{-2}{-1.05}\fancyqr@cs@wins3{-.74}{-.24}%
+   \fancyqr@cs@sw{1.13}{1.27}{-.8}\fancyqr@cs@sw{2.73}{2.87}{-.8}\fancyqr@cs@sw{.43}{.57}{-1.7}\fancyqr@cs@sw{3.43}{3.57}{-1.7}%
+   \put(1,0){\fancyqr@cs@banner@{.7}}\put(2,0){\fancyqr@cs@banner@{.7}}}%
+\FancyQrFigure{castle}{\fancyqr@castle@chance}{000/xxx/xxx/xxx}{\fancyqr@cs@blk{3}{3}%
+   \fancyqr@cs@gate{1.18}{1.82}{-2}{-1.1}\fancyqr@cs@wins2{-.74}{-.24}\put(1,0){\fancyqr@cs@banner@{.7}}}%
+% a dragon on a block of two rows of three, its wing raised, neck and one claw
+% forward: rare, at most two per
+% code, else a gatehouse
+\def\fancyqr@cs@dragon@{{\def\fancyqr@cs@dg{\fancyqr@mixcolor{.!35!green!36!black}}\fancyqr@cs@dg
+   \moveto(.55,-.36)\curveto(.25,-.38)(.06,-.24)(.13,0)\lineto(.21,-.05)\curveto(.18,-.28)(.32,-.58)(.62,-.62)\closepath\fillpath
+   \moveto(.15,.1)\lineto(.03,-.06)\lineto(.24,-.1)\closepath\fillpath
+   \moveto(.45,-.45)\curveto(.45,-.1)(1.1,-.12)(1.6,-.12)\curveto(2,-.12)(2.15,-.3)(2.15,-.5)%
+      \curveto(2.15,-.75)(1.9,-.82)(1.5,-.82)\curveto(1,-.82)(.45,-.8)(.45,-.45)\closepath\fillpath
+   \moveto(.75,-.55)\curveto(.65,-.7)(.68,-.85)(.62,-.98)\lineto(.97,-.98)\lineto(.86,-.9)\curveto(.95,-.8)(1.05,-.7)(1.08,-.55)\closepath\fillpath
+   \moveto(1.84,-.6)\lineto(1.86,-.98)\lineto(2.16,-.98)\lineto(2.04,-.9)\lineto(2.08,-.6)\closepath\fillpath
+   \moveto(1.95,-.42)\curveto(2.2,-.52)(2.4,-.64)(2.56,-.64)\lineto(2.6,-.74)\lineto(2.67,-.64)\lineto(2.74,-.72)%
+      \lineto(2.77,-.6)\lineto(2.86,-.64)\lineto(2.82,-.48)\curveto(2.6,-.42)(2.35,-.4)(2.05,-.24)\closepath\fillpath
+   \linethickness{.24\unitlength}\roundcap\moveto(1.95,-.3)\curveto(2.25,-.2)(2.3,.1)(2.42,.42)\strokepath
+   \moveto(2.3,.38)\curveto(2.35,.64)(2.6,.68)(2.76,.6)\lineto(2.97,.5)\lineto(2.95,.39)\lineto(2.7,.35)%
+      \curveto(2.55,.29)(2.4,.27)(2.3,.38)\closepath\fillpath
+   \moveto(2.42,.54)\curveto(2.36,.74)(2.28,.84)(2.14,.92)\curveto(2.32,.9)(2.48,.8)(2.58,.6)\closepath\fillpath
+   \fancyqr@mixcolor{.!35!green!56!black}\moveto(1,-.79)\curveto(1.4,-.86)(1.9,-.8)(2.1,-.56)\curveto(1.98,-.72)(1.5,-.76)(1,-.79)\closepath\fillpath
+   \fancyqr@mixcolor{.!35!green!46!black}%
+   \moveto(1.45,-.15)\curveto(1.52,.3)(1.6,.7)(1.72,.95)\curveto(1.4,.95)(1.05,.93)(.72,.86)%
+      \curveto(.66,.72)(.5,.62)(.3,.62)\curveto(.28,.48)(.22,.34)(.1,.24)\curveto(.3,.12)(.42,-.02)(.55,-.2)\closepath\fillpath
+   \fancyqr@cs@dg\linethickness{.035\unitlength}\roundcap\moveto(1.72,.95)\lineto(.3,.62)\moveto(1.72,.95)\lineto(.1,.24)\strokepath
+   \linethickness{.07\unitlength}\moveto(1.45,-.15)\curveto(1.52,.3)(1.6,.7)(1.72,.95)\curveto(1.4,.95)(1.05,.93)(.72,.86)\strokepath
+   \fancyqr@mixcolor{.!40!yellow!80!orange}\fancyqr@cs@dot{2.62}{.53}{.03}\fillpath
+   \fancyqr@cs@dg\fancyqr@cs@dot{2.9}{.46}{.012}\fillpath}}%
+\def\fancyqr@cs@dragon{\ifnum\fancyqr@cs@dq>\z@\xdef\fancyqr@cs@dq{\the\numexpr\fancyqr@cs@dq-1}\fancyqr@cs@dragon@
+   \else\fancyqr@cs@gatehouse\fi}%
+\def\fancyqr@cs@gatehouse{\fancyqr@cs@blk{2}{3}\fancyqr@cs@gate{1.2}{1.8}{-1}{-.08}\fancyqr@cs@wins2{-.76}{-.26}}%
+\FancyQrFigure{dragon}{\fancyqr@dragon@chance}{000/xxx/xxx}{\fancyqr@cs@dragon}%
+\FancyQrFigure{gatehouse}{\fancyqr@gatehouse@chance}{000/xxx/xxx}{\fancyqr@cs@gatehouse}%
+\FancyQrFigure{keep}{\fancyqr@keep@chance}{00/xx/xx}{\fancyqr@cs@blk{2}{2}\fancyqr@cs@gate{.72}{1.28}{-1}{-.2}}%
+% the packed earth of a courtyard runs on under a dark module (#1 row, #2
+% column), a quarter at a time: where a module next to that quarter is in a
+% courtyard and none is open white, so that earth never shows toward grass;
+% painted with the courtyards, before the tiles
+\def\fancyqr@cs@under#1#2{\let\fancyqr@cs@up\@empty
+   \fancyqr@cs@uq{#1}{#2}{-1}{-1}0{.5}{.5}1\fancyqr@cs@uq{#1}{#2}{-1}1{.5}{.5}11%
+   \fancyqr@cs@uq{#1}{#2}1{-1}00{.5}{.5}\fancyqr@cs@uq{#1}{#2}11{.5}01{.5}%
+   \ifx\fancyqr@cs@up\@empty\else\put(\the\numexpr#2-\j\relax,\the\numexpr\i-#1\relax)%
+      {{\color{fancyqr@cs@earth}\fancyqr@cs@up\fillpath}}\fi}%
+% 1 a courtyard, 2 open white or outside, 0 dark
+\def\fancyqr@cs@us#1#2{\ifnum\numexpr#1\relax<\@ne2\else\ifnum\numexpr#1\relax>\@max@y\space2\else
+   \ifnum\numexpr#2\relax<\@ne2\else\ifnum\numexpr#2\relax>\@max@x\space2\else
+   \ifcsname\fancyqr@cs@yk Z{#1}{#2}\endcsname1\else\ifnum\fancyqr@cs@at@{#1}{#2}=\z@2\else0\fi\fi\fi\fi\fi\fi}%
+\def\fancyqr@cs@uq#1#2#3#4#5#6#7#8{%
+   \edef\@tempa{\fancyqr@cs@us{#1+#3}{#2}\fancyqr@cs@us{#1}{#2+#4}\fancyqr@cs@us{#1+#3}{#2+#4}}%
+   \expandafter\in@\expandafter2\expandafter{\@tempa}\ifin@\else
+   \expandafter\in@\expandafter1\expandafter{\@tempa}\ifin@
+      \edef\fancyqr@cs@up{\unexpanded\expandafter{\fancyqr@cs@up}\noexpand\moveto(#5,#6)\noexpand\lineto(#7,#6)\noexpand\lineto(#7,#8)\noexpand\lineto(#5,#8)\noexpand\closepath}\fi\fi}%
+\def\fancyqr@cs@hbase#1#2#3{{\fancyqr@cs@mortar\fancyqr@cs@P{H#1#2}{\fancyqr@cs@bed#1#20{.52}}\fillpath}%
+   \fancyqr@cs@lower#1#20{2*(\i)+1}{#3}}%
+\FancyQrFigure{house}{\fancyqr@house@chance}{0000/0xx0}{%
+   \fancyqr@cs@hbase01\j\put(1,0){\fancyqr@cs@hbase10{\j+1}}%
+   {\fancyqr@cs@roof\moveto(.02,.5)\lineto(1.98,.5)\lineto(1.6,.97)\lineto(.4,.97)\closepath\fillpath
+    \fancyqr@cs@roofs\moveto(1,.5)\lineto(1.98,.5)\lineto(1.6,.97)\lineto(1,.97)\closepath\fillpath}%
+   {\fancyqr@cs@mortar\fancyqr@cs@rq{1.28}{.72}{1.48}{.99}{.02}\fillpath}%
+   {\fancyqr@cs@lit\fancyqr@cs@rq{1.3}{.74}{1.46}{.97}{.02}\fillpath}%
+   \fancyqr@cs@gate{.3}{.58}{0}{.4}\fancyqr@cs@arch{1.42}{1.6}{.12}{.36}}%
+% what the style draws besides figures; the princess is rare, at most one per code
+% the pale land and water in strong colors where an extra is on display
+\def\fancyqr@hl@hook{\definecolor{fancyqr@cs@water}{rgb}{.3,.6,.92}\definecolor{fancyqr@cs@wwater}{rgb}{.22,.5,.85}%
+   \definecolor{fancyqr@cs@shade}{rgb}{.22,.5,.85}\definecolor{fancyqr@cs@bank}{rgb}{.2,.45,.75}%
+   \definecolor{fancyqr@cs@pave}{rgb}{.9,.75,.3}\definecolor{fancyqr@cs@joint}{rgb}{.7,.52,.15}%
+   \definecolor{fancyqr@cs@earth}{rgb}{.82,.62,.35}\definecolor{fancyqr@cs@soil}{rgb}{.7,.5,.3}%
+   \definecolor{fancyqr@cs@cobble}{rgb}{.55,.45,.35}\definecolor{fancyqr@cs@curb}{rgb}{.55,.45,.35}%
+   \definecolor{fancyqr@cs@hay}{rgb}{.9,.72,.2}\definecolor{fancyqr@cs@meadow}{rgb}{.45,.75,.3}%
+   \definecolor{fancyqr@cs@leaf}{rgb}{.3,.6,.2}\definecolor{fancyqr@cs@blade}{rgb}{.3,.6,.2}%
+   \definecolor{fancyqr@cs@row}{rgb}{.6,.45,.25}\definecolor{fancyqr@cs@ear}{rgb}{.95,.8,.3}%
+   \definecolor{fancyqr@cs@post}{rgb}{.6,.42,.25}\definecolor{fancyqr@cs@sack}{rgb}{.75,.62,.42}%
+   \definecolor{fancyqr@cs@ring}{rgb}{.85,.2,.2}\definecolor{fancyqr@cs@bull}{rgb}{.95,.75,.1}%
+   \definecolor{fancyqr@cs@wood}{rgb}{.6,.42,.25}\definecolor{fancyqr@cs@strap}{rgb}{.5,.35,.2}}%
+\FancyQrExtraNeedsFigures{people/princess}%
+\FancyQrExtras{land/river,land/field,land/court,land/training,people/princess,people/guard,people/tower,%
+   water/boat,water/pool,water/moat,wall/banner}%
+% the lone modules, a sixth each (the chances are conditional, in this order)
+\FancyQrFigure{volcano}{\fancyqr@volcano@chance}{000/0x0/000}{\fancyqr@cs@volcano}%
+\FancyQrFigure{watchpost}{\fancyqr@watchpost@chance}{.0./0x0/.0.}{\fancyqr@cs@post}%
+\FancyQrFigure{trees}{\fancyqr@trees@chance}{.0./0x0/.0.}{\fancyqr@cs@trees}%
+\FancyQrFigure{tent}{\fancyqr@tent@chance}{.0./0x0/.0.}{\fancyqr@cs@tent}%
+\FancyQrFigure{well}{\fancyqr@well@chance}{.0./0x0/.0.}{\fancyqr@cs@well}%
+\FancyQrFigure{hut}{\fancyqr@hut@chance}{.0./0x0/.0.}{\fancyqr@cs@hut}%
+\FancyQrFigure{turret}{\fancyqr@turret@chance}{.0./0x0/.0.}{\fancyqr@cs@turret}%
+% free bars of two, three or four
+\FancyQrFigure{mountains}{\fancyqr@mountains@chance}{.000./0xxx0/.000.}{\fancyqr@cs@mount3}%
+\FancyQrFigure{mountains/long}{\fancyqr@mountains@chance}{.0000./0xxxx0/.0000.}{\fancyqr@cs@mount4}%
+\FancyQrFigure{mountains/short}{\fancyqr@mountains@chance}{.00./0xx0/.00.}{\fancyqr@cs@mount2}%
+% snow lent by add=snow lies on battlements only, at the coping, never on roofs,
+% spires or men; \fancyqr@cs@sk is 2 where the tile has a bare battlement
+\gdef\fancyqr@cs@sk{0}%
+\def\fancyqr@snow@host@castle{\ifnum\fancyqr@cs@sk\@left\@right=200 \def\fancyqr@snow@hk{0}\else\ifnum\fancyqr@cs@sk=\z@\def\fancyqr@snow@hk{0}\else\def\fancyqr@snow@hy{.7}\def\fancyqr@snow@hs{.7}\def\fancyqr@snow@hd{0}\fi\fi}%
+\let\fancyqr@cs@mod@\fancyqr@cs@mod\let\fancyqr@cs@cap@\fancyqr@cs@cap\let\fancyqr@cs@man@\fancyqr@cs@man
+\def\fancyqr@cs@mod#1#2#3#4#5#6{\ifnum#1=0 \gdef\fancyqr@cs@sk{2}\fi\fancyqr@cs@mod@{#1}{#2}{#3}{#4}{#5}{#6}}%
+\def\fancyqr@cs@cap{\gdef\fancyqr@cs@sk{2}\fancyqr@cs@cap@}%
+\def\fancyqr@cs@man{\gdef\fancyqr@cs@sk{0}\fancyqr@cs@man@}%
+\let\fancyqr@cs@finder@\fancyqr@cs@finder\def\fancyqr@cs@finder{\gdef\fancyqr@cs@sk{0}\fancyqr@cs@finder@}%
+\let\fancyqr@cs@tile@\fancyqr@castle@tile
+\def\fancyqr@castle@tile#1#2#3#4{\gdef\fancyqr@cs@sk{0}\fancyqr@cs@tile@{#1}{#2}{#3}{#4}}%
+\FancyQrSidePatterns\fancyqr@castle@tile
+\FancyQrStyleSet{%
+   r color=brown!52!black,l color=brown!40!gray!45!black,%
+   finder=inherit,finder core=auto,background=green!60!yellow!14!white%
+}%

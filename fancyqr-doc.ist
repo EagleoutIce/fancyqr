@@ -1,0 +1,8 @@
+% makeindex style of the manual: one group per letter, page numbers after dots
+preamble "\\begin{theindex}\n\\raggedright\n"
+postamble "\n\\end{theindex}\n"
+headings_flag 1
+heading_prefix "\\pagebreak[2]\\textcolor{fqcmd}{\\bfseries "
+heading_suffix "}\\nopagebreak\n"
+delim_0 "\\dotfill "
+delim_1 "\\dotfill "

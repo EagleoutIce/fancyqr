@@ -1,0 +1,736 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+\qr@newforcount=\count...
+<Calculating QR code for "abc" in version 7-H.>
+<Splitting off block 1> <Splitting off block 2> <Splitting off block 3> <Splitting off block 4> <Splitting off block 5> <Making error block 1> <Making error block 2> <Making error block 3> <Making error block 4> <Making error block 5> <Interleaving datablocks of length 13\ and 14:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14.> <Interleaving errorblocks of length 26:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 1870>
+<Applying Mask 1... done. Calculating penalty... penalty is 1868>
+<Applying Mask 2... done. Calculating penalty... penalty is 1946>
+<Applying Mask 3... done. Calculating penalty... penalty is 1851>
+<Applying Mask 4... done. Calculating penalty... penalty is 2011>
+<Applying Mask 5... done. Calculating penalty... penalty is 1980>
+<Applying Mask 6... done. Calculating penalty... penalty is 1945>
+<Applying Mask 7... done. Calculating penalty... penalty is 1991>
+<Selected Mask 3>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-color-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-falls-back
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-color-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-core-only
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-no-alignment
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] finder-color-no-alignment
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-color-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-leaves-finders
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-core-color-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-color-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-core-color-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] timing-color
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] timing-color-with-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] content-color
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] background
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] background-square
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] no-background
+(fancyqr-style-castle.code
+\fancyqr@cs@ta=\count...
+\fancyqr@cs@tb=\count...
+\fancyqr@cs@ga=\count...
+\fancyqr@cs@gb=\count...
+\fancyqr@cs@wr=\count...
+\fancyqr@cs@wc=\count...
+\fancyqr@cs@wd=\count...
+\fancyqr@cs@wn=\count...
+\fancyqr@cs@id=\count...
+\fancyqr@cs@r=\count...
+\fancyqr@cs@c=\count...
+\fancyqr@cs@v=\count...
+\fancyqr@cs@gw=\count...
+)
+[PASS] style-background
+[PASS] style-background-undone
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] hide-is-reproducible
+[PASS] hide-fills-the-area
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] hide-counts
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] hide-keeps-finders
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] hide-restores-matrix
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] inherit-without-shapes-is-plain
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] merge-leaves-no-markers
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] merge-restores-matrix
+[1
+]
+[PASS] merge-square
+[PASS] merge-rounded
+[PASS] merge-rounded-tight
+[PASS] merge-circle
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] hole-skips-pattern
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] hole-restores-matrix
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] pumpkin-closed-paths
+[PASS] pumpkin-strokes
+(fancyqr-style-halloween.code
+\fancyqr@hw@a=\count...
+\fancyqr@hw@b=\count...
+\fancyqr@hw@c=\count...
+)
+[PASS] halloween-finder
+[PASS] halloween-finder-color
+(fancyqr-style-snow.code
+\fancyqr@snow@c=\count...
+\fancyqr@snow@k=\count...
+)
+[PASS] snow-undoes-halloween
+[PASS] snow-passes
+[PASS] default-resets-passes
+[PASS] default-undoes-snow
+[PASS] style-colors-restored
+(fancyqr-style-glows.code)
+[PASS] default-after-glows
+\Caps=\count...
+(fancyqr-style-snow.code) 
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] snow-caps-all
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] snow-icicles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] snow-caps-rings
+[PASS] snow-fill-per-cap
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] snow-caps-some
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+(fancyqr-style-snow.code) 
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[FAIL] snow-second-pass: expected `1616' but got `1674'
+(fancyqr-style-snow.code)
+[PASS] snow-flat-bottom
+[PASS] snow-end-on-corner
+[2]
+[PASS] snow-seams-meet
+[PASS] snow-scale
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] default-has-no-snow
+(fancyqr-style-halloween.code) 
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] halloween-dry-is-default
+(fancyqr-style-halloween.code)
+\CoreP=\count...
+\CoreJ=\count...
+\CoreG=\count...
+\CoreS=\count...
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] halloween-cores-fixed
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] halloween-cores
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] halloween-drops
+\Webs=\count...
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+\fancyqr@hw@WB@2/1.98218pt=\box...
+\fancyqr@hw@WB@0/1.98218pt=\box...
+\fancyqr@hw@WB@1/1.98218pt=\box...
+[PASS] halloween-webs
+\Rects=\count...
+\Skulls=\count...
+\Pumpkins=\count...
+\Threes=\count...
+\Lones=\count...
+\Timing=\count...
+\Twelves=\count...
+\Sixes=\count...
+\Fours=\count...
+\Twos=\count...
+\Bones=\count...
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Calculating QR code for "abc" in version 10-H.>
+<Splitting off block 1> <Splitting off block 2> <Splitting off block 3> <Splitting off block 4> <Splitting off block 5> <Splitting off block 6> <Splitting off block 7> <Splitting off block 8> <Making error block 1> <Making error block 2> <Making error block 3> <Making error block 4> <Making error block 5> <Making error block 6> <Making error block 7> <Making error block 8> <Interleaving datablocks of length 15\ and 16:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16.> <Interleaving errorblocks of length 28:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 2505>
+<Applying Mask 1... done. Calculating penalty... penalty is 2681>
+<Applying Mask 2... done. Calculating penalty... penalty is 2462>
+<Applying Mask 3... done. Calculating penalty... penalty is 2656>
+<Applying Mask 4... done. Calculating penalty... penalty is 2661>
+<Applying Mask 5... done. Calculating penalty... penalty is 2663>
+<Applying Mask 6... done. Calculating penalty... penalty is 2527>
+<Applying Mask 7... done. Calculating penalty... penalty is 2738>
+<Selected Mask 2>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] skulls
+[PASS] skull-covers-block
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] reapers
+[PASS] reaper-covers-block
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] reapers-and-skulls
+[PASS] figures-cover-blocks
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] skulls-without-reapers
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] ghosts
+[PASS] ghost-covers-module
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] more-figures
+[PASS] more-figures-cover-blocks
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] timing-figures
+[PASS] default-figures
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] figures-are-fixed
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[3]
+[PASS] skulls-with-tile-finders
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] skulls-around-hole
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] figures-around-hole
+[PASS] default-has-no-figures
+\Sides=\count...
+\UpLeft=\count...
+\Figbar=\count...
+\Figpair=\count...
+\Figlone=\count...
+\Figbig=\count...
+[PASS] api-figure-order
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] api-figures
+[PASS] api-figure-grid
+[PASS] api-figure-tiles
+[PASS] api-figure-covers-blocks
+[PASS] api-figure-neighbours
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] api-figures-around-hole
+[PASS] api-figure-tiles-around-hole
+[PASS] api-figure-neighbours-around-hole
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] api-figures-are-fixed
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] api-diagonals
+[PASS] default-has-no-diagonals
+(fancyqr-style-castle.code)
+[PASS] castle-finder
+(fancyqr-style-christmas.code (fancyqr-style-snow.code))
+[PASS] christmas-finder
+\X@trees=\count...
+\X@cane=\count...
+\X@present=\count...
+\X@bauble=\count...
+\X@sledge=\count...
+\X@bench=\count...
+\X@train=\count...
+\X@teddy=\count...
+\X@drum=\count...
+\X@stocking=\count...
+\X@soldier=\count...
+\X@sock=\count...
+\X@lone=\count...
+\X@core=\count...
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] christmas-figures
+<QR code requested for "abc" in version 10-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 10-H as previously calculated.>
+[PASS] christmas-figures-are-fixed
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] christmas-new-figures
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[4]
+[PASS] christmas-cores-vary
+(fancyqr-style-rounded.code)
+[PASS] load-rounded-adds-no-space
+(fancyqr-style-flat.code)
+[PASS] load-flat-adds-no-space
+(fancyqr-style-frame.code)
+[PASS] load-frame-adds-no-space
+(fancyqr-style-dots.code)
+[PASS] load-dots-adds-no-space
+(fancyqr-style-blobs.code)
+[PASS] load-blobs-adds-no-space
+(fancyqr-style-glitch.code)
+[PASS] load-glitch-adds-no-space
+(fancyqr-style-glows.code)
+[PASS] load-glows-adds-no-space
+(fancyqr-style-goo.code
+\fancyqr@goo@n=\count...
+)
+[PASS] load-goo-adds-no-space
+(fancyqr-style-halloween.code)
+[PASS] load-halloween-adds-no-space
+(fancyqr-style-snow.code)
+[PASS] load-snow-adds-no-space
+(fancyqr-style-castle.code)
+[PASS] load-castle-adds-no-space
+(fancyqr-style-christmas.code (fancyqr-style-snow.code))
+[PASS] load-christmas-adds-no-space
+(fancyqr-style-castle.code) 
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] castle-background
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] castle-no-background
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] castle-white-background
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] castle-people (P=1062 M=320 L=808 A+=4 A-=0 C=139 F=4450 S=58 Z=246 O=0 o=0)
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] castle-banners (P=1062 M=296 L=770 A+=4 A-=0 C=127 F=4465 S=50 Z=230 O=0 o=0)
+(fancyqr-style-halloween.code) 
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+\fancyqr@hw@WB@f2/1.89684pt=\box...
+\fancyqr@hw@WB@h2/1.89684pt=\box...
+\fancyqr@hw@WB@q2/1.89684pt=\box...
+\fancyqr@hw@WB@f1/1.89684pt=\box...
+\fancyqr@hw@WB@h1/1.89684pt=\box...
+\fancyqr@hw@WB@0/1.89684pt=\box...
+\fancyqr@hw@WB@2/1.89684pt=\box...
+\fancyqr@hw@WB@1/1.89684pt=\box...
+[PASS] castle-add-halloween (P=1115 M=499 L=929 A+=4 A-=0 C=343 F=4437 S=118 Z=247 O=0 o=0)
+(fancyqr-style-snow.code) (fancyqr-style-christmas.code (fancyqr-style-snow.code)) 
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] castle-add-snow-christmas (P=1102 M=1071 L=1511 A+=392 A-=252 C=582 F=4951 S=294 Z=438 O=0 o=0)
+[5]
+Overfull \hbox (2.53818pt too wide) in paragraph at lines ...
+\OT1/cmtt/m/n/8 [PASS] \OT1/cmss/m/n/8 castle-add-snow-christmas \OT1/cmtt/m/n/8 P=1102 M=1071 L=1511 A+=392 A-=252 C=582 F=4951 S=294
+\hbox(5.55556+0.66666)x345.0, glue set - 1.0
+.\OT1/cmtt/m/n/8 [
+.\OT1/cmtt/m/n/8 P
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 ]
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmss/m/n/8 c
+.\OT1/cmss/m/n/8 a
+.\OT1/cmss/m/n/8 s
+.\OT1/cmss/m/n/8 t
+.\OT1/cmss/m/n/8 l
+.\OT1/cmss/m/n/8 e
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 a
+.\OT1/cmss/m/n/8 d
+.\OT1/cmss/m/n/8 d
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 s
+.\OT1/cmss/m/n/8 n
+.\OT1/cmss/m/n/8 o
+.\kern-0.23611
+.\OT1/cmss/m/n/8 w
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 c
+.\OT1/cmss/m/n/8 h
+.\OT1/cmss/m/n/8 r
+.\OT1/cmss/m/n/8 i
+.\OT1/cmss/m/n/8 s
+.\OT1/cmss/m/n/8 t
+.\OT1/cmss/m/n/8 m
+.\OT1/cmss/m/n/8 a
+.\OT1/cmss/m/n/8 s
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmtt/m/n/8 P
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 0
+.\OT1/cmtt/m/n/8 2
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 M
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 0
+.\OT1/cmtt/m/n/8 7
+.\OT1/cmtt/m/n/8 1
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 L
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 5
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 1
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 +
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 3
+.\OT1/cmtt/m/n/8 9
+.\OT1/cmtt/m/n/8 2
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 -
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 2
+.\OT1/cmtt/m/n/8 5
+.\OT1/cmtt/m/n/8 2
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 C
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 5
+.\OT1/cmtt/m/n/8 8
+.\OT1/cmtt/m/n/8 2
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 F
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 4
+.\OT1/cmtt/m/n/8 9
+.\OT1/cmtt/m/n/8 5
+.\OT1/cmtt/m/n/8 1
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 2
+.\OT1/cmtt/m/n/8 9
+.\OT1/cmtt/m/n/8 4
+.\glue(\rightskip) 0.0
+<QR code requested for "abc" in version 0-H.>
+<Calculating QR code for "abc" in version 1-H.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 9\ and 10:  1, 2, 3, 4, 5, 6, 7, 8, 9, .> <Interleaving errorblocks of length 17:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 976>
+<Applying Mask 1... done. Calculating penalty... penalty is 1026>
+<Applying Mask 2... done. Calculating penalty... penalty is 1003>
+<Applying Mask 3... done. Calculating penalty... penalty is 1003>
+<Applying Mask 4... done. Calculating penalty... penalty is 1004>
+<Applying Mask 5... done. Calculating penalty... penalty is 985>
+<Applying Mask 6... done. Calculating penalty... penalty is 982>
+<Applying Mask 7... done. Calculating penalty... penalty is 1004>
+<Selected Mask 0>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] hole-rounded (P=200 M=200 L=1060 A+=164 A-=52 C=0 F=200 S=0 Z=0 O=0 o=0)
+<QR code requested for "first run" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Calculating QR code for "first run" in version 7-H.>
+<Splitting off block 1> <Splitting off block 2> <Splitting off block 3> <Splitting off block 4> <Splitting off block 5> <Making error block 1> <Making error block 2> <Making error block 3> <Making error block 4> <Making error block 5> <Interleaving datablocks of length 13\ and 14:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14.> <Interleaving errorblocks of length 26:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 1993>
+<Applying Mask 1... done. Calculating penalty... penalty is 2009>
+<Applying Mask 2... done. Calculating penalty... penalty is 1862>
+<Applying Mask 3... done. Calculating penalty... penalty is 1961>
+<Applying Mask 4... done. Calculating penalty... penalty is 1972>
+<Applying Mask 5... done. Calculating penalty... penalty is 1951>
+<Applying Mask 6... done. Calculating penalty... penalty is 2101>
+<Applying Mask 7... done. Calculating penalty... penalty is 1997>
+<Selected Mask 2>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] first-run-version-7
+Overfull \hbox (2.6882pt too wide) in paragraph at lines ...
+\OT1/cmtt/m/n/8 [PASS] \OT1/cmss/m/n/8 first-run-version-7 \OT1/cmtt/m/n/8 P=818 M=827 L=5248 A+=1056 A-=388 C=0 F=818 S=9 Z=18 O=0 o=0 
+\hbox(5.55556+0.66666)x345.0, glue set - 1.0
+.\OT1/cmtt/m/n/8 [
+.\OT1/cmtt/m/n/8 P
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 ]
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmss/m/n/8 ^^L (ligature fi)
+.\OT1/cmss/m/n/8 r
+.\OT1/cmss/m/n/8 s
+.\OT1/cmss/m/n/8 t
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 r
+.\OT1/cmss/m/n/8 u
+.\OT1/cmss/m/n/8 n
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 v
+.\OT1/cmss/m/n/8 e
+.\OT1/cmss/m/n/8 r
+.\OT1/cmss/m/n/8 s
+.\OT1/cmss/m/n/8 i
+.\OT1/cmss/m/n/8 o
+.\OT1/cmss/m/n/8 n
+.\OT1/cmss/m/n/8 -
+.\discretionary
+.\OT1/cmss/m/n/8 7
+.\kern 0.0
+.\penalty 10000
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmtt/m/n/8 P
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 8
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 8
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 M
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 8
+.\OT1/cmtt/m/n/8 2
+.\OT1/cmtt/m/n/8 7
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 L
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 5
+.\OT1/cmtt/m/n/8 2
+.\OT1/cmtt/m/n/8 4
+.\OT1/cmtt/m/n/8 8
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 +
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 0
+.\OT1/cmtt/m/n/8 5
+.\OT1/cmtt/m/n/8 6
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 A
+.\OT1/cmtt/m/n/8 -
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 3
+.\OT1/cmtt/m/n/8 8
+.\OT1/cmtt/m/n/8 8
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 C
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 0
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 F
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 8
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 8
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 S
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 9
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 Z
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 1
+.\OT1/cmtt/m/n/8 8
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 O
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 0
+.\glue 4.25006
+.\OT1/cmtt/m/n/8 o
+.\OT1/cmtt/m/n/8 =
+.\OT1/cmtt/m/n/8 0
+.\kern 0.0
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+<QR code requested for "small" in version 1-M.>
+<Error-correction level increased from M to H at no cost.>
+<Calculating QR code for "small" in version 1-H.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 9\ and 10:  1, 2, 3, 4, 5, 6, 7, 8, 9, .> <Interleaving errorblocks of length 17:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 1028>
+<Applying Mask 1... done. Calculating penalty... penalty is 1028>
+<Applying Mask 2... done. Calculating penalty... penalty is 1042>
+<Applying Mask 3... done. Calculating penalty... penalty is 1020>
+<Applying Mask 4... done. Calculating penalty... penalty is 997>
+<Applying Mask 5... done. Calculating penalty... penalty is 990>
+<Applying Mask 6... done. Calculating penalty... penalty is 1015>
+<Applying Mask 7... done. Calculating penalty... penalty is 974>
+<Selected Mask 7>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] first-run-version-1
+===== fancyqr tests: 118 passed, 1 failed =====
+[6]

@@ -34,9 +34,9 @@
 
 % frame strokes only the sides that face white -- so a run of modules is one
 % outline, which is why there are far fewer \closepath than \strokepath here --
-% and puts a dot inside every module
+% and puts a dot inside every module; its finder patterns are squares with round cores
 \FancyQrLoad{frame}\FancyQrRoundCut
-\TestCounts{qr-frame}{P=460 M=331 L=458 A+=172 A-=0 C=0 F=0 S=230 Z=11 O=0 o=230}{%
+\TestCounts{qr-frame}{P=265 M=172 L=287 A+=151 A-=0 C=0 F=3 S=134 Z=17 O=0 o=131}{%
   \fancyqr[size=2cm,tight,color=black]{abc}}
 
 % dots draws its position patterns as solid circles, otherwise a scanner has
@@ -61,6 +61,17 @@
 \TestRuns{qr-glitch}{\fancyqr[size=2cm,tight,color=black,seed=11]{abc}}
 \FancyQrLoad{goo}\FancyQrRoundCut
 \TestRuns{qr-goo}{\fancyqr[size=2cm,tight,color=black,seed=11]{abc}}
+\FancyQrLoad{halloween}\FancyQrRoundCut
+\TestRuns{qr-halloween}{\fancyqr[size=2cm,tight,seed=11]{abc}}
+\FancyQrLoad{snow}\FancyQrRoundCut
+\TestRuns{qr-snow}{\fancyqr[size=2cm,tight,seed=11]{abc}}
+\FancyQrLoad{castle}\FancyQrRoundCut
+\TestRuns{qr-castle}{\fancyqr[size=2cm,tight,seed=11]{abc}}
+\TestRuns{qr-castle-colors}{\fancyqr[size=2cm,tight,seed=11,r color=red,l color=blue,timing color=green]{abc}}
+\FancyQrLoad{christmas}\FancyQrRoundCut
+\TestRuns{qr-christmas}{\fancyqr[size=2cm,tight,seed=11]{abc}}
+\FancyQrLoadDefault
+\TestRuns{qr-pumpkin}{\fancyqr[size=2cm,tight,color=black,finder=circle,finder core=pumpkin]{abc}}
 
 \TestSummary
 \END

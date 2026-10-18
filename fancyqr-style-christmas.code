@@ -1,0 +1,645 @@
+% style `christmas': tiles from pine to deep teal with gold, cream and cranberry
+% accents, under snow. Trees grow where the dark modules have the outline of
+% one (tiered trees, plump firs, slim trees, spires), candy canes take L
+% shapes, presents some 2x2 blocks and baubles lone modules; sledges, park
+% benches, toy trains, drums, stockings, nutcrackers and other figures take other
+% blocks (see below), lone modules of the timing patterns become lights and
+% ornaments, white modules get light chains, stars, snowflakes and candles, and
+% the finders are wreaths around cores that vary by the seed. Tunables
+% \fancyqr@{tree,cane,present,bauble,sledge,bench,train,toy,stocking,pair}@chance
+% (those of sledges, benches and trains are expressions of the size \@max@x of the
+% code: the smaller the code, the fewer places, the likelier each, so that most
+% codes show a few).
+\FancyQrSince{2.5}%
+\def\fancyqr@xm@ch#1#2{\@ifundefined{fancyqr@#1@chance}{\@namedef{fancyqr@#1@chance}{#2}}{}}%
+\fancyqr@xm@ch{tree}1\fancyqr@xm@ch{cane}1\fancyqr@xm@ch{present}{.15}\fancyqr@xm@ch{bauble}{.5}%
+\fancyqr@xm@ch{sledge}{max(.12,min(.4,(56-\@max@x)/60))}\fancyqr@xm@ch{train}{min(.5,200/(\@max@x*\@max@x))}%
+\fancyqr@xm@ch{bench}{min(.2,60/(\@max@x*\@max@x))}\fancyqr@xm@ch{toy}{.12}\fancyqr@xm@ch{stocking}{.05}%
+\fancyqr@xm@ch{pair}{.02}%
+% global palette, so that a code drawn outside the group of the load finds it
+{\globalcolorstrue
+\definecolor{fancyqr@xm@pine}{HTML}{17473A}\definecolor{fancyqr@xm@teal}{HTML}{1A4F5E}%
+\definecolor{fancyqr@xm@gold}{HTML}{C8992F}\definecolor{fancyqr@xm@deepgold}{HTML}{A97A1C}%
+\definecolor{fancyqr@xm@cream}{HTML}{F4EAD2}\definecolor{fancyqr@xm@berry}{HTML}{8E2B3D}%
+\definecolor{fancyqr@xm@bark}{HTML}{5B3B25}%
+\definecolor{fancyqr@xm@halo}{HTML}{FFF3CF}\definecolor{fancyqr@xm@wire}{HTML}{2F5E49}\definecolor{fancyqr@xm@spark}{HTML}{FFE58F}%
+\definecolor{fancyqr@xm@ice}{HTML}{4A84B8}\definecolor{fancyqr@xm@flame}{HTML}{F6A92B}%
+\definecolor{fancyqr@xm@bY}{HTML}{F5B731}\definecolor{fancyqr@xm@bR}{HTML}{D13B47}\definecolor{fancyqr@xm@bB}{HTML}{3F8FD2}%
+\definecolor{fancyqr@xm@bG}{HTML}{4DAA62}\definecolor{fancyqr@xm@bO}{HTML}{EE7D2A}}%
+\def\fancyqr@xm@shade{\fancyqr@mixcolor{.!68!black}}%
+% paths are computed once (#1 a key, #2 the expandable path) and kept
+\def\fancyqr@xm@path#1#2{\ifcsname fancyqr@xm@#1\endcsname\else
+   \global\expandafter\edef\csname fancyqr@xm@#1\endcsname{#2}\fi\csname fancyqr@xm@#1\endcsname}%
+\def\fancyqr@xm@p#1#2{(\fpeval{#1},\fpeval{#2})}%
+% a tier of a tree around x=#1 from its apex at height #2 down to tips at #3,
+% #4 wide on each side: nearly straight sides, a lower edge that rises to the
+% middle; the right half is shaded
+\def\fancyqr@xm@tier#1#2#3#4{%
+   \fancyqr@xm@tpath{#1}{#2}{#3}{#4}\closepath\fillpath
+   {\fancyqr@xm@shade
+   \fancyqr@xm@path{h#1/#2/#3/#4}{\noexpand\moveto(#1,#2)\fancyqr@xm@side{#1}{#2}{#3}{#4}{}%
+      \fancyqr@xm@lower{#1}{#3}{#4}{}}%
+   \closepath\fillpath}}%
+\def\fancyqr@xm@tpath#1#2#3#4{\fancyqr@xm@path{t#1/#2/#3/#4}{\noexpand\moveto(#1,#2)%
+   \fancyqr@xm@side{#1}{#2}{#3}{#4}{}\fancyqr@xm@lower{#1}{#3}{#4}{}\fancyqr@xm@lower{#1}{#3}{#4}{-}%
+   \fancyqr@xm@side{#1}{#2}{#3}{#4}{-}}}%
+% ... and an upper tier, which casts a shadow on the one below (narrower, so
+% that it stays on that tier)
+\def\fancyqr@xm@utier#1#2#3#4{%
+   {\fancyqr@mixcolor{.!40!black}\put(0,-.08){\fancyqr@xm@tpath{#1}{#2}{#3}{.85*#4}\closepath\fillpath}}%
+   \fancyqr@xm@tier{#1}{#2}{#3}{#4}}%
+% #1 minus #3 of the way from #1 to #2
+\def\fancyqr@xm@dn#1#2#3{#1-#3*(#1-#2)}%
+% the right (#5 empty) or left (#5 -) side, down on the right, up on the left
+\def\fancyqr@xm@side#1#2#3#4#5{\noexpand\curveto
+   \ifx\relax#5\relax
+      \fancyqr@xm@p{#1+.36*#4}{\fancyqr@xm@dn{#2}{#3}{.3}}\fancyqr@xm@p{#1+.74*#4}{\fancyqr@xm@dn{#2}{#3}{.68}}\fancyqr@xm@p{#1+#4}{#3}%
+   \else
+      \fancyqr@xm@p{#1-.74*#4}{\fancyqr@xm@dn{#2}{#3}{.68}}\fancyqr@xm@p{#1-.36*#4}{\fancyqr@xm@dn{#2}{#3}{.3}}(#1,#2)%
+   \fi}%
+% the right half of the lower edge, from the tip in (#4 empty) or from the
+% middle out to the left tip (#4 -), expandable
+\def\fancyqr@xm@lower#1#2#3#4{\noexpand\curveto
+   \ifx\relax#4\relax
+      \fancyqr@xm@p{#1+.7*#3}{#2+.07}\fancyqr@xm@p{#1+.3*#3}{#2+.13}\fancyqr@xm@p{#1}{#2+.13}%
+   \else
+      \fancyqr@xm@p{#1-.3*#3}{#2+.13}\fancyqr@xm@p{#1-.7*#3}{#2+.07}\fancyqr@xm@p{#1-#3}{#2}%
+   \fi}%
+% an arc around #1, #2 with radius #3 from the current point at #4 degrees to
+% #5, at most 90 degrees on, as one curve; a circle of four
+\def\fancyqr@xm@kk#1#2{4/3*tand(((#2)-(#1))/4)}%
+\def\fancyqr@xm@arc#1#2#3#4#5{\noexpand\curveto
+   \fancyqr@xm@p{#1+#3*(cosd(#4)-\fancyqr@xm@kk{#4}{#5}*sind(#4))}{#2+#3*(sind(#4)+\fancyqr@xm@kk{#4}{#5}*cosd(#4))}%
+   \fancyqr@xm@p{#1+#3*(cosd(#5)+\fancyqr@xm@kk{#4}{#5}*sind(#5))}{#2+#3*(sind(#5)-\fancyqr@xm@kk{#4}{#5}*cosd(#5))}%
+   \fancyqr@xm@p{#1+#3*cosd(#5)}{#2+#3*sind(#5)}}%
+\def\fancyqr@xm@circ#1#2#3{\noexpand\moveto\fancyqr@xm@p{#1+#3}{#2}%
+   \fancyqr@xm@arc{#1}{#2}{#3}{0}{90}\fancyqr@xm@arc{#1}{#2}{#3}{90}{180}%
+   \fancyqr@xm@arc{#1}{#2}{#3}{180}{270}\fancyqr@xm@arc{#1}{#2}{#3}{270}{360}\noexpand\closepath}%
+\def\fancyqr@xm@ball#1#2#3{\linethickness{#3\unitlength}\roundcap
+   \moveto(#1,#2)\lineto(#1,#2)\strokepath\buttcap}%
+% ornaments: gold balls #1 and cranberry ones #2, lists of x/y
+\def\fancyqr@xm@orn#1#2{{\linethickness{.17\unitlength}\roundcap\color{fancyqr@xm@gold}%
+   \fancyqr@xm@path{G#1}{\fancyqr@xm@dots#1,\relax/,}\strokepath
+   \color{fancyqr@xm@berry!85!fancyqr@xm@cream}%
+   \fancyqr@xm@path{R#2}{\fancyqr@xm@dots#2,\relax/,}\strokepath\buttcap}}%
+\def\fancyqr@xm@dots#1/#2,{\ifx\relax#1\else
+   \noexpand\moveto(#1,#2)\noexpand\lineto(#1,#2)\expandafter\fancyqr@xm@dots\fi}%
+\def\fancyqr@xm@box#1#2#3#4{\fancyqr@xm@path{x#1/#2/#3/#4}{\noexpand\moveto\fancyqr@xm@p{#1}{#2}\noexpand\lineto\fancyqr@xm@p{#3}{#2}%
+   \noexpand\lineto\fancyqr@xm@p{#3}{#4}\noexpand\lineto\fancyqr@xm@p{#1}{#4}\noexpand\closepath}\fillpath}%
+\def\fancyqr@xm@trunk#1{{\color{fancyqr@xm@bark}\fancyqr@xm@box{1.31}{#1+1.2}{1.69}{#1+.5}%
+   \color{fancyqr@xm@berry}%
+   \fancyqr@xm@path{q#1}{\noexpand\moveto\fancyqr@xm@p{1.1}{#1+.56}\noexpand\lineto\fancyqr@xm@p{1.9}{#1+.56}%
+      \noexpand\lineto\fancyqr@xm@p{1.78}{#1+.03}\noexpand\lineto\fancyqr@xm@p{1.22}{#1+.03}\noexpand\closepath}\fillpath
+   \color{fancyqr@xm@gold}\fancyqr@xm@box{1.06}{#1+.5}{1.94}{#1+.62}}}%
+% the star on a tree top at x=#1: five straight points, the tips slightly
+% rounded, the facets on the left of each point lighter; its lowest notch
+% sits on the apex of the tree at .8
+\def\fancyqr@xm@topstar#1{\put(#1,.845){\fancyqr@xm@D{topstar}{}{\K{gold}\M(0,.125)\fancyqr@xm@spt{.125}{.052}{90}\F
+   \T{.025}\R\M(0,.125)\fancyqr@xm@spt{.125}{.052}{90}\S\K{gold!55!fancyqr@xm@cream}\fancyqr@xm@fac{90}%
+   \fancyqr@xm@fac{162}\fancyqr@xm@fac{234}\fancyqr@xm@fac{306}\fancyqr@xm@fac{18}\F}}}%
+% a soft glow behind the star (inside the block of the tree), drawn first
+\def\fancyqr@xm@halo#1{\put(#1,.845){\fancyqr@xm@D{halo}{}{\KK{fancyqr@xm@gold!16!white}\O(0,0){.155}\F
+   \KK{fancyqr@xm@gold!34!white}\O(0,0){.11}\F}}}%
+\def\fancyqr@xm@fac#1{\M(0,0)\L({.125*cosd(#1)},{.125*sind(#1)})\L({.052*cosd(#1+36)},{.052*sind(#1+36)})\Z}%
+\FancyQrFigure{fir}{\fancyqr@tree@chance}{.0./0x0/xxx/xxx}{\fancyqr@xm@fit{\fancyqr@xm@fir
+   \fancyqr@xm@orn{.6/-1.68,2.1/-1.3,1.75/-.62,1.3/.15}{2.4/-1.7,1.05/-1.4,.75/-.78,2.25/-.8}}}%
+\FancyQrFigure{tree}{\fancyqr@tree@chance}{.0./0x0/xxx/0x0}{\fancyqr@xm@fit{%
+   \fancyqr@xm@trunk{-2}\fancyqr@xm@small
+   \fancyqr@xm@orn{.6/-.68,1.75/-.5,1.3/.15}{2.4/-.7,1.05/-.6,2.2/-.1}}}%
+\FancyQrFigure{spire}{\fancyqr@tree@chance}{.0./0x0/0x0/xxx}{\fancyqr@xm@fit{\fancyqr@xm@spire
+   \fancyqr@xm@orn{.6/-1.68,2.05/-1.35,1.25/-.7}{2.4/-1.7,1.1/-1.42,1.75/-.38}}}%
+\FancyQrFigure{smalltree}{\fancyqr@tree@chance}{.0./0x0/xxx}{\fancyqr@xm@fit{\fancyqr@xm@small
+   \fancyqr@xm@orn{.6/-.68,1.75/-.5,1.3/.15}{2.4/-.7,1.05/-.6,2.2/-.1}}}%
+\FancyQrFigure{smallfir}{\fancyqr@tree@chance}{.00./0xx0/.xx.}{\fancyqr@xm@fit{\fancyqr@xm@stem1{-.97}%
+   \fancyqr@xm@tier{1}{.45}{-.82}{.98}\fancyqr@xm@utier{1}{.99}{.1}{.98}%
+   \fancyqr@xm@orn{.3/-.72,1.4/-.5,1.25/.3}{1.7/-.74,.65/-.55,.4/.18}}}%
+% the tiers on three columns: a fir on two full rows, a spire of two over one
+% full row and a small tree on one, each on a short trunk (at x=#1 down to #2)
+\def\fancyqr@xm@stem#1#2{{\color{fancyqr@xm@bark}\fancyqr@xm@box{#1-.08}{#2}{#1+.08}{#2+.3}}}%
+\def\fancyqr@xm@fir{\fancyqr@xm@halo{1.5}\fancyqr@xm@stem{1.5}{-1.97}%
+   \fancyqr@xm@tier{1.5}{-.2}{-1.82}{1.48}\fancyqr@xm@utier{1.5}{.6}{-.93}{1.47}%
+   \fancyqr@xm@utier{1.5}{.8}{.12}{.64}\fancyqr@xm@topstar{1.5}}%
+\def\fancyqr@xm@spire{\fancyqr@xm@halo{1.5}\fancyqr@xm@stem{1.5}{-1.97}%
+   \fancyqr@xm@tier{1.5}{-.15}{-1.82}{1.48}\fancyqr@xm@utier{1.5}{.45}{-.86}{.88}%
+   \fancyqr@xm@utier{1.5}{.8}{.06}{.5}\fancyqr@xm@topstar{1.5}}%
+\def\fancyqr@xm@small{\fancyqr@xm@halo{1.5}\fancyqr@xm@stem{1.5}{-.97}%
+   \fancyqr@xm@tier{1.5}{.62}{-.82}{1.48}\fancyqr@xm@utier{1.5}{.76}{-.3}{1}%
+   \fancyqr@xm@utier{1.5}{.8}{.25}{.52}\fancyqr@xm@topstar{1.5}}%
+\def\fancyqr@xm@slim#1{\fancyqr@xm@halo{.5}%
+   \ifnum#1>2 \fancyqr@xm@stem{.5}{-1.97}%
+      \fancyqr@xm@tier{.5}{-1.02}{-1.82}{.48}\fancyqr@xm@utier{.5}{-.32}{-1.3}{.46}%
+      \fancyqr@xm@utier{.5}{.38}{-.62}{.42}\fancyqr@xm@utier{.5}{.8}{.02}{.4}%
+      \fancyqr@xm@orn{.27/-1.72,.62/-1.15,.3/-.48}{.73/-1.7,.35/-1.18,.68/-.45,.4/.18}%
+   \else\fancyqr@xm@stem{.5}{-.97}%
+      \fancyqr@xm@tier{.5}{-.3}{-.82}{.48}\fancyqr@xm@utier{.5}{.4}{-.5}{.44}%
+      \fancyqr@xm@utier{.5}{.8}{.02}{.4}%
+      \fancyqr@xm@orn{.27/-.72,.62/-.35}{.73/-.7,.35/-.36,.4/.18}%
+   \fi
+   \fancyqr@xm@topstar{.5}}%
+\FancyQrFigure{slimtree}{\fancyqr@tree@chance}{.0./0x0/0x0/0x0/.0.}{\fancyqr@xm@fit{\fancyqr@xm@slim3}}%
+\FancyQrFigure{slimfir}{\fancyqr@tree@chance}{.0./0x0/0x0/.0.}{\fancyqr@xm@fit{\fancyqr@xm@slim2}}%
+% a candy cane, drawn as on an L of a crook over a shaft of three modules with
+% the crook to the right, and mapped (#2) to its other places (#1 the key): the
+% crook to the left, or lying on a row of three with the crook up or down at
+% either end. A cranberry or red tube most of a module wide that curls over,
+% with thin slanted stripes (cream or gold, by the seeded generator) that
+% follow it and stay clear of the module centers
+\def\fancyqr@xm@cane#1#2{\fancyqr@xm@fit{\edef\@tempa{\fancyqr@xm@rand2}%
+   \fancyqr@xm@D{cane#1\@tempa}{#2\def\h@s##1{\M(.23,##1-.112)\L(.77,##1+.112)}%
+      \def\h@a##1{\M({1+.23*cosd(##1-20)},{.18+.23*sind(##1-20)})\L({1+.77*cosd(##1)},{.18+.77*sind(##1)})}}{%
+   \ifcase\@tempa\relax\K{berry}\else\K{red}\fi\T{.6}\R\M(.5,-1.62)\L(.5,.18)\A(1,.18){.5}{180}{-15}\S
+   \ifcase\@tempa\relax\K{cream}\else\K{gold!60!fancyqr@xm@cream}\fi\T{.11}%
+   \h@s{-1.25}\h@s{-.75}\h@s{-.25}\h@a{172}\h@a{115}\h@a{58}\h@a{3}\S}}}%
+\FancyQrFigure{cane/R}{\fancyqr@cane@chance}{.00./0xx0/0x0./.x..}{\fancyqr@xm@cane{r}{}}%
+\FancyQrFigure{cane/L}{\fancyqr@cane@chance}{.00./0xx0/.0x0/..x.}{\fancyqr@xm@cane{l}{\fancyqr@xm@mirror2}}%
+\FancyQrFigure{present}{\fancyqr@present@chance}{xx/xx}{\fancyqr@xm@fit{%
+   \ifodd\numexpr\fancyqr@fig@hash8\i\j\relax\color{fancyqr@xm@berry}\fi
+   \fancyqr@xm@box{.1}{-.95}{1.9}{.5}%
+   {\fancyqr@xm@shade\fancyqr@xm@box{.03}{.42}{1.97}{.78}\color{fancyqr@xm@gold}%
+   \fancyqr@xm@box{.86}{-.95}{1.14}{.78}\fancyqr@xm@box{.1}{-.12}{1.9}{.12}%
+   \moveto(1,.78)\curveto(.82,1)(.5,1.02)(.52,.86)\curveto(.54,.76)(.8,.76)(1,.78)\closepath\fillpath
+   \moveto(1,.78)\curveto(1.18,1)(1.5,1.02)(1.48,.86)\curveto(1.46,.76)(1.2,.76)(1,.78)\closepath\fillpath}}}%
+\FancyQrFigure{bauble}{\fancyqr@bauble@chance}{.0./0x0/.0.}{\fancyqr@xm@fit{%
+   \ifodd\numexpr\fancyqr@fig@hash7\i\j\relax
+      \color{fancyqr@xm@deepgold}\else\color{fancyqr@xm@berry}\fi
+   {\fancyqr@mixcolor{.!65!black}\fancyqr@xm@ball{.5}{.42}{.84}}%
+   \fancyqr@xm@ball{.46}{.46}{.74}%
+   {\fancyqr@mixcolor{.!45!fancyqr@xm@cream}\fancyqr@xm@ball{.3}{.6}{.12}}%
+   \color{fancyqr@xm@gold}%
+   \moveto(.4,.79)\lineto(.6,.79)\lineto(.6,.89)\lineto(.4,.89)\closepath\fillpath
+   \linethickness{.035\unitlength}\fancyqr@xm@path{loop}{\fancyqr@xm@circ{.5}{.935}{.045}}\strokepath}}%
+{\globalcolorstrue
+\definecolor{fancyqr@xm@red}{HTML}{A9353B}\definecolor{fancyqr@xm@skin}{HTML}{EFC3A2}%
+\definecolor{fancyqr@xm@coal}{HTML}{26262B}\definecolor{fancyqr@xm@frost}{HTML}{4D6D7A}%
+\definecolor{fancyqr@xm@fur}{HTML}{87583A}\definecolor{fancyqr@xm@deep}{HTML}{4A1A24}}%
+% drawings from named points: \fancyqr@xm@D{key}{definitions}{drawing} keeps
+% the drawing under the key; in it \M(p), \L(p), \C(p)(p)(p) move, line and
+% curve, \A(c){r}{from}{to} continues with an arc, \O(c){r} and \E(c){rx}{ry}
+% are a circle and an ellipse, \B(p)(q) a box, \Z, \F, \S close, fill and
+% stroke, \T{w} sets the line width, \R round caps and joins, \K{c} a color of
+% the palette, \KK{c} any color; a point p is x,y (expressions, braced if they
+% hold parentheses, or a macro that holds both) mapped by
+% \fancyqr@xm@map{a}{b}{c}{d}{e}{f} to (ax+by+e,cx+dy+f), the identity unless
+% the definitions set another one
+\def\fancyqr@xm@map#1#2#3#4#5#6{\def\fancyqr@xm@P##1{\expandafter\fancyqr@xm@P@\expanded{##1}\@nil}%
+   \def\fancyqr@xm@P@##1,##2\@nil{\fpeval{(#1)*(##1)+(#2)*(##2)+(#5)},\fpeval{(#3)*(##1)+(#4)*(##2)+(#6)}}}%
+% the identity: a plain number stays as it is, anything else is evaluated
+\def\fancyqr@xm@id{\def\fancyqr@xm@P##1{\expandafter\fancyqr@xm@P@\expanded{##1}\@nil}%
+   \def\fancyqr@xm@P@##1,##2\@nil{\fancyqr@xm@n{##1},\fancyqr@xm@n{##2}}}%
+\def\fancyqr@xm@n#1{\expandafter\fancyqr@xm@nf\detokenize{#1}\relax{#1}}%
+\def\fancyqr@xm@nf#1{\if-#1\expandafter\fancyqr@xm@nl\else\expandafter\fancyqr@xm@nl\expandafter#1\fi}%
+\def\fancyqr@xm@nl#1{\ifx\relax#1\expandafter\fancyqr@xm@nyes\else\expandafter\fancyqr@xm@nc\fi#1}%
+\def\fancyqr@xm@nc#1{\ifcsname fancyqr@xm@ok#1\endcsname\expandafter\fancyqr@xm@nl\else\expandafter\fancyqr@xm@nno\fi}%
+\def\fancyqr@xm@nyes#1#2{#2}\def\fancyqr@xm@nno#1\relax#2{\fpeval{#2}}%
+\@for\@tempa:=0,1,2,3,4,5,6,7,8,9,.\do{\expandafter\let\csname fancyqr@xm@ok\@tempa\endcsname\@empty}%
+% the mirror x -> #1-x
+\def\fancyqr@xm@mirror#1{\def\fancyqr@xm@P##1{\expandafter\fancyqr@xm@P@\expanded{##1}\@nil}%
+   \def\fancyqr@xm@P@##1,##2\@nil{\fpeval{#1-(##1)},\fancyqr@xm@n{##2}}}%
+\def\fancyqr@xm@D#1#2#3{\ifcsname fancyqr@xm@D@#1\endcsname\else\begingroup
+   \fancyqr@xm@id\fancyqr@xm@dsl#2%
+   \expandafter\xdef\csname fancyqr@xm@D@#1\endcsname{#3}\endgroup\fi
+   \csname fancyqr@xm@D@#1\endcsname}%
+\def\fancyqr@xm@dsl{%
+   \def\M(##1){\noexpand\moveto(\fancyqr@xm@P{##1})}\def\L(##1){\noexpand\lineto(\fancyqr@xm@P{##1})}%
+   \def\C(##1)(##2)(##3){\noexpand\curveto(\fancyqr@xm@P{##1})(\fancyqr@xm@P{##2})(\fancyqr@xm@P{##3})}%
+   \def\A(##1){\expandafter\fancyqr@xm@A\expanded{##1}\@nil}%
+   \def\E(##1)##2##3{\expandafter\fancyqr@xm@E\expanded{##1}\@nil{##2}{##3}}%
+   \def\O(##1)##2{\E(##1){##2}{##2}}%
+   \def\B(##1)(##2){\expandafter\fancyqr@xm@B\expanded{##1,##2}\@nil}%
+   \def\Z{\noexpand\closepath}\def\F{\noexpand\fillpath}\def\S{\noexpand\strokepath}%
+   \def\T##1{\noexpand\linethickness{##1\noexpand\unitlength}}%
+   \def\R{\noexpand\roundcap\noexpand\roundjoin}\def\K##1{\noexpand\fancyqr@mixcolor{fancyqr@xm@##1}}%
+   \def\KK##1{\noexpand\fancyqr@mixcolor{##1}}}%
+% an arc around #1,#2 with radius #3 from #4 to #5 degrees, a curve per quarter
+\def\fancyqr@xm@A#1,#2\@nil#3#4#5{%
+   \ifdim\fpeval{abs((#5)-(#4))}\p@>90.01\p@
+      \fancyqr@xm@Aq{#1}{#2}{#3}{#4}{(#4)+90*sign((#5)-(#4))}%
+      \expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
+   {\fancyqr@xm@A#1,#2\@nil{#3}{\fpeval{(#4)+90*sign((#5)-(#4))}}{#5}}{\fancyqr@xm@Aq{#1}{#2}{#3}{#4}{#5}}}%
+\def\fancyqr@xm@Aq#1#2#3#4#5{\noexpand\curveto
+   (\fancyqr@xm@P{#1+#3*(cosd(#4)-\fancyqr@xm@kk{#4}{#5}*sind(#4)),#2+#3*(sind(#4)+\fancyqr@xm@kk{#4}{#5}*cosd(#4))})%
+   (\fancyqr@xm@P{#1+#3*(cosd(#5)+\fancyqr@xm@kk{#4}{#5}*sind(#5)),#2+#3*(sind(#5)-\fancyqr@xm@kk{#4}{#5}*cosd(#5))})%
+   (\fancyqr@xm@P{#1+#3*cosd(#5),#2+#3*sind(#5)})}%
+\def\fancyqr@xm@E#1,#2\@nil#3#4{\noexpand\moveto(\fancyqr@xm@P{#1+(#3),#2})%
+   \fancyqr@xm@Eq{#1}{#2}{#3}0{0}{#4}\fancyqr@xm@Eq{#1}{#2}0{#4}{-(#3)}0%
+   \fancyqr@xm@Eq{#1}{#2}{-(#3)}0{0}{-(#4)}\fancyqr@xm@Eq{#1}{#2}0{-(#4)}{#3}0\noexpand\closepath}%
+% a quarter from the center #1,#2 plus #3,#4 to it plus #5,#6
+\def\fancyqr@xm@Eq#1#2#3#4#5#6{\noexpand\curveto(\fancyqr@xm@P{#1+(#3)+.5523*(#5),#2+(#4)+.5523*(#6)})%
+   (\fancyqr@xm@P{#1+(#5)+.5523*(#3),#2+(#6)+.5523*(#4)})(\fancyqr@xm@P{#1+(#5),#2+(#6)})}%
+\def\fancyqr@xm@B#1,#2,#3,#4\@nil{\noexpand\moveto(\fancyqr@xm@P{#1,#2})\noexpand\lineto(\fancyqr@xm@P{#3,#2})%
+   \noexpand\lineto(\fancyqr@xm@P{#3,#4})\noexpand\lineto(\fancyqr@xm@P{#1,#4})\noexpand\closepath}%
+% #1 drawn in exact module units (tiles are drawn larger by their overlap,
+% toward their right and top), a figure also a little smaller, so that it keeps
+% clear of the tiles that reach into its block from the left and from below
+\def\fancyqr@xm@fit#1{{\ifcsname fancyqr@F@\the\i @\the\j\endcsname
+      \expandafter\expandafter\expandafter\fancyqr@xm@fitf\csname fancyqr@F@\the\i @\the\j\endcsname
+   \else\def\fancyqr@xm@k{0}\def\fancyqr@xm@s{1}\def\fancyqr@xm@tx{0}\def\fancyqr@xm@ty{0}\fi
+   \unitlength\qr@modulesize
+   \put(\fpeval{\fancyqr@xm@k*\fancyqr@edge@compensate/\qr@modulesize+\fancyqr@xm@tx},\fancyqr@xm@ty){%
+      \unitlength\fancyqr@xm@s\unitlength#1}}}%
+\def\fancyqr@xm@fitf#1#2{\def\fancyqr@xm@k{#2}\csname fancyqr@fig@d@#1\endcsname
+   \ifcsname fancyqr@xm@S@#1\endcsname\else
+      \global\expandafter\edef\csname fancyqr@xm@S@#1\endcsname{%
+         \def\noexpand\fancyqr@xm@s{\fpeval{min(1-.05/\fancyqr@fig@w,1-.05/\fancyqr@fig@h)}}%
+         \def\noexpand\fancyqr@xm@ty{\fpeval{(1-\fancyqr@fig@h)*(1-min(1-.05/\fancyqr@fig@w,1-.05/\fancyqr@fig@h))+.04}}}\fi
+   \csname fancyqr@xm@S@#1\endcsname\def\fancyqr@xm@tx{.04}}%
+% a variant 0 to #2-1 by the place of a figure, #1 a salt
+\def\fancyqr@xm@var#1#2{\the\numexpr(\fancyqr@fig@hash{#1}\i\j*#2+50)/100-1\relax}%
+% more figures (variants by their place: mirrored, colors); lighter details stay
+% off the module centers
+\FancyQrFigure{sledge}{\fancyqr@sledge@chance}{xxx/xxx}{\fancyqr@xm@sledge}%
+\FancyQrFigure{bench}{\fancyqr@bench@chance}{xxx}{\fancyqr@xm@bench}%
+\FancyQrFigure{train}{\fancyqr@train@chance}{xxx}{\fancyqr@xm@train}%
+\FancyQrFigure{drum}{\fancyqr@toy@chance}{xx/xx}{\fancyqr@xm@drum}%
+\FancyQrFigure{stocking/R}{\fancyqr@stocking@chance}{x./xx}{\fancyqr@xm@stocking0}%
+\FancyQrFigure{stocking/L}{\fancyqr@stocking@chance}{.x/xx}{\fancyqr@xm@stocking1}%
+\FancyQrFigure{nutcracker}{\fancyqr@pair@chance}{x/x}{%
+   \ifnum\fancyqr@fig@hash{50}\i\j<50 \fancyqr@xm@soldier\else\fancyqr@xm@sock\fi}%
+\FancyQrFigure{cane/UR}{\fancyqr@cane@chance}{..0./.0x0/xxx0/.00.}{\fancyqr@xm@cane{ur}{\fancyqr@xm@map0110{2}{-1}}}%
+\FancyQrFigure{cane/DR}{\fancyqr@cane@chance}{.00./xxx0/.0x0/..0.}{\fancyqr@xm@cane{dr}{\fancyqr@xm@map01{-1}0{2}1}}%
+\FancyQrFigure{cane/UL}{\fancyqr@cane@chance}{.0../0x0./0xxx/.00.}{\fancyqr@xm@cane{ul}{\fancyqr@xm@map0{-1}10{1}{-1}}}%
+\FancyQrFigure{cane/DL}{\fancyqr@cane@chance}{.00./0xxx/0x0./.0..}{\fancyqr@xm@cane{dl}{\fancyqr@xm@map0{-1}{-1}011}}%
+\def\fancyqr@xm@sledge{\fancyqr@xm@fit{\edef\fancyqr@xm@v{\fancyqr@xm@var{32}4}%
+   \fancyqr@xm@D{sledge\fancyqr@xm@v}{\ifodd\fancyqr@xm@v\relax\fancyqr@xm@mirror3\fi
+      \def\h@p{\ifnum\fancyqr@xm@v<2 teal\else pine\fi}}{%
+   \K{gold}\T{.08}\R\M(.5,-.86)\L(.5,-.6)\M(1.5,-.86)\L(1.5,-.6)\M(2.2,-.86)\L(2.2,-.6)\S
+   \T{.09}\M(.12,-.86)\L(2.3,-.86)\C(2.7,-.86)(2.92,-.66)(2.9,-.36)\C(2.88,-.12)(2.72,-.04)(2.64,-.18)\S
+   \K{berry}\M(.08,-.62)\L(2.36,-.62)\C(2.62,-.62)(2.78,-.4)(2.8,-.1)\C(2.82,.2)(2.9,.4)(2.94,.56)%
+      \C(2.9,.76)(2.6,.78)(2.5,.66)\C(2.4,.54)(2.34,.3)(2.3,.02)\L(.08,.02)\Z\F
+   \K{gold}\T{.05}\M(.2,-.3)\L(2.3,-.3)\C(2.5,-.3)(2.6,-.2)(2.64,0)\S
+   \M(2.86,.52)\C(2.8,.62)(2.66,.62)(2.62,.52)\S
+   \K{fur}\M(.12,0)\C(.04,.5)(.24,.84)(.62,.86)\C(1,.84)(1.28,.5)(1.22,0)\Z
+   \M(.56,.84)\C(.5,.92)(.54,.97)(.62,.96)\L(.74,.94)\C(.8,.9)(.74,.84)(.68,.82)\Z\F
+   \K{fur!70!black}\M(1.2,.4)\C(1.16,.2)(.9,.06)(.6,.08)\C(.9,.14)(1.1,.26)(1.2,.4)\Z\F
+   \K\h@p\B(1.3,0)(2.25,.8)\F
+   \K{gold}\B(1.73,0)(1.82,.8)\B(1.3,.62)(2.25,.7)\F
+   \M(1.775,.8)\C(1.66,.96)(1.5,.96)(1.52,.86)\C(1.54,.8)(1.66,.8)(1.775,.8)\Z
+   \M(1.775,.8)\C(1.89,.96)(2.05,.96)(2.03,.86)\C(2.01,.8)(1.89,.8)(1.775,.8)\Z\F}}}%
+% the slats and the iron rail between the seat and the backrest cover the module
+% centers (a gap there would make the modules read as light)
+\def\fancyqr@xm@bench{\fancyqr@xm@fit{\edef\fancyqr@xm@v{\fancyqr@xm@var{34}3}%
+   \fancyqr@xm@D{bench\fancyqr@xm@v}{\def\h@w{\ifcase\fancyqr@xm@v bark!45!.\or berry!45!.\else teal!45!.\fi}}{%
+   \K{coal}\T{.07}\R\M(.4,.72)\L(.4,.3)\M(2.6,.72)\L(2.6,.3)\S
+   \B(.38,.4)(2.62,.48)\F
+   \T{.06}\M(.3,.22)\C(.3,.15)(.2,.12)(.12,.08)\M(.5,.22)\C(.5,.15)(.6,.12)(.68,.08)\M(.4,.22)\L(.4,.09)%
+   \M(2.5,.22)\C(2.5,.15)(2.4,.12)(2.32,.08)\M(2.7,.22)\C(2.7,.15)(2.8,.12)(2.88,.08)\M(2.6,.22)\L(2.6,.09)\S
+   \K\h@w\B(.16,.22)(2.84,.305)\B(.16,.325)(2.84,.41)\B(.22,.47)(2.78,.575)\B(.22,.595)(2.78,.7)\F
+   \K{\h@w!60!black}\B(.16,.22)(2.84,.245)\B(.16,.325)(2.84,.35)\B(.22,.47)(2.78,.5)\B(.22,.595)(2.78,.625)\F
+   \noexpand\color{\noexpand\fancyqr@snow@color}%
+   \M(.15,.64)\C(.06,.69)(.1,.77)(.28,.78)\C(.55,.79)(.75,.93)(1.5,.93)\C(2.25,.93)(2.45,.79)(2.72,.78)%
+   \C(2.9,.77)(2.94,.69)(2.85,.64)\C(2.78,.62)(2.7,.66)(2.6,.68)\L(.4,.68)\C(.3,.66)(.22,.62)(.15,.64)\Z
+   \M(.13,.41)\C(.1,.48)(.18,.53)(.28,.52)\C(.38,.51)(.4,.46)(.37,.41)\Z
+   \M(2.87,.41)\C(2.9,.48)(2.82,.53)(2.72,.52)\C(2.62,.51)(2.6,.46)(2.63,.41)\Z\F}}}%
+\def\fancyqr@xm@train{\fancyqr@xm@fit{\edef\fancyqr@xm@v{\fancyqr@xm@var{35}4}%
+   \fancyqr@xm@D{train\fancyqr@xm@v}{\ifodd\fancyqr@xm@v\relax\fancyqr@xm@mirror3\fi
+      \def\h@w{\ifnum\fancyqr@xm@v<2 teal\else berry\fi}\def\h@p{\ifnum\fancyqr@xm@v<2 berry\else teal\fi}}{%
+   \K{pine}\M(.86,.7)\L(1.24,.7)\L(1.05,.96)\Z\F\K\h@p\B(.3,.7)(.78,.94)\F
+   \K{gold}\B(.52,.7)(.56,.94)\B(.3,.8)(.78,.84)\F
+   \K\h@w\B(.08,.26)(1.3,.7)\F\K{gold}\B(.08,.6)(1.3,.65)\F
+   \K{red}\B(1.42,.26)(1.92,.86)\M(1.92,.26)\L(2.7,.26)\A(2.7,.45){.19}{-90}{90}\L(1.92,.64)\Z\F
+   \K{gold}\B(2.12,.26)(2.18,.64)\B(2.64,.26)(2.7,.64)\F
+   \K{coal}\B(1.36,.84)(1.98,.94)\B(1.28,.3)(1.44,.36)\M(2.48,.62)\L(2.62,.62)\L(2.68,.88)\L(2.42,.88)\Z
+   \M(2.8,.3)\L(2.95,.08)\L(2.72,.08)\Z\O(.38,.17){.13}\O(.98,.17){.13}\O(1.62,.17){.13}%
+   \O(2.12,.17){.12}\O(2.56,.17){.12}\F
+   \K{gold}\O(.38,.17){.04}\O(.98,.17){.04}\O(1.62,.17){.04}\O(2.12,.17){.04}\O(2.56,.17){.04}\F
+   \K{cream}\B(1.6,.6)(1.8,.76)\O(2.3,.9){.06}\O(2.18,.92){.045}\F}}}%
+\def\fancyqr@xm@drum{\fancyqr@xm@fit{\edef\fancyqr@xm@v{\fancyqr@xm@var{37}3}%
+   \fancyqr@xm@D{drum\fancyqr@xm@v}{\def\h@r{deepgold!45!black}}{%
+   \ifcase\fancyqr@xm@v\relax\K{red}\or\K{teal}\else\K{berry}\fi
+   \M(.1,.76)\L(.1,-.7)\C(.1,-.88)(.55,-.97)(1,-.97)\C(1.45,-.97)(1.9,-.88)(1.9,-.7)\L(1.9,.76)\Z\F
+   \K\h@r\M(.1,-.58)\C(.1,-.76)(.55,-.85)(1,-.85)\C(1.45,-.85)(1.9,-.76)(1.9,-.58)\L(1.9,-.7)%
+   \C(1.9,-.88)(1.45,-.97)(1,-.97)\C(.55,-.97)(.1,-.88)(.1,-.7)\Z
+   \M(.1,.77)\L(.1,.6)\C(.1,.48)(.55,.42)(1,.42)\C(1.45,.42)(1.9,.48)(1.9,.6)\L(1.9,.77)\Z\F
+   \K{gold}\T{.045}\R\M(.12,.46)\L(1,-.83)\L(1.88,.46)\M(.14,-.64)\L(1,.42)\L(1.86,-.64)\S
+   \K{cream!80!fancyqr@xm@fur}\E(1,.77){.9}{.17}\F\K\h@r\T{.04}\E(1,.77){.9}{.17}\S
+   \K{bark}\T{.07}\M(.42,.7)\L(1.38,.9)\M(1.58,.7)\L(.62,.9)\S\K{cream}\O(1.38,.9){.06}\O(.62,.9){.06}\F}}}%
+\def\fancyqr@xm@stocking#1{\fancyqr@xm@fit{\edef\fancyqr@xm@v{#1\fancyqr@xm@var{38}4}%
+   \fancyqr@xm@D{stocking\fancyqr@xm@v}{\ifnum#1=\@ne\fancyqr@xm@mirror2\fi
+      \def\h@c{\ifodd\fancyqr@xm@v\space red\else berry\fi}}{%
+   \K\h@c\M(.16,.7)\L(.84,.7)\L(.84,-.1)\C(.86,-.14)(.95,-.14)(1.05,-.14)\L(1.62,-.14)%
+   \C(1.84,-.14)(1.95,-.32)(1.95,-.54)\C(1.95,-.78)(1.8,-.95)(1.56,-.95)\L(.48,-.95)%
+   \C(.22,-.95)(.05,-.8)(.05,-.56)\C(.05,-.4)(.1,-.28)(.16,-.2)\Z\F
+   \K{cream}\M(.05,-.56)\C(.05,-.8)(.22,-.95)(.48,-.95)\C(.34,-.9)(.14,-.78)(.05,-.56)\Z
+   \M(1.62,-.14)\C(1.84,-.14)(1.95,-.32)(1.95,-.54)\C(1.95,-.78)(1.8,-.95)(1.56,-.95)%
+   \C(1.7,-.78)(1.72,-.4)(1.62,-.14)\Z
+   \M(.15,.66)\L(.85,.66)\A(.85,.73){.07}{-90}{0}\L(.92,.88)\A(.85,.88){.07}{0}{90}%
+   \L(.15,.95)\A(.15,.88){.07}{90}{180}\L(.08,.73)\A(.15,.73){.07}{180}{270}\Z
+   \ifnum\fancyqr@xm@var{38}4<2 \B(.16,.24)(.84,.34)\B(.16,.02)(.84,.12)\else
+   \O(.3,.25){.05}\O(.7,.12){.05}\O(.46,-.06){.05}\O(1.1,-.42){.05}\O(1.32,-.76){.05}\fi\F}}}%
+\def\fancyqr@xm@soldier{\fancyqr@xm@fit{\edef\fancyqr@xm@v{\fancyqr@xm@var{39}2}%
+   \fancyqr@xm@D{soldier\fancyqr@xm@v}{\def\h@c{\ifodd\fancyqr@xm@v\space teal\else red\fi}}{%
+   \K\h@c\M(.25,.2)\L(.75,.2)\L(.78,-.46)\L(.22,-.46)\Z\F\T{.12}\R\M(.21,.12)\L(.19,-.34)\M(.79,.12)\L(.81,-.34)\S
+   \K{skin}\E(.5,.29){.15}{.14}\O(.19,-.4){.06}\O(.81,-.4){.06}\F
+   \K{coal}\M(.3,.36)\L(.7,.36)\L(.68,.84)\C(.66,.96)(.34,.96)(.32,.84)\Z\O(.45,.32){.022}\O(.55,.32){.022}%
+   \B(.23,-.5)(.77,-.42)\B(.25,-.94)(.48,-.82)\B(.52,-.94)(.75,-.82)\F
+   \K{cream}\M(.5,.27)\C(.45,.3)(.39,.28)(.37,.23)\C(.43,.21)(.48,.22)(.5,.27)\Z
+   \M(.5,.27)\C(.55,.3)(.61,.28)(.63,.23)\C(.57,.21)(.52,.22)(.5,.27)\Z\F
+   \ifodd\fancyqr@xm@v\relax\K{berry}\else\K{teal}\fi\B(.27,-.86)(.73,-.48)\F}}}%
+\def\fancyqr@xm@sock{\fancyqr@xm@fit{\edef\fancyqr@xm@v{\fancyqr@xm@var{41}4}%
+   \fancyqr@xm@D{sock\fancyqr@xm@v}{\ifodd\fancyqr@xm@v\relax\fancyqr@xm@mirror1\fi
+      \def\h@c{\ifnum\fancyqr@xm@v<2 red\else berry\fi}}{%
+   \K\h@c\M(.22,.72)\L(.7,.72)\L(.7,-.38)\C(.7,-.46)(.76,-.5)(.84,-.54)\C(.97,-.6)(.98,-.9)(.8,-.95)%
+   \L(.38,-.95)\C(.24,-.95)(.18,-.84)(.2,-.7)\Z\F
+   \K{cream}\M(.84,-.54)\C(.97,-.6)(.98,-.9)(.8,-.95)\C(.87,-.82)(.88,-.66)(.84,-.54)\Z
+   \M(.38,-.95)\C(.24,-.95)(.18,-.84)(.2,-.7)\C(.25,-.8)(.32,-.85)(.42,-.86)\Z
+   \B(.22,.28)(.7,.36)\B(.22,.1)(.7,.18)%
+   \M(.22,.66)\L(.7,.66)\A(.7,.73){.07}{-90}{0}\L(.77,.88)\A(.7,.88){.07}{0}{90}%
+   \L(.22,.95)\A(.22,.88){.07}{90}{180}\L(.15,.73)\A(.22,.73){.07}{180}{270}\Z\F}}}%
+% the timing patterns are decorated where a dark module stands alone (one that
+% joins its neighbours keeps its tile; no figure takes a module of a timing
+% pattern): by the seeded generator a round or a pointed bulb, a bauble, a
+% small gift or a star, in a soft glow, in the tile color (always if there is a
+% timing color), cranberry, red or dark gold
+\def\fancyqr@xm@light#1#2#3#4{\ifnum#1#2#3#4=1111
+      \edef\@tempa{\fancyqr@xm@rand5\ifx\fancyqr@timing@color\@empty\fancyqr@xm@rand4\else0\fi}%
+      \fancyqr@xm@fit{\fancyqr@xm@D{t\@tempa}{}{{\K{gold!12!white}\O(.5,.5){.47}\F}%
+         {\expandafter\fancyqr@xm@item\@tempa}%
+         \ifcase\expandafter\@firstoftwo\@tempa\space\fancyqr@xm@cap{.31,.6}\or\fancyqr@xm@cap{.4,.6}%
+         \or\fancyqr@xm@cap{.34,.58}\fi}}%
+   \else\fancyqr@rounded@rect#1#2#3#4\fi}%
+\def\fancyqr@xm@rand#1{\the\numexpr\csname int_rand:nn\endcsname{0}{#1-1}\relax}%
+\def\fancyqr@xm@cap#1{\K{gold}\M(.39,.78)\L(.61,.78)\L(.59,.9)\L(.41,.9)\Z\F\K{cream!65!.}\O(#1){.06}\F}%
+\def\fancyqr@xm@item#1#2{\ifcase#2 \KK{.}\or\K{berry}\or\K{red}\else\K{deepgold!70!black}\fi
+   \ifcase#1
+      \M(.38,.8)\L(.62,.8)\C(.66,.7)(.9,.62)(.9,.42)\A(.5,.42){.4}{0}{-180}\C(.1,.62)(.34,.7)(.38,.8)\Z\F
+   \or
+      \M(.39,.8)\L(.61,.8)\C(.68,.68)(.8,.5)(.76,.3)\C(.72,.12)(.58,.03)(.5,.02)%
+      \C(.42,.03)(.28,.12)(.24,.3)\C(.2,.5)(.32,.68)(.39,.8)\Z\F
+   \or\O(.5,.4){.38}\F
+   \or\B(.14,.06)(.86,.68)\F\ifnum#2=\z@\K{berry}\else\K{pine}\fi\B(.44,.06)(.56,.68)\B(.14,.3)(.86,.42)\F
+      \K{gold}\M(.5,.68)\C(.4,.86)(.24,.86)(.26,.76)\C(.28,.68)(.4,.68)(.5,.68)\Z
+      \M(.5,.68)\C(.6,.86)(.76,.86)(.74,.76)\C(.72,.68)(.6,.68)(.5,.68)\Z\F
+   \else\M(.5,.92)\fancyqr@xm@pt{126}{.45}\fancyqr@xm@pt{162}1\fancyqr@xm@pt{198}{.45}\fancyqr@xm@pt{234}1%
+      \fancyqr@xm@pt{270}{.45}\fancyqr@xm@pt{306}1\fancyqr@xm@pt{342}{.45}\fancyqr@xm@pt{18}1%
+      \fancyqr@xm@pt{54}{.45}\Z\F
+   \fi}%
+\def\fancyqr@xm@pt#1#2{\L({.5+.47*#2*cosd(#1)},{.45+.47*#2*sind(#1)})}%
+\def\fancyqr@christmas@tile#1#2#3#4{\FancyQrFigureTile{\FancyQrIfTiming
+   {\FancyQrIfExtra{timing}{\fancyqr@xm@light#1#2#3#4}{\fancyqr@rounded@rect#1#2#3#4}}{\fancyqr@rounded@rect#1#2#3#4}}}%
+% the finder patterns are wreaths: a soft texture of needles in a darker
+% green, a few gold lights and a bow, around a core that the seeded generator
+% picks for each finder (see \fancyqr@xm@core); #1 top row, #2 left column, #3
+% size
+\def\fancyqr@xm@pattern#1#2#3{%
+   \iffancyqr@inalign@\else
+   \put(#2,\the\numexpr\@max@y-#1-#3+\@ne\relax){%
+      \fancyqr@fixedcolor{\roundcap
+         {\fancyqr@mixcolor{.!80!black}\linethickness{.035\unitlength}%
+         \fancyqr@xm@path{w#3}{\fancyqr@xm@needles{#3}}\strokepath}%
+         \color{fancyqr@xm@gold}\linethickness{.17\unitlength}%
+         \fancyqr@xm@path{g#3}{\fancyqr@xm@dot{2}{#3-.5}\fancyqr@xm@dot{#3-2}{#3-.5}\fancyqr@xm@dot{.5}{2}%
+            \fancyqr@xm@dot{.5}{#3-2}\fancyqr@xm@dot{#3-.5}{2}\fancyqr@xm@dot{#3-.5}{#3-2}}%
+         \strokepath
+         \color{fancyqr@xm@berry!85!black}\linethickness{.18\unitlength}%
+         \fancyqr@xm@path{o#3}{\fancyqr@xm@bow{#3/2}}\strokepath
+         \buttcap}%
+      \put(\fpeval{#3/2},\fpeval{#3/2}){\unitlength\fpeval{(#3-4)/3}\unitlength\fancyqr@xm@core}%
+   }\fi}%
+% the cores, around (0,0) in the 3x3 modules of a finder's core: a bauble, a
+% ring of light, a gift, a small wreath, a snowflake or two candy canes in a
+% knot, all in dark tones (a light line in a core keeps scanners from
+% finding the pattern)
+\def\fancyqr@xm@core{\edef\fancyqr@xm@v{\fancyqr@xm@rand6}%
+   \fancyqr@xm@D{core\fancyqr@xm@v}{\def\h@b##1{\M(0,1.2)\C(##1*.3,1.46)(##1*.7,1.45)(##1*.64,1.3)%
+      \C(##1*.58,1.2)(##1*.3,1.19)(0,1.2)\Z}}{%
+   \ifcase\fancyqr@xm@v\relax
+      \K{berry!62!black}\O(0,0){1.5}\F\K{berry}\O(-.1,.1){1.32}\F
+      \K{berry!72!fancyqr@xm@cream}\O(-.62,.62){.13}\F\K{deepgold!50!black}\B(-.13,1.27)(.13,1.45)\F
+   \or\K{deep}\O(0,0){1.5}\F\K{gold!40!fancyqr@xm@deep}\T{.26}\O(0,0){1.2}\S
+      \K{gold!25!fancyqr@xm@deep}\T{.12}\O(0,0){.62}\S\K{gold!55!fancyqr@xm@deep}\fancyqr@xm@studs0{8}{1.2}{.06}{22.5}\F
+   \or\K{berry}\B(-1.5,-1.5)(1.5,1.5)\F\K{berry!78!black}\B(-1.5,.86)(1.5,1.18)\F
+      \K{pine}\B(-.17,-1.5)(.17,1.5)\B(-1.5,-.17)(1.5,.17)\F\K{gold}\h@b{-1}\h@b1\F
+   \or\K{pine!80!black}\O(0,0){1.5}\F\K{teal!80!black}\T{.06}\R
+      \fancyqr@xm@spk0{20}{.9}{1.38}0\fancyqr@xm@spk0{20}{.8}{1.2}{9}\S
+      \K{berry}\O(0,0){.62}\F\K{gold!45!fancyqr@xm@pine}\fancyqr@xm@studs0{6}{1.12}{.08}{30}\F
+   \or\K{teal!60!black}\O(0,0){1.5}\F\K{frost!65!black}\T{.1}\R\fancyqr@xm@spk0{6}{0}{1.22}{90}%
+      \fancyqr@xm@twig{90}\fancyqr@xm@twig{150}\fancyqr@xm@twig{210}\fancyqr@xm@twig{270}%
+      \fancyqr@xm@twig{330}\fancyqr@xm@twig{30}\S
+   \else\K{pine!65!black}\O(0,0){1.5}\F
+   \fi}%
+   \ifnum\fancyqr@xm@v=5 \fancyqr@xm@D{core5a}{\fancyqr@xm@turn{-28}}{\fancyqr@xm@kcane}%
+      \fancyqr@xm@D{core5b}{\fancyqr@xm@map{-cosd(28)}{-sind(28)}{-sind(28)}{cosd(28)}00}{\fancyqr@xm@kcane}%
+      \fancyqr@xm@D{core5c}{}{\K{berry!70!black}\M(0,0)\C(-.2,.3)(-.5,.3)(-.45,.08)%
+      \C(-.42,-.08)(-.2,-.05)(0,0)\C(.2,-.05)(.42,-.08)(.45,.08)\C(.5,.3)(.2,.3)(0,0)\Z\F\O(0,0){.1}\F}\fi}%
+% a candy cane leaning by the map, shaft and crook, stripes clear of the
+% module centers
+\def\fancyqr@xm@kcane{\K{red}\T{.42}\R\M(0,-1.06)\L(0,.5)\A(.34,.5){.34}{180}{0}\L(.68,.32)\S
+   \K{berry!55!black}\T{.07}\M(-.21,-.78)\L(.21,-.62)\M(-.21,-.36)\L(.21,-.2)\M(-.21,.18)\L(.21,.34)\S}%
+\def\fancyqr@xm@turn#1{\fancyqr@xm@map{cosd(#1)}{-sind(#1)}{sind(#1)}{cosd(#1)}00}%
+% #2 strokes (from #1 on) from radius #3 to #4, turned by #5 and leaning by
+% 12 degrees; dots of radius #4 on radius #3; the 5-pointed star outline
+% from the top with radii #1, #2; a branch pair on the arm at #1 degrees
+\def\fancyqr@xm@spk#1#2#3#4#5{\ifnum#1<#2
+   \M({#3*cosd(360*#1/#2+#5)},{#3*sind(360*#1/#2+#5)})%
+   \L({#4*cosd(360*#1/#2+#5+(#3>0)*12)},{#4*sind(360*#1/#2+#5+(#3>0)*12)})%
+   \expandafter\fancyqr@xm@spk\expandafter{\the\numexpr#1+1\relax}{#2}{#3}{#4}{#5}\fi}%
+\def\fancyqr@xm@studs#1#2#3#4#5{\ifnum#1<#2
+   \O({#3*cosd(360*#1/#2+#5)},{#3*sind(360*#1/#2+#5)}){#4}%
+   \expandafter\fancyqr@xm@studs\expandafter{\the\numexpr#1+1\relax}{#2}{#3}{#4}{#5}\fi}%
+\def\fancyqr@xm@spt#1#2#3{\fancyqr@xm@rp{#2}{#3+36}\fancyqr@xm@rp{#1}{#3+72}\fancyqr@xm@rp{#2}{#3+108}%
+   \fancyqr@xm@rp{#1}{#3+144}\fancyqr@xm@rp{#2}{#3+180}\fancyqr@xm@rp{#1}{#3+216}\fancyqr@xm@rp{#2}{#3+252}%
+   \fancyqr@xm@rp{#1}{#3+288}\fancyqr@xm@rp{#2}{#3+324}\Z}%
+\def\fancyqr@xm@rp#1#2{\L({#1*cosd(#2)},{#1*sind(#2)})}%
+\def\fancyqr@xm@twig#1{\M({.72*cosd(#1)},{.72*sind(#1)})\L({1.02*cosd(#1+22)},{1.02*sind(#1+22)})%
+   \M({.72*cosd(#1)},{.72*sind(#1)})\L({1.02*cosd(#1-22)},{1.02*sind(#1-22)})}%
+\def\fancyqr@xm@dot#1#2{\noexpand\moveto\fancyqr@xm@p{#1}{#2}\noexpand\lineto\fancyqr@xm@p{#1}{#2}}%
+% fine needles along the straight parts of the ring, leaning back from its
+% middle line
+\def\fancyqr@xm@needles#1{\fancyqr@xm@nz{#1}1.75/2.05/2.35/2.65/2.95/3.25/3.55/3.85/4.15/4.45/4.75/5.05/\relax/}%
+\def\fancyqr@xm@nz#1#2/{\ifx\relax#2\else\fancyqr@xm@nd{#1}{#2}\expandafter\fancyqr@xm@nz\expandafter{\expandafter#1\expandafter}\fi}%
+\def\fancyqr@xm@nd#1#2{%
+   \fancyqr@xm@ndl{#2}{.55}{#2-.16}{.8}\fancyqr@xm@ndl{#2+.15}{.45}{#2-.01}{.2}%
+   \fancyqr@xm@ndl{#1-#2}{#1-.55}{#1-#2+.16}{#1-.8}\fancyqr@xm@ndl{#1-#2-.15}{#1-.45}{#1-#2+.01}{#1-.2}%
+   \fancyqr@xm@ndl{.55}{#1-#2}{.8}{#1-#2+.16}\fancyqr@xm@ndl{.45}{#1-#2-.15}{.2}{#1-#2+.01}%
+   \fancyqr@xm@ndl{#1-.55}{#2}{#1-.8}{#2-.16}\fancyqr@xm@ndl{#1-.45}{#2+.15}{#1-.2}{#2-.01}}%
+\def\fancyqr@xm@ndl#1#2#3#4{\noexpand\moveto\fancyqr@xm@p{#1}{#2}\noexpand\lineto\fancyqr@xm@p{#3}{#4}}%
+% a bow at the bottom of the ring around x=#1: two loops (#2 the sign of the
+% side) and the tails
+\def\fancyqr@xm@wing#1#2{\noexpand\moveto\fancyqr@xm@p{#1}{.5}\noexpand\curveto\fancyqr@xm@p{#1#2.25}{.85}\fancyqr@xm@p{#1#2.6}{.8}%
+      \fancyqr@xm@p{#1#2.58}{.5}\noexpand\curveto\fancyqr@xm@p{#1#2.56}{.22}\fancyqr@xm@p{#1#2.25}{.2}%
+      \fancyqr@xm@p{#1}{.5}\noexpand\closepath\noexpand\fillpath}%
+\def\fancyqr@xm@bow#1{\fancyqr@xm@wing{#1}-\fancyqr@xm@wing{#1}+
+   \noexpand\moveto\fancyqr@xm@p{#1-.08}{.5}\noexpand\lineto\fancyqr@xm@p{#1-.3}{.02}%
+      \noexpand\lineto\fancyqr@xm@p{#1-.12}{.06}\noexpand\lineto\fancyqr@xm@p{#1}{.4}%
+      \noexpand\lineto\fancyqr@xm@p{#1+.12}{.06}\noexpand\lineto\fancyqr@xm@p{#1+.3}{.02}%
+      \noexpand\lineto\fancyqr@xm@p{#1+.08}{.5}\noexpand\closepath\noexpand\fillpath
+   \noexpand\moveto\fancyqr@xm@p{#1}{.5}\noexpand\lineto\fancyqr@xm@p{#1}{.5}}%
+% snow lies on the tiles and wreaths as in the style `snow', but not on or under
+% figures
+\let\fancyqr@xm@lend\FancyQrLend\let\FancyQrLend\@gobbletwo
+\input{fancyqr-style-snow.code}\fancyqr@style@undo\let\FancyQrLend\fancyqr@xm@lend
+% ... no figure takes a module of the timing patterns
+\let\fancyqr@xm@snowbegin\fancyqr@style@begin
+\def\fancyqr@style@begin{\fancyqr@xm@snowbegin
+   \fancyqr@fig@block7\@ne\@ne\@max@x\fancyqr@fig@block\@ne7\@max@y\@ne}%
+% ... the outline only follows the top of the snow, so that it lies flush on
+% the tile
+\def\fancyqr@snow@draw#1#2{%
+   \unitlength\qr@modulesize
+   \fancyqr@snow@waves{#1}{#2}%
+   \roundjoin\roundcap\linethickness{.05\unitlength}%
+   \color{\fancyqr@snow@color}\fancyqr@snow@path\lineto\fillpath
+   \color{\fancyqr@snow@line}%
+   \ifnum\fancyqr@snow@l=\@ne\expandafter\moveto\fancyqr@snow@end\fancyqr@snow@lc
+   \else\moveto(0,\fancyqr@snow@tl)\fi
+   \fancyqr@snow@up
+   \ifnum\fancyqr@snow@r=\@ne\expandafter\fancyqr@xm@first\fancyqr@snow@rc\@nil\fi\strokepath
+   \ifnum\fancyqr@xm@rand3=\z@\fancyqr@xm@glint{\fpeval{\fancyqr@snow@xl+(\fancyqr@snow@xr-\fancyqr@snow@xl)%
+      *\fancyqr@xm@rand{60}/100+.2*(\fancyqr@snow@xr-\fancyqr@snow@xl)}}%
+      {\fpeval{\fancyqr@snow@one+.5*\fancyqr@snow@height}}\fi}%
+\def\fancyqr@xm@first#1#2#3#4#5#6#7\@nil{#1{#2}{#3}{#4}{#5}{#6}}%
+% no glints any more; the draw stays so that the seeded sequence keeps its place
+\def\fancyqr@xm@glint#1#2{}%
+\let\fancyqr@xm@snowrings\fancyqr@fixed@extra
+\def\fancyqr@fixed@extra{\fancyqr@drawpatterns\fancyqr@xm@pattern\fancyqr@xm@snowrings\fancyqr@xm@decor}%
+\def\fancyqr@xm@snowtile#1#2#3#4{\ifnum\fancyqr@pass=\@ne\fancyqr@christmas@tile#1#2#3#4%
+   \else\edef\@tempa{\FancyQrFigureAt{\the\i}{\the\j}\fancyqr@xm@figabove{\the\j}}%
+      \ifx\@tempa\@empty\FancyQrIfTiming{}{\fancyqr@xm@snowcap}\fi\fi}%
+% the figures in the row above, at column #1 and next to it (a figure may reach
+% into the light modules beside it)
+\def\fancyqr@xm@figabove#1{\FancyQrFigureAt{\the\numexpr\i-\@ne}{\the\numexpr#1-\@ne}%
+   \FancyQrFigureAt{\the\numexpr\i-\@ne}{#1}\FancyQrFigureAt{\the\numexpr\i-\@ne}{\the\numexpr#1+\@ne}}%
+% as in `snow', but a lone round top gets a crescent that hugs it, and an end
+% next to a tile without snow (near a figure or in a timing pattern) tapers off
+% over the module
+\def\fancyqr@xm@snowcap{\ifnum\@up\ifnum\i=\@ne1\fi=\z@\fancyqr@snow@run{\the\i}{\the\j}\iffancyqr@snow@
+   \edef\fancyqr@snow@fl{\fancyqr@xm@end{\the\numexpr\j-\@ne}\@left}%
+   \edef\fancyqr@snow@fr{\fancyqr@xm@end{\the\numexpr\j+\@ne}\@right}%
+   \ifnum\fancyqr@snow@fl\fancyqr@snow@fr=11 \fancyqr@xm@crescent\else
+      \let\fancyqr@snow@one\fancyqr@snow@scale
+      \fancyqr@snow@setup1\fancyqr@rounding@factor\fancyqr@snow@fl\fancyqr@snow@fr
+      \fancyqr@snow@draw{\the\j}{\the\i}\fi\fi\fi}%
+% the end toward column #1, #2 the neighbour there: 1 free, 0 on or at a wall,
+% 2 tapered
+\def\fancyqr@xm@end#1#2{\ifnum#2=\@ne
+   \if\relax\detokenize\expandafter{\expanded{\fancyqr@xm@figabove{#1}}}\relax
+   \ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr\i-\@ne}{#1}=\@ne 0\else
+   \ifnum\i=7 \fancyqr@between{#1}\@max@x\else\ifnum#1=7 \fancyqr@between\i\@max@y\else0\fi\fi\fi
+   \else2\fi\else1\fi}%
+\def\fancyqr@snow@wave@at#1#2#3{\ifcase#1
+      \edef\fancyqr@snow@h{\fancyqr@snow@wave*\fancyqr@snow@sin{23*#2+17*#3}}%
+      \edef\fancyqr@snow@s{2.3*\fancyqr@snow@wave*\fancyqr@snow@sin{23*#2+17*#3+16}}%
+   \or\def\fancyqr@snow@h{0}\def\fancyqr@snow@s{0}%
+   \else\edef\fancyqr@snow@h{-\fancyqr@snow@height}\def\fancyqr@snow@s{0}\fi}%
+% the crescent rises tangent from the round top at 30 and 150 degrees
+\def\fancyqr@xm@crescent{{\unitlength\qr@modulesize
+   \fancyqr@xm@D{cr\fancyqr@snow@scale/\fancyqr@snow@height}{%
+      \edef\h@r{\fpeval{.5*\fancyqr@snow@scale}}\edef\h@t{\fpeval{2*\h@r+.6*\fancyqr@snow@height}}%
+      \def\h@u{\M({1.866*\h@r},{1.5*\h@r})\C({1.866*\h@r-.12},{1.5*\h@r+.208})(1.45*\h@r,\h@t)(\h@r,\h@t)%
+         \C(.55*\h@r,\h@t)({.134*\h@r+.12},{1.5*\h@r+.208})({.134*\h@r},{1.5*\h@r})}}{%
+   \noexpand\color{\noexpand\fancyqr@snow@color}\h@u\A(\h@r,\h@r){\h@r}{150}{30}\Z\F
+   \noexpand\color{\noexpand\fancyqr@snow@line}\T{.05}\R\h@u\S}}}%
+% decorations in white modules that no figure, pattern or timing line takes: a
+% light chain sagging across a white gap of one or two modules between two
+% tiles, one draped over the top of a horizontal run of dark tiles, and, in open
+% white, a glowing star, a snowflake or a candle on holly; all of them stay in
+% their modules, off the module centers, in pale colors, and vary by position
+% and seed
+\def\fancyqr@xm@at#1#2{\qr@matrixentry\fancyqr@currprint{\the\numexpr#1}{\the\numexpr#2}}%
+\def\fancyqr@xm@fr#1#2{\ifcsname fancyqr@B@\the\numexpr#1@\the\numexpr#2\endcsname0\else
+   \ifcsname fancyqr@F@\the\numexpr#1@\the\numexpr#2\endcsname0\else1\fi\fi}%
+% 1 if (#1,#2) is a free module of color #3 (0 white, 1 dark) off the timing lines
+\def\fancyqr@xm@m#1#2#3{\ifnum\numexpr#1\relax=7 0\else\ifnum\numexpr#2\relax=7 0\else
+   \ifnum\fancyqr@xm@at{#1}{#2}=#3 \fancyqr@xm@fr{#1}{#2}\else0\fi\fi\fi}%
+\def\fancyqr@xm@lt#1#2{\ifnum#1<#2 1\else0\fi}%
+% which of the three small decorations a module gets: by its place, in the gallery
+% always the one shown
+\def\fancyqr@xm@kind{\iffancyqr@faint@\ifx\fancyqr@gal@e\fancyqr@xm@kS 0\else
+   \ifx\fancyqr@gal@e\fancyqr@xm@kF 1\else\ifx\fancyqr@gal@e\fancyqr@xm@kC 2\else\numexpr\fancyqr@xm@h-3*((\fancyqr@xm@h-1)/3)\fi\fi\fi
+   \else\numexpr\fancyqr@xm@h-3*((\fancyqr@xm@h-1)/3)\fi\relax}%
+\def\fancyqr@xm@kS{stars}\def\fancyqr@xm@kF{snowflakes}\def\fancyqr@xm@kC{candles}%
+\def\fancyqr@xm@th#1{\iffancyqr@faint@101\else#1\fi}%
+% the white run from here to the right (at most 6), its modules free above and
+% below
+\def\fancyqr@xm@scan#1{\ifnum\fancyqr@xm@c<6 \ifnum\numexpr\@tempcntb+\fancyqr@xm@c\relax<\@max@x
+   \ifnum\numexpr#1{\@tempcnta}{\@tempcntb+\fancyqr@xm@c}\relax=\@ne\edef\fancyqr@xm@c{\the\numexpr\fancyqr@xm@c+1}\fancyqr@xm@scan#1\fi\fi\fi}%
+\def\fancyqr@xm@cw#1#2{\fancyqr@xm@m{#1}{#2}0*\fancyqr@xm@fr{#1-1}{#2}*\fancyqr@xm@fr{#1+1}{#2}}%
+\def\fancyqr@xm@decor{{\unitlength\qr@modulesize
+   \iffancyqr@faint@\else\blendcolors{!\fancyqr@xm@opacity!\ifx\fancyqr@background\@empty white\else\fancyqr@background\fi}\fi
+   \edef\fancyqr@xm@salt{\csname int_rand:nn\endcsname{0}{99}}%
+   \@tempcnta\@ne\@whilenum\@tempcnta<\numexpr\@max@y-1\relax\do{\advance\@tempcnta\@ne
+   \@tempcntb\@ne\@whilenum\@tempcntb<\numexpr\@max@x-1\relax\do{\advance\@tempcntb\@ne
+      \ifnum\fancyqr@xm@m\@tempcnta\@tempcntb0=\@ne\fancyqr@xm@one\fi}}}}%
+\def\fancyqr@xm@one{%
+   \count@\numexpr\@tempcnta*131+\@tempcntb*71+\@tempcnta*\@tempcntb*17+\fancyqr@xm@salt\relax
+   \count@\numexpr\count@-100*((\count@-50)/100)\relax
+   \edef\fancyqr@xm@h{\the\numexpr\@tempcnta*37+\@tempcntb*91+\@tempcnta*\@tempcntb*7+3*\fancyqr@xm@salt\relax}%
+   \edef\fancyqr@xm@h{\the\numexpr\fancyqr@xm@h-100*((\fancyqr@xm@h-50)/100)\relax}%
+   \def\fancyqr@xm@c{0}\fancyqr@xm@scan\fancyqr@xm@cw\edef\fancyqr@xm@l{\fancyqr@xm@c}%
+   \def\fancyqr@xm@put{\put(\the\@tempcntb,\the\numexpr\@max@y-\@tempcnta\relax)}%
+   \ifnum\numexpr\fancyqr@xm@m\@tempcnta{\@tempcntb-1}1*\fancyqr@xm@m\@tempcnta{\@tempcntb+\fancyqr@xm@l}1%
+         *\fancyqr@xm@lt{\fancyqr@xm@l}2*\fancyqr@xm@lt\count@{\fancyqr@xm@th{30}}\relax=\@ne
+      \fancyqr@xm@put{\FancyQrExtra{lights}{\fancyqr@xm@swag{\fancyqr@xm@l}{.84}{.14}20}}%
+   \else\ifnum\numexpr\fancyqr@xm@m\@tempcnta\@tempcntb0*\fancyqr@xm@lt\count@{\fancyqr@xm@th{34}}%
+         *\fancyqr@xm@m{\@tempcnta-1}\@tempcntb0*\fancyqr@xm@m{\@tempcnta+1}\@tempcntb0%
+         *\fancyqr@xm@m\@tempcnta{\@tempcntb-1}0*\fancyqr@xm@m\@tempcnta{\@tempcntb+1}0\relax=\@ne
+      \ifcase\fancyqr@xm@kind
+         \fancyqr@xm@put{\FancyQrExtra{stars}\fancyqr@xm@star}\or
+         \fancyqr@xm@put{\FancyQrExtra{snowflakes}\fancyqr@xm@flake}\or
+         \fancyqr@xm@put{\FancyQrExtra{candles}\fancyqr@xm@candle}\fi
+   \fi\fi}%
+\def\fancyqr@xm@opacity{45}%
+\def\fancyqr@xm@mv#1#2{\moveto(\fpeval{#1},\fpeval{#2})}%
+\def\fancyqr@xm@ln#1#2{\lineto(\fpeval{#1},\fpeval{#2})}%
+\def\fancyqr@xm@cu#1#2#3#4#5#6{\curveto(\fpeval{#1},\fpeval{#2})(\fpeval{#3},\fpeval{#4})(\fpeval{#5},\fpeval{#6})}%
+\def\fancyqr@xm@dc#1#2#3{\moveto(\fpeval{#1+#3},\fpeval{#2})\circlearc{\fpeval{#1}}{\fpeval{#2}}{\fpeval{#3}}{0}{360}}%
+\def\fancyqr@xm@disc#1#2#3#4{\fancyqr@mixcolor{#4}\fancyqr@xm@dc{#1}{#2}{#3}\fillpath}%
+% a soft glow: discs of the color #4 with more of the warm light toward the middle
+\def\fancyqr@xm@glow#1#2#3#4{\fancyqr@xm@disc{#1}{#2}{#3}{#4!9!fancyqr@xm@halo}%
+   \fancyqr@xm@disc{#1}{#2}{.72*#3}{#4!18!fancyqr@xm@halo}\fancyqr@xm@disc{#1}{#2}{.46*#3}{#4!30!fancyqr@xm@halo}}%
+% a chain of length #1 from height #2, sagging by #3, with #4 bulbs (the
+% colors by the place and #5)
+\def\fancyqr@xm@swag#1#2#3#4#5{{\fancyqr@mixcolor{fancyqr@xm@wire}\linethickness{.04\unitlength}\roundcap
+   \fancyqr@xm@mv0{#2}\fancyqr@xm@cu{.3*#1}{#2-#3}{.7*#1}{#2-#3}{#1}{#2}\strokepath}%
+   \@for\@tempa:=1,2,3,4\do{\ifnum\@tempa>#4 \else
+      \edef\@tempb{\fpeval{\@tempa/(#4+1)}}%
+      \fancyqr@xm@lamp{#1*(.9*(1-\@tempb)^2*\@tempb+2.1*(1-\@tempb)*\@tempb^2+\@tempb^3)}{#2-3*#3*\@tempb*(1-\@tempb)}%
+         {\numexpr\count@+#5+\@tempa\relax}\fi}}%
+\def\fancyqr@xm@lamp#1#2#3{{\edef\@tempc{fancyqr@xm@b\ifcase\numexpr#3-5*((#3-2)/5)\relax Y\or R\or B\or G\else O\fi}%
+   \fancyqr@xm@glow{#1}{#2-.11}{.16}\@tempc
+   \fancyqr@mixcolor{fancyqr@xm@gold}\fancyqr@xm@mv{#1-.03}{#2}\fancyqr@xm@ln{#1+.03}{#2}%
+      \fancyqr@xm@ln{#1+.03}{#2-.05}\fancyqr@xm@ln{#1-.03}{#2-.05}\closepath\fillpath
+   \fancyqr@xm@disc{#1}{#2-.11}{.075}\@tempc
+   \fancyqr@xm@disc{#1-.025}{#2-.09}{.022}{white}}}%
+\def\fancyqr@xm@star{{\fancyqr@xm@glow{.5}{.5}{.49}{fancyqr@xm@gold}%
+   \edef\fancyqr@xm@rot{\fpeval{.3*\fancyqr@xm@h}}%
+   \edef\fancyqr@xm@pn{\ifcase\numexpr\fancyqr@xm@h-3*((\fancyqr@xm@h-1)/3)\relax 5\or4\else8\fi}%
+   \edef\fancyqr@xm@pi{\ifnum\fancyqr@xm@pn=4 .1\else\ifnum\fancyqr@xm@pn=8 .19\else.15\fi\fi}%
+   \fancyqr@mixcolor{fancyqr@xm@spark}\fancyqr@xm@poly\fillpath
+   \fancyqr@mixcolor{fancyqr@xm@deepgold}\linethickness{.04\unitlength}\roundjoin\fancyqr@xm@poly\strokepath}}%
+% a star of \fancyqr@xm@pn points, the inner radius \fancyqr@xm@pi
+\def\fancyqr@xm@poly{\fancyqr@xm@mv{.5+.36*sind(\fancyqr@xm@rot)}{.5+.36*cosd(\fancyqr@xm@rot)}%
+   \@tempcnta\z@\@whilenum\@tempcnta<\numexpr2*\fancyqr@xm@pn-1\relax\do{\advance\@tempcnta\@ne
+      \fancyqr@xm@ln{.5+(\ifodd\@tempcnta\fancyqr@xm@pi\else.36\fi)*sind(180/\fancyqr@xm@pn*\the\@tempcnta+\fancyqr@xm@rot)}%
+      {.5+(\ifodd\@tempcnta\fancyqr@xm@pi\else.36\fi)*cosd(180/\fancyqr@xm@pn*\the\@tempcnta+\fancyqr@xm@rot)}}\closepath}%
+\def\fancyqr@xm@flake{{\fancyqr@mixcolor{fancyqr@xm@ice}\linethickness{.05\unitlength}\roundcap
+   \edef\fancyqr@xm@rot{\fpeval{.3*\fancyqr@xm@h}}%
+   \edef\fancyqr@xm@fv{\the\numexpr\fancyqr@xm@h/3-3*((\fancyqr@xm@h/3-1)/3)\relax}%
+   \@for\@tempa:=0,1,2,3,4,5\do{\edef\@tempb{\fpeval{60*\@tempa+\fancyqr@xm@rot}}%
+      \fancyqr@xm@mv{.5+.14*cosd(\@tempb)}{.5+.14*sind(\@tempb)}\fancyqr@xm@ln{.5+.44*cosd(\@tempb)}{.5+.44*sind(\@tempb)}%
+      \ifcase\fancyqr@xm@fv\fancyqr@xm@fk{\@tempb}{.27}{.14}\fancyqr@xm@fk{\@tempb}{.27}{-.14}%
+      \or\fancyqr@xm@fk{\@tempb}{.36}{.1}\fancyqr@xm@fk{\@tempb}{.36}{-.1}\fancyqr@xm@fk{\@tempb}{.22}{.1}\fancyqr@xm@fk{\@tempb}{.22}{-.1}\fi
+      \strokepath\ifnum\fancyqr@xm@fv>\@ne\fancyqr@xm@dc{.5+.44*cosd(\@tempb)}{.5+.44*sind(\@tempb)}{.04}\fillpath\fi}}}%
+\def\fancyqr@xm@fk#1#2#3{\fancyqr@xm@mv{.5+#2*cosd(#1)}{.5+#2*sind(#1)}%
+   \fancyqr@xm@ln{.5+#2*cosd(#1)+.12*cosd(#1+(#3)*400)}{.5+#2*sind(#1)+.12*sind(#1+(#3)*400)}}%
+\def\fancyqr@xm@candle{{\fancyqr@xm@glow{.5}{.78}{.21}{fancyqr@xm@flame}%
+   \fancyqr@mixcolor{fancyqr@xm@pine}\moveto(.5,.17)\curveto(.4,.32)(.1,.26)(.08,.1)\curveto(.3,.03)(.45,.08)(.5,.17)\closepath\fillpath
+   \moveto(.5,.17)\curveto(.6,.32)(.9,.26)(.92,.1)\curveto(.7,.03)(.55,.08)(.5,.17)\closepath\fillpath
+   \edef\fancyqr@xm@cv{\the\numexpr\fancyqr@xm@h/9-3*((\fancyqr@xm@h/9-1)/3)\relax}%
+   \fancyqr@mixcolor{fancyqr@xm@\ifcase\fancyqr@xm@cv cream\or red\else gold\fi}%
+      \moveto(.41,.12)\lineto(.59,.12)\lineto(.59,.62)\lineto(.41,.62)\closepath\fillpath
+   \fancyqr@mixcolor{fancyqr@xm@\ifcase\fancyqr@xm@cv berry\or cream\else red\fi}%
+      \moveto(.41,.2)\lineto(.59,.2)\lineto(.59,.3)\lineto(.41,.3)\closepath\fillpath
+   \fancyqr@xm@disc{.34}{.12}{.045}{fancyqr@xm@red}\fancyqr@xm@disc{.66}{.12}{.045}{fancyqr@xm@red}%
+   \fancyqr@mixcolor{fancyqr@xm@flame}\moveto(.5,.92)\curveto(.6,.83)(.63,.76)(.5,.67)\curveto(.37,.76)(.4,.83)(.5,.92)\closepath\fillpath
+   \fancyqr@mixcolor{fancyqr@xm@spark}\moveto(.5,.84)\curveto(.55,.79)(.56,.76)(.5,.72)\curveto(.44,.76)(.45,.79)(.5,.84)\closepath\fillpath}}%
+\FancyQrExtras{timing,lights,stars,snowflakes,candles}%
+% what another style gets with add=christmas
+\FancyQrLend{after}{\fancyqr@xm@decor}\FancyQrLend{extras}{lights,stars,snowflakes,candles}%
+\FancyQrRoundedPatterns\fancyqr@xm@snowtile
+\FancyQrInnerRoundings
+\FancyQrStyleSet{%
+   r color=fancyqr@xm@teal,l color=fancyqr@xm@pine,%
+   finder=rounded,finder core=circle,%
+   finder core color=fancyqr@xm@berry%
+}%

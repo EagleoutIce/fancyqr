@@ -15,10 +15,17 @@
 \edef#1{\fpeval{#2=0 ? 0 : (rand()<\fancyqr@glitch@detach
    ? -\fancyqr@glitch@gap : \fancyqr@glitch@bleed)}}%
 }%
+% the directions of the eight vertices, computed once
+\@tempcnta=\z@
+\loop
+   \expandafter\edef\csname fancyqr@glitch@cos\the\@tempcnta\endcsname{\fpeval{cosd(\@tempcnta)}}%
+   \expandafter\edef\csname fancyqr@glitch@sin\the\@tempcnta\endcsname{\fpeval{sind(\@tempcnta)}}%
+   \advance\@tempcnta by 45
+\ifnum\@tempcnta<360\relax\repeat
 \def\fancyqr@glitch@vertex{%
 \edef\@fq@r{\fpeval{\fancyqr@glitch@radius+\fancyqr@glitch@spread*rand()}}%
-\edef\@fq@x{\fpeval{.5+\@fq@r*cosd(\@tempcnta)}}%
-\edef\@fq@y{\fpeval{.5+\@fq@r*sind(\@tempcnta)}}%
+\edef\@fq@x{\fpeval{.5+\@fq@r*\csname fancyqr@glitch@cos\the\@tempcnta\endcsname}}%
+\edef\@fq@y{\fpeval{.5+\@fq@r*\csname fancyqr@glitch@sin\the\@tempcnta\endcsname}}%
 \edef\@fq@x{\fpeval{\@fq@x+(\@fq@x>.5 ? \fancyqr@glitch@rr : -\fancyqr@glitch@rl)}}%
 \edef\@fq@y{\fpeval{\@fq@y+(\@fq@y>.5 ? \fancyqr@glitch@ru : -\fancyqr@glitch@rd)}}%
 }%
@@ -35,7 +42,7 @@
 }%
 \def\fancyqr@glitch@ghosttile#1#2#3#4#5#6{%
 \put(\fpeval{#1\fancyqr@glitch@tear*rand()},\fpeval{.4*\fancyqr@glitch@tear*(rand()-.5)}){%
-   \color{.!#2}\fancyqr@glitch@shard{#3}{#4}{#5}{#6}}%
+   \fancyqr@mixcolor{.!#2}\fancyqr@glitch@shard{#3}{#4}{#5}{#6}}%
 }%
 \def\fancyqr@glitch@tile#1#2#3#4{%
 \ifcase\fancyqr@pass\or
@@ -44,4 +51,4 @@
    \fancyqr@glitch@shard{#1}{#2}{#3}{#4}\fi
 }%
 \FancyQrSidePatterns\fancyqr@glitch@tile
-\FancyQrPasses{3}
+\FancyQrPasses{3}%

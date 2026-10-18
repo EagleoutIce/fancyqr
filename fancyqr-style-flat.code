@@ -1,6 +1,6 @@
 % style `flat': every module is a plain rectangle
 \FancyQrHardCut%
-\def\fancyqr@flat@rect{\moveto(0,0)\lineto(0,1)\lineto(1,1)\lineto(1,0)\lineto(0,0)\fillpath}
+\def\fancyqr@flat@rect{\moveto(0,0)\lineto(0,1)\lineto(1,1)\lineto(1,0)\lineto(0,0)\fillpath}%
 \newpattern0000{\fancyqr@flat@rect}%
 \newpattern1000{\fancyqr@flat@rect}%
 \newpattern0001{\fancyqr@flat@rect}%

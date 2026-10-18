@@ -16,4 +16,4 @@
 \newpattern1011{\fancyqr@dots@circle}%
 \newpattern1101{\fancyqr@dots@circle}%
 \newpattern1110{\fancyqr@dots@circle}%
-\fancyqrset{finder=circle,finder thickness=.8}
+\FancyQrStyleSet{finder=circle,finder thickness=.8}%

@@ -3,11 +3,11 @@
 \@ifundefined{fancyqr@frame@width}{\def\fancyqr@frame@width{.11}}{}%
 \@ifundefined{fancyqr@frame@dot}{\def\fancyqr@frame@dot{.44}}{}%
 \newif\iffancyqr@frame@pen
-\def\fancyqr@frame@corner#1#2{\ifnum\numexpr#1+#2\relax=\z@ \@ne\else\z@\fi}
+\def\fancyqr@frame@corner#1#2{\ifnum\numexpr#1+#2\relax=\z@ \@ne\else\z@\fi}%
 \def\fancyqr@frame@side#1#2#3#4#5{%
    \ifnum#1=\@ne\iffancyqr@frame@pen\else\moveto(#2,#3)\fi\else\moveto(#2,#3)\fi
    \lineto(#4,#5)\fancyqr@frame@pentrue
-}
+}%
 \def\fancyqr@frame@tile#1#2#3#4{%
    \linethickness{\fancyqr@frame@width\qr@modulesize}\roundjoin\roundcap
    \edef\@fq@bl{\fancyqr@frame@corner{#2}{#4}}\edef\@fq@br{\fancyqr@frame@corner{#3}{#4}}%
@@ -40,7 +40,7 @@
    \ifnum\numexpr#1+#2+#3+#4\relax=\z@ \closepath\fi
    \strokepath
    \put(.5,.5){\circle*{\fancyqr@frame@dot}}%
-}
+}%
 \FancyQrSidePatterns\fancyqr@frame@tile
 \FancyQrNoInnerRoundings
-\fancyqrset{finder=inherit}
+\FancyQrStyleSet{finder=square,finder core=circle}%

@@ -1,0 +1,10 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+[PASS] eci-for-utf8
+[PASS] eci-header
+[PASS] eci-capacity
+[PASS] eci-switched-off
+[PASS] no-eci-for-ascii
+===== fancyqr tests: 5 passed, 0 failed =====
+[1
+]

@@ -1,0 +1,1103 @@
+% style `halloween': the default tiles in orange and purple, with slime that
+% drips from lower edges and figures in place of blocks of dark modules; every
+% object is a figure of its own, listed by \FancyQrFigureGallery (variants of one
+% object are named object/variant). Extras (see \FancyQrExtras): slime, the
+% spider webs (web/corner, web/sized, web/thread) and the small figures on the
+% timing patterns. The finder rings follow the gradient around pumpkins,
+% jack-o'-lanterns, ghosts and skulls in its tint. Tunables, the chance of a
+% group of figures: \fancyqr@slime@chance, \fancyqr@slime@length,
+% \fancyqr@reaper@chance (3x3, 3x4), \fancyqr@big@chance (3x2, 2x3),
+% \fancyqr@skull@chance (skulls and jack-o'-lanterns, the share of the latter is
+% \fancyqr@pumpkin@chance), \fancyqr@ghost@chance (lone modules), \fancyqr@hat@chance,
+% \fancyqr@bat@chance, \fancyqr@spider@chance, \fancyqr@cross@chance,
+% \fancyqr@candy@chance, \fancyqr@lamp@chance (lamps, candles), \fancyqr@broom@chance,
+% \fancyqr@scythe@chance, \fancyqr@bone@chance, \fancyqr@web@chance (corner webs)
+\FancyQrSince{2.5}%
+\@ifundefined{fancyqr@slime@chance}{\def\fancyqr@slime@chance{.35}}{}%
+\@ifundefined{fancyqr@slime@length}{\def\fancyqr@slime@length{.47}}{}%
+\@ifundefined{fancyqr@reaper@chance}{\def\fancyqr@reaper@chance{1}}{}%
+\@ifundefined{fancyqr@big@chance}{\def\fancyqr@big@chance{.6}}{}%
+\@ifundefined{fancyqr@skull@chance}{\def\fancyqr@skull@chance{.82}}{}%
+\@ifundefined{fancyqr@pumpkin@chance}{\def\fancyqr@pumpkin@chance{.5}}{}%
+\@ifundefined{fancyqr@ghost@chance}{\def\fancyqr@ghost@chance{.4}}{}%
+\@ifundefined{fancyqr@hat@chance}{\def\fancyqr@hat@chance{.22}}{}%
+\@ifundefined{fancyqr@bat@chance}{\def\fancyqr@bat@chance{.2}}{}%
+\@ifundefined{fancyqr@spider@chance}{\def\fancyqr@spider@chance{.17}}{}%
+\@ifundefined{fancyqr@cross@chance}{\def\fancyqr@cross@chance{.275}}{}%
+\@ifundefined{fancyqr@web@chance}{\def\fancyqr@web@chance{.4}}{}%
+\@ifundefined{fancyqr@bigweb@chance}{\def\fancyqr@bigweb@chance{.008}}{}%
+\@ifundefined{fancyqr@thread@chance}{\def\fancyqr@thread@chance{.08}}{}%
+\@ifundefined{fancyqr@hw@a}{\newcount\fancyqr@hw@a\newcount\fancyqr@hw@b\newcount\fancyqr@hw@c}{}%
+\@ifundefined{fancyqr@candy@chance}{\def\fancyqr@candy@chance{.3}}{}%
+\@ifundefined{fancyqr@broom@chance}{\def\fancyqr@broom@chance{.2}}{}%
+\@ifundefined{fancyqr@lamp@chance}{\def\fancyqr@lamp@chance{.5}}{}%
+\@ifundefined{fancyqr@scythe@chance}{\def\fancyqr@scythe@chance{1}}{}%
+\@ifundefined{fancyqr@bone@chance}{\def\fancyqr@bone@chance{.5}}{}%
+% slime flows out of the straight part of a lower edge (#1, #2: the bottom
+% right and left corners are round) with a wide base; every drop has its own
+% width, length, tip and lean, a few split into two tips; it never reaches the
+% center of the white module below; one path per drop. Lengths are integers in
+% sp (65536 is a module), so \numexpr does the work; \int_rand:nn draws from the
+% same seeded generator as rand()
+\def\fancyqr@sl@r{\csname int_rand:nn\endcsname{0}{65535}}%
+\def\fancyqr@sl@set#1#2{\edef#1{\the\numexpr#2\relax}}%
+\def\fancyqr@sl@pt#1{\strip@pt\dimexpr\numexpr#1\relax sp\relax}%
+\def\fancyqr@slime#1#2{%
+\ifdim\fpeval{rand()}\p@<\fancyqr@slime@chance\p@
+   \fancyqr@sl@set\fancyqr@sl@lo{\ifnum#2=\@ne\dimexpr\fancyqr@rounding@factor\p@\relax\else0\fi}%
+   \fancyqr@sl@set\fancyqr@sl@hi{65536-\ifnum#1=\@ne\dimexpr\fancyqr@rounding@factor\p@\relax\else0\fi}%
+   % half width of the base, from narrow trickles to wide sheets; a round end
+   % gets a centered one, wide and without a neck, so that it hangs on
+   \ifnum\numexpr\fancyqr@sl@hi-\fancyqr@sl@lo<17039
+      \fancyqr@sl@set\fancyqr@sl@c{(\fancyqr@sl@lo+\fancyqr@sl@hi)/2}\def\fancyqr@sl@b{11000}%
+      \let\fancyqr@sl@round\@ne
+      \edef\fancyqr@sl@ys{\number\dimexpr\fpeval{\fancyqr@rounding@factor-sqrt(max(0,\fancyqr@rounding@factor^2-(11000/65536)^2))}pt\relax}%
+   \else\let\fancyqr@sl@round\z@
+      \fancyqr@sl@set\fancyqr@sl@b{7864+\fancyqr@sl@r*13107/65536}%
+      \ifnum\fancyqr@sl@b>\numexpr(\fancyqr@sl@hi-\fancyqr@sl@lo)/2\relax
+         \fancyqr@sl@set\fancyqr@sl@b{(\fancyqr@sl@hi-\fancyqr@sl@lo)/2}\fi
+      \fancyqr@sl@set\fancyqr@sl@c{\fancyqr@sl@lo+\fancyqr@sl@b
+         +(\fancyqr@sl@hi-\fancyqr@sl@lo-2*\fancyqr@sl@b)*\fancyqr@sl@r/65536}%
+   \fi
+   \fancyqr@sl@set\fancyqr@sl@x{\fancyqr@sl@c-\fancyqr@sl@b}%
+   \fancyqr@sl@set\fancyqr@sl@X{\fancyqr@sl@c+\fancyqr@sl@b}%
+   \ifnum\fancyqr@sl@round=\@ne\expandafter\fancyqr@sl@lift\else\expandafter\fancyqr@sl@body\fi\fi}%
+% on a round dot the drop starts on the circle, \fancyqr@sl@ys above the lower edge, and
+% is drawn from there: it leaves the circle in a fillet, a neck and a drop of .25 to .35
+\def\fancyqr@sl@lift{\put(0,\fancyqr@sl@pt\fancyqr@sl@ys){\fancyqr@sl@body}}%
+\def\fancyqr@sl@body{%
+   \moveto(\fancyqr@sl@pt\fancyqr@sl@x,.15)\lineto(\fancyqr@sl@pt\fancyqr@sl@x,0)%
+   \ifnum\numexpr\csname int_rand:nn\endcsname{0}{99}<22 \ifnum\fancyqr@sl@b>11141
+      \@tempswatrue\else\@tempswafalse\fi\else\@tempswafalse\fi
+   \if@tempswa
+      \fancyqr@sl@set\fancyqr@sl@p{\fancyqr@sl@c-1966}\fancyqr@sl@set\fancyqr@sl@q{\fancyqr@sl@c+1966}%
+      \fancyqr@slime@tip\fancyqr@sl@x\fancyqr@sl@p{32768+\fancyqr@sl@r/2}%
+      \fancyqr@slime@tip\fancyqr@sl@q\fancyqr@sl@X{32768+\fancyqr@sl@r/2}%
+   \else
+      \fancyqr@slime@tip\fancyqr@sl@x\fancyqr@sl@X{65536}%
+   \fi
+   \lineto(\fancyqr@sl@pt\fancyqr@sl@X,.15)\closepath\fillpath}%
+% a tip that leaves the edge at #1 and comes back at #2; #3 scales its length
+\def\fancyqr@slime@tip#1#2#3{%
+   \fancyqr@sl@set\fancyqr@sl@h{(#2-#1)/2}% half width
+   % short drops end in a fat round tip, long ones in a thin one; the tip leans
+   \fancyqr@sl@set\fancyqr@sl@u{\fancyqr@sl@r}\fancyqr@sl@set\fancyqr@sl@u{\fancyqr@sl@u*(131072-\fancyqr@sl@u)/65536}%
+   \fancyqr@sl@set\fancyqr@sl@rr{11141-\fancyqr@sl@u*6554/65536+\fancyqr@sl@r*1966/65536}%
+   \ifnum\fancyqr@sl@rr>\numexpr\fancyqr@sl@h*9/10\relax\fancyqr@sl@set\fancyqr@sl@rr{\fancyqr@sl@h*9/10}\fi
+   \fancyqr@sl@set\fancyqr@sl@l{(#3)*(6554+(\dimexpr\fancyqr@slime@length\p@\relax-6554)*\fancyqr@sl@u/65536)/65536
+      -\fancyqr@sl@rr}%
+   \ifnum\fancyqr@sl@l<\numexpr\fancyqr@sl@rr*3/5\relax\fancyqr@sl@set\fancyqr@sl@l{\fancyqr@sl@rr*3/5}\fi
+   \fancyqr@sl@set\fancyqr@sl@m{(#1+#2)/2+(\fancyqr@sl@r-32768)*(\fancyqr@sl@h-\fancyqr@sl@rr)/65536}%
+   % the flanks flare from the edge into a neck of half width w at depth n,
+   % which swells into the tip (a neck as wide as the tip makes a blob); the
+   % base sags by v before it narrows
+   \fancyqr@sl@set\fancyqr@sl@w{\fancyqr@sl@rr*(29491+\fancyqr@sl@r/2)/65536}%
+   \ifnum\fancyqr@sl@round=\@ne\fancyqr@sl@set\fancyqr@sl@w{\fancyqr@sl@rr*(39000+\fancyqr@sl@r*8000/65536)/65536}%
+      \fancyqr@sl@set\fancyqr@sl@l{19000+\fancyqr@sl@r*6554/65536-\fancyqr@sl@rr}\fi
+   \fancyqr@sl@set\fancyqr@sl@n{\fancyqr@sl@l*(19661+\fancyqr@sl@r*19661/65536)/65536}%
+   \fancyqr@sl@set\fancyqr@sl@v{\fancyqr@sl@r}\fancyqr@sl@set\fancyqr@sl@v{\fancyqr@sl@v*\fancyqr@sl@v/65536}%
+   \ifnum\fancyqr@sl@round=\@ne\fancyqr@sl@set\fancyqr@sl@v{3000}\fi
+   \fancyqr@slime@flank#1{-1}%
+   \curveto(\fancyqr@sl@pt{\fancyqr@sl@m-\fancyqr@sl@w},\fancyqr@sl@pt{-\fancyqr@sl@n-\fancyqr@sl@k})%
+      (\fancyqr@sl@pt{\fancyqr@sl@m-\fancyqr@sl@rr},\fancyqr@sl@pt{-\fancyqr@sl@l+\fancyqr@sl@rr*11/20})%
+      (\fancyqr@sl@pt{\fancyqr@sl@m-\fancyqr@sl@rr},\fancyqr@sl@pt{-\fancyqr@sl@l})%
+   \circlearc{\fancyqr@sl@pt\fancyqr@sl@m}{\fancyqr@sl@pt{-\fancyqr@sl@l}}{\fancyqr@sl@pt\fancyqr@sl@rr}{180}{360}%
+   \curveto(\fancyqr@sl@pt{\fancyqr@sl@m+\fancyqr@sl@rr},\fancyqr@sl@pt{-\fancyqr@sl@l+\fancyqr@sl@rr*11/20})%
+      (\fancyqr@sl@pt{\fancyqr@sl@m+\fancyqr@sl@w},\fancyqr@sl@pt{-\fancyqr@sl@n-\fancyqr@sl@k})%
+      (\fancyqr@sl@pt{\fancyqr@sl@m+\fancyqr@sl@w},\fancyqr@sl@pt{-\fancyqr@sl@n})%
+   \fancyqr@slime@flank#2{1}}%
+% the part of a flank between the edge point #1 and the neck, #2 is -1 on the
+% left (drawn down) and 1 on the right (drawn up)
+\def\fancyqr@slime@flank#1#2{%
+   \fancyqr@sl@set\fancyqr@sl@k{(\fancyqr@sl@l-\fancyqr@sl@n)*9/20}%
+   \edef\@tempa{(\fancyqr@sl@pt{#1+(65536-\fancyqr@sl@v)*(\fancyqr@sl@m+#2*\fancyqr@sl@w-#1)/163840},
+      \fancyqr@sl@pt{-\fancyqr@sl@v*\fancyqr@sl@n/65536})%
+      (\fancyqr@sl@pt{\fancyqr@sl@m+#2*\fancyqr@sl@w},\fancyqr@sl@pt{-\fancyqr@sl@n*2/5})}%
+   \ifnum#2<\z@
+      \expandafter\curveto\@tempa(\fancyqr@sl@pt{\fancyqr@sl@m-\fancyqr@sl@w},\fancyqr@sl@pt{-\fancyqr@sl@n})%
+   \else
+      \expandafter\fancyqr@slime@up\@tempa(\fancyqr@sl@pt{#1},0)%
+   \fi}%
+\def\fancyqr@slime@up(#1)(#2){\curveto(#2)(#1)}%
+% every object is a figure of its own (see \FancyQrFigureGallery); the chances
+% are shares of the tunables, so that the counts per code stay about the same
+\FancyQrFigure*{skull}{\fancyqr@skull@chance*(1-\fancyqr@pumpkin@chance)}{xx/xx}{\fancyqr@hw@go{0}{2}{2}{\fancyqr@skull}}%
+% J: a jack-o'-lantern on a 2x2 block (#1 its name)
+\def\fancyqr@hw@J#1#2#3#4{\FancyQrFigure*{jack/#1}{\fancyqr@skull@chance*\fancyqr@pumpkin@chance*.25}{xx/xx}{\fancyqr@hw@go{0}{2}{2}{\fancyqr@hw@jack{#1}{#2}{#3}}}}%
+\fancyqr@hw@J A{}0{}%
+\fancyqr@hw@J B{}1{}%
+\fancyqr@hw@J C{\fancyqr@hw@map{.9903}{-.1392}{.1392}{.9903}{.0097}{-.1392}}0{}%
+\fancyqr@hw@J D{\fancyqr@hw@map{.9903}{.1392}{-.1392}{.9903}{-.0097}{.1392}}1{}%
+\FancyQrFigure*{bigeyeball}{\fancyqr@skull@chance*.12}{xx/xx}{\fancyqr@hw@go{0}{2}{2}{\fancyqr@hw@bigeyeball}}%
+\FancyQrFigure{reaper}{\fancyqr@reaper@chance*.33}{xxx/xxx/xxx}{\fancyqr@hw@go{0}{3}{3}{\fancyqr@reaper}}%
+\FancyQrFigure{bigjack}{\fancyqr@reaper@chance*.33}{xxx/xxx/xxx}{\fancyqr@hw@go{0}{3}{3}{\fancyqr@hw@bigjack}}%
+\FancyQrFigure{bigghost}{\fancyqr@reaper@chance}{xxx/xxx/xxx}{\fancyqr@hw@go{0}{3}{3}{\fancyqr@hw@bigghost}}%
+\FancyQrFigure{tallreaper}{\fancyqr@reaper@chance}{xxx/xxx/xxx/xxx}{\fancyqr@hw@go{0}{3}{4}{\fancyqr@reaper@tall}}%
+\FancyQrFigure{widejack}{\fancyqr@big@chance}{xxx/xxx}{\fancyqr@hw@go{0}{3}{2}{\fancyqr@hw@widejack}}%
+\FancyQrFigure{fence/H}{\fancyqr@big@chance*.1}{xxx/xxx}{\fancyqr@hw@go{0}{3}{2}{\fancyqr@hw@fence{H}{}}}%
+\FancyQrFigure{candelabra}{\fancyqr@big@chance*.58}{xxx/xxx}{\fancyqr@hw@go{0}{3}{2}{\fancyqr@hw@candelabra}}%
+\FancyQrFigure{grave/A}{\fancyqr@big@chance*.21}{xx/xx/xx}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@tomb0}}%
+\FancyQrFigure{grave/B}{\fancyqr@big@chance*.21}{xx/xx/xx}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@tomb1}}%
+\FancyQrFigure{tallghost}{\fancyqr@big@chance*.63}{xx/xx/xx}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@tallghost}}%
+\FancyQrFigure{witch/R}{\fancyqr@big@chance*.3}{xx/xx/xx}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@witch{R}{}}}%
+\FancyQrFigure{witch/L}{\fancyqr@big@chance*.3}{xx/xx/xx}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@witch{L}{\fancyqr@hw@mm}}}%
+\FancyQrFigure{fence/V}{\fancyqr@big@chance*.1}{xx/xx/xx}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@fence{V}{\fancyqr@hw@map{0}{1}{1}{0}{1}{-2}}}}%
+\FancyQrFigure{hat}{\fancyqr@hat@chance}{0x0/xxx}{\fancyqr@hw@go{1}{3}{2}{\fancyqr@hw@hat}}%
+\FancyQrFigure{batbranch}{\fancyqr@bat@chance*.85}{xxx/.x.}{\fancyqr@hw@go{0}{3}{2}{\fancyqr@hw@roost}}%
+\FancyQrFigure{spider}{\fancyqr@spider@chance}{.x./xxx}{\fancyqr@hw@go{1}{3}{2}{\fancyqr@hw@spider}}%
+\FancyQrFigure{cross}{\fancyqr@cross@chance}{.x./xxx/.x./.x.}{\fancyqr@hw@go{1}{3}{4}{\fancyqr@hw@cross}}%
+\def\fancyqr@hw@mm{\fancyqr@hw@map{-1}00{1}{2}0}%
+\def\fancyqr@hw@mu{\fancyqr@hw@map0{1}{-1}0{0}{1}}%
+\def\fancyqr@hw@mv{\fancyqr@hw@map0{1}{1}0{0}{-1}}%
+\def\fancyqr@hw@mw{\fancyqr@hw@map0{1}{1}0{0}{-2}}%
+% shorthands for figures by the shape of their block (#1 name, #2 chance, #3
+% drawing): H horizontal pair, V vertical pair, R row of three, C column of
+% three, L lone module
+\def\fancyqr@hw@H#1#2#3{\FancyQrFigure{#1}{#2}{.00./0xx0/.00.}{\fancyqr@hw@go{0}{2}{1}{#3}}}%
+\def\fancyqr@hw@V#1#2#3{\FancyQrFigure{#1}{#2}{.0./0x0/0x0/.0.}{\fancyqr@hw@go{0}{1}{2}{#3}}}%
+\fancyqr@hw@H{candy}{\fancyqr@candy@chance*.3}{\fancyqr@hw@candy{}{}0}%
+\fancyqr@hw@H{toffeebar}{\fancyqr@candy@chance*.3}{\fancyqr@hw@candy{}{}1}%
+\fancyqr@hw@H{lollipop/left}{\fancyqr@candy@chance*.27}{\fancyqr@hw@candy{}{}2}%
+\fancyqr@hw@H{lollipop/right}{\fancyqr@candy@chance*.27}{\fancyqr@hw@candy{m}{\fancyqr@hw@mm}2}%
+\fancyqr@hw@H{eyes}{\fancyqr@ghost@chance*.03}{\fancyqr@hw@eyes}%
+\fancyqr@hw@H{candycane}{\fancyqr@candy@chance*.4}{\fancyqr@hw@cane{}{}}%
+\fancyqr@hw@V{hangbat}{\fancyqr@bat@chance*.4}{\fancyqr@hw@hangbat}%
+\fancyqr@hw@V{candle}{\fancyqr@lamp@chance*.08}{\fancyqr@hw@tallcandle}%
+\fancyqr@hw@V{lantern}{\fancyqr@lamp@chance*.08}{\fancyqr@hw@lantern{2}}%
+\fancyqr@hw@V{candy/up}{\fancyqr@candy@chance*.13}{\fancyqr@hw@candy{u}{\fancyqr@hw@mu}0}%
+\fancyqr@hw@V{toffeebar/up}{\fancyqr@candy@chance*.13}{\fancyqr@hw@candy{u}{\fancyqr@hw@mu}1}%
+\fancyqr@hw@V{lollipop/up}{\fancyqr@candy@chance*.13}{\fancyqr@hw@candy{v}{\fancyqr@hw@mv}2}%
+\fancyqr@hw@V{candycane/up}{\fancyqr@candy@chance*.13}{\fancyqr@hw@cane{v}{\fancyqr@hw@mv}}%
+\FancyQrFigure{bone/A}{\fancyqr@bone@chance}{.00./0xx0/0x0./.0..}{\fancyqr@hw@go{0}{2}{2}{\fancyqr@hw@bone{a}{}}}%
+\FancyQrFigure{bone/B}{\fancyqr@bone@chance}{.00./0xx0/.0x0/..0.}{\fancyqr@hw@go{0}{2}{2}{\fancyqr@hw@bone{b}{\fancyqr@hw@mm}}}%
+\FancyQrFigure{bone/C}{\fancyqr@bone@chance}{.0../0x0./0xx0/.00.}{\fancyqr@hw@go{0}{2}{2}{\fancyqr@hw@bone{c}{\fancyqr@hw@map{1}00{-1}00}}}%
+\FancyQrFigure{bone/D}{\fancyqr@bone@chance}{..0./.0x0/0xx0/.00.}{\fancyqr@hw@go{1}{2}{2}{\fancyqr@hw@bone{d}{\fancyqr@hw@map{-1}00{-1}{2}0}}}%
+\def\fancyqr@hw@R#1#2#3{\FancyQrFigure{#1}{#2}{.000./0xxx0/.000.}{\fancyqr@hw@go{0}{3}{1}{#3}}}%
+\def\fancyqr@hw@C#1#2#3{\FancyQrFigure{#1}{#2}{.0./0x0/0x0/0x0/.0.}{\fancyqr@hw@go{0}{1}{3}{#3}}}%
+\fancyqr@hw@R{flyingwitch}{\fancyqr@bat@chance*.45}{\fancyqr@hw@witchfly}%
+\fancyqr@hw@R{flyingbat}{\fancyqr@bat@chance*.65}{\fancyqr@hw@bat}%
+\fancyqr@hw@R{broom/left}{\fancyqr@broom@chance*.25}{\fancyqr@hw@broom{A}{}}%
+\fancyqr@hw@R{broom/right}{\fancyqr@broom@chance*.25}{\fancyqr@hw@broom{B}{\fancyqr@hw@map{-1}00{1}{3}0}}%
+\fancyqr@hw@R{wholebone/lying}{\fancyqr@bone@chance*.1}{\fancyqr@hw@bonewhole{E}{}}%
+\fancyqr@hw@C{lanternlong}{\fancyqr@lamp@chance*.4}{\fancyqr@hw@lantern{3}}%
+\fancyqr@hw@C{streetlamp}{\fancyqr@lamp@chance*.16}{\fancyqr@hw@streetlamp}%
+\fancyqr@hw@C{jacklamp}{\fancyqr@lamp@chance*.36}{\fancyqr@hw@jacklamp}%
+\fancyqr@hw@C{broom/up}{\fancyqr@broom@chance*.8}{\fancyqr@hw@broom{up}{\fancyqr@hw@mw}}%
+\fancyqr@hw@C{wholebone/standing}{\fancyqr@bone@chance*.24}{\fancyqr@hw@bonewhole{F}{\fancyqr@hw@mw}}%
+\FancyQrFigure{scythe/A}{\fancyqr@scythe@chance}{.00./0xx0/0x0./0x0./.0..}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@scythe{A}{}}}%
+\FancyQrFigure{scythe/B}{\fancyqr@scythe@chance}{.00./0xx0/.0x0/.0x0/..0.}{\fancyqr@hw@go{0}{2}{3}{\fancyqr@hw@scythe{B}{\fancyqr@hw@mm}}}%
+\def\fancyqr@hw@L#1#2#3{\FancyQrFigure{#1}{\fancyqr@ghost@chance*#2}{.0./0x0/.0.}{\fancyqr@hw@go{0}{1}{1}{\fancyqr@hw@var{14}#3}}}%
+\fancyqr@hw@L{ghost}{.5}{\fancyqr@ghost}%
+\fancyqr@hw@L{bat}{.025}{\fancyqr@hw@openbat}%
+\fancyqr@hw@L{devil}{.025}{\fancyqr@hw@devil}%
+\fancyqr@hw@L{miniskull}{.025}{\fancyqr@hw@tiny0}%
+\fancyqr@hw@L{eyeball}{.025}{\fancyqr@hw@tiny1}%
+\fancyqr@hw@L{minipumpkin/D}{.025}{\fancyqr@hw@tiny2}%
+\fancyqr@hw@L{minijack/B}{.025}{\fancyqr@hw@tiny3}%
+\fancyqr@hw@L{minicandle}{.025}{\fancyqr@hw@tiny4}%
+\fancyqr@hw@L{minibat}{.025}{\fancyqr@hw@tiny5}%
+\fancyqr@hw@L{potion}{.025}{\fancyqr@hw@tiny6}%
+\fancyqr@hw@L{crossbones}{.025}{\fancyqr@hw@tiny7}%
+\fancyqr@hw@L{minipumpkin/A}{.025}{\fancyqr@hw@pump a}%
+\fancyqr@hw@L{minipumpkin/B}{.025}{\fancyqr@hw@pump c}%
+\fancyqr@hw@L{minipumpkin/C}{.025}{\fancyqr@hw@pump d}%
+\fancyqr@hw@L{minijack/A}{.025}{\fancyqr@hw@pump b}%
+\def\fancyqr@hw@L#1#2#3{\FancyQrFigure{#1}{\fancyqr@candy@chance*.034}{.0./0x0/.0.}{\fancyqr@hw@go{0}{1}{1}{\fancyqr@hw@var{14}\fancyqr@hw@sweet#3}}}%
+\fancyqr@hw@L{bonbon}{}0%
+\fancyqr@hw@L{swirl}{}1%
+\fancyqr@hw@L{candycorn}{}2%
+\fancyqr@hw@L{toffee}{}3%
+\fancyqr@hw@L{peppermint}{}4%
+\fancyqr@hw@L{gumdrop}{}5%
+% figures are drawn at the size of a module, not of a tile (which overlaps its
+% neighbours a little), the shift by #1 modules to the first x undone to match,
+% and shrunk about the middle of their #2 x #3 block, so that they keep a margin
+% of .02 modules more than drawn from every edge
+\def\fancyqr@hw@go#1#2#3#4{{\advance\unitlength-\fancyqr@edge@compensate
+   \edef\@fq@s{\fpeval{1-.04/min(#2,#3)}}%
+   \put(\fpeval{#1*\fancyqr@edge@compensate/\unitlength+#2/2*(1-\@fq@s)},\fpeval{(1-#3/2)*(1-\@fq@s)}){%
+      \unitlength=\@fq@s\unitlength#4}}}%
+\let\fancyqr@hw@tgo\fancyqr@hw@go%
+\def\fancyqr@hw@begin{%
+   \edef\fancyqr@hw@webs{\iffancyqr@faint@40\else\fpeval{round(100*\fancyqr@web@chance)}\fi}%
+   \edef\fancyqr@hw@bigwebs{\fpeval{round(1000*\fancyqr@bigweb@chance)}}%
+   \edef\fancyqr@hw@threads{\iffancyqr@faint@40\else\fpeval{round(100*\fancyqr@thread@chance)}\fi}%
+   \ifx\fancyqr@fig@scan\fancyqr@hw@scanw\else\let\fancyqr@hw@figscan\fancyqr@fig@scan\let\fancyqr@fig@scan\fancyqr@hw@scanw\fi}%
+\def\fancyqr@hw@scanw{\fancyqr@hw@figscan\FancyQrExtra{web/sized}{\fancyqr@hw@webscan}}%
+% the colors, mixed from the current one: pumpkins lean to orange, features
+% are darker, eyes and carved faces glow
+\def\fancyqr@hw@pk{\fancyqr@mixcolor{.!55!orange!80!black}}%
+\def\fancyqr@hw@dk{\fancyqr@mixcolor{.!45!black}}%
+% webs are pale to scan, but shown strongly where an extra is on display
+\def\fancyqr@hw@webc{\fancyqr@mixcolor{\iffancyqr@hl@.!80!black\else.!22!white\fi}}%
+\def\fancyqr@hw@dkk{\fancyqr@mixcolor{.!25!black}}%
+\def\fancyqr@hw@stem{\fancyqr@mixcolor{.!50!black}}%
+\def\fancyqr@hw@glow{\fancyqr@mixcolor{yellow!75!orange}}%
+% ... in the cores a tinted ember and soft ribs, as light cut-outs or strong
+% edges there keep scanners from finding the patterns
+\def\fancyqr@hw@cglow{\fancyqr@mixcolor{.!60!red!72!black}}%
+\def\fancyqr@hw@apk{\fancyqr@mixcolor{.!50!orange}}%
+\def\fancyqr@hw@crib{\fancyqr@mixcolor{.!70!black}}%
+% paths with computed points are kept under the name #1
+\def\fancyqr@hw@P#1#2{\ifcsname fancyqr@hw@P@#1\endcsname\else
+   \expandafter\xdef\csname fancyqr@hw@P@#1\endcsname{#2}\fi
+   \csname fancyqr@hw@P@#1\endcsname}%
+% an ellipse around (#1,#2) with the radii #3, #4, for \fancyqr@hw@P
+% (in sp: \numexpr and \dimexpr instead of \fpeval, with the arcs at .5523 radii)
+\def\fancyqr@hw@sp#1{\number\dimexpr\fpeval{#1}pt\relax}%
+\def\fancyqr@hw@kk#1{\dimexpr#1sp*5523/10000\relax}%
+\def\fancyqr@hw@ell#1#2#3#4{\fancyqr@hw@els{\fancyqr@hw@sp{#1}}{\fancyqr@hw@sp{#2}}{\fancyqr@hw@sp{#3}}{\fancyqr@hw@sp{#4}}}%
+\def\fancyqr@hw@els#1#2#3#4{%
+   \noexpand\moveto(\fancyqr@sl@pt{#1+#3},\fancyqr@sl@pt{#2})%
+   \noexpand\curveto(\fancyqr@sl@pt{#1+#3},\fancyqr@sl@pt{#2+\fancyqr@hw@kk{#4}})(\fancyqr@sl@pt{#1+\fancyqr@hw@kk{#3}},\fancyqr@sl@pt{#2+#4})(\fancyqr@sl@pt{#1},\fancyqr@sl@pt{#2+#4})%
+   \noexpand\curveto(\fancyqr@sl@pt{#1-\fancyqr@hw@kk{#3}},\fancyqr@sl@pt{#2+#4})(\fancyqr@sl@pt{#1-#3},\fancyqr@sl@pt{#2+\fancyqr@hw@kk{#4}})(\fancyqr@sl@pt{#1-#3},\fancyqr@sl@pt{#2})%
+   \noexpand\curveto(\fancyqr@sl@pt{#1-#3},\fancyqr@sl@pt{#2-\fancyqr@hw@kk{#4}})(\fancyqr@sl@pt{#1-\fancyqr@hw@kk{#3}},\fancyqr@sl@pt{#2-#4})(\fancyqr@sl@pt{#1},\fancyqr@sl@pt{#2-#4})%
+   \noexpand\curveto(\fancyqr@sl@pt{#1+\fancyqr@hw@kk{#3}},\fancyqr@sl@pt{#2-#4})(\fancyqr@sl@pt{#1+#3},\fancyqr@sl@pt{#2-\fancyqr@hw@kk{#4}})(\fancyqr@sl@pt{#1+#3},\fancyqr@sl@pt{#2})%
+   \noexpand\closepath}%
+% a figure #3 kept under the name #1, with the points #2 defined while it is
+% built: \M, \L, \C, \Z move, line, curve, close, \F, \S fill, stroke, \T a
+% thickness, \K a color, \R round caps, \E an ellipse, \O a circle; \P{x}{y}
+% is a point through the map \fancyqr@hw@map{a}{b}{c}{d}{e}{f} (x'=ax+by+e,
+% y'=cx+dy+f, set in #2), \Q{x}{y}{rx}{ry} an ellipse through it
+\def\fancyqr@hw@map#1#2#3#4#5#6{%
+   \def\@tempa{#2#3}\def\@tempb{00}%
+   \ifx\@tempa\@tempb
+      \def\@tempa{#1}\def\@tempb{1}\def\@tempc{#5}\def\@tempd{0}%
+      \ifx\@tempa\@tempb\ifx\@tempc\@tempd\def\fancyqr@hw@px##1{\fpeval{##1}}\else
+         \def\fancyqr@hw@px##1{\fpeval{(##1)+(#5)}}\fi
+      \else\ifx\@tempc\@tempd\def\fancyqr@hw@px##1{\fpeval{(#1)*(##1)}}\else
+         \def\fancyqr@hw@px##1{\fpeval{(#1)*(##1)+(#5)}}\fi\fi
+      \def\@tempa{#4}\def\@tempc{#6}%
+      \ifx\@tempa\@tempb\ifx\@tempc\@tempd\def\fancyqr@hw@py##1{\fpeval{##1}}\else
+         \def\fancyqr@hw@py##1{\fpeval{(##1)+(#6)}}\fi
+      \else\ifx\@tempc\@tempd\def\fancyqr@hw@py##1{\fpeval{(#4)*(##1)}}\else
+         \def\fancyqr@hw@py##1{\fpeval{(#4)*(##1)+(#6)}}\fi\fi
+      \def\P##1##2{\fancyqr@hw@px{##1},\fancyqr@hw@py{##2}}%
+   \else
+      \def\P##1##2{\fpeval{(#1)*(##1)+(#2)*(##2)+(#5)},\fpeval{(#3)*(##1)+(#4)*(##2)+(#6)}}\fi
+   \edef\@tempa{#1#2#3#4#5#6}\def\@tempb{100100}\ifx\@tempa\@tempb\def\fancyqr@hw@id{1}\else\def\fancyqr@hw@id{0}\fi
+   \let\Pn\P \def\fancyqr@hw@fast{1}\fancyqr@hw@chk{#1}\fancyqr@hw@chk{#2}\fancyqr@hw@chk{#3}\fancyqr@hw@chk{#4}%
+   \if1\fancyqr@hw@fast
+      \def\Pn##1##2{\fancyqr@hw@Pn{#1}{#2}{#3}{#4}{#5}{#6}{##1}{##2}}%
+      \def\Pp##1##2{\fancyqr@sl@pt{(#1)*(##1)+(#2)*(##2)+\fancyqr@hw@sp{#5}},\fancyqr@sl@pt{(#3)*(##1)+(#4)*(##2)+\fancyqr@hw@sp{#6}}}\fi}%
+% a point of plain numbers through the map (kept as it is by the identity)
+\def\fancyqr@hw@Pn#1#2#3#4#5#6#7#8{\if1\fancyqr@hw@id #7,#8\else
+   \fancyqr@sl@pt{(#1)*\dimexpr#7pt\relax+(#2)*\dimexpr#8pt\relax+\dimexpr#5pt\relax},%
+   \fancyqr@sl@pt{(#3)*\dimexpr#7pt\relax+(#4)*\dimexpr#8pt\relax+\dimexpr#6pt\relax}\fi}%
+% 0 unless the coefficient #1 is 0, 1 or -1
+\def\fancyqr@hw@chk#1{\def\@tempa{#1}\def\@tempb{0}\ifx\@tempa\@tempb\else\def\@tempb{1}\ifx\@tempa\@tempb\else
+   \def\@tempb{-1}\ifx\@tempa\@tempb\else\def\fancyqr@hw@fast{0}\fi\fi\fi}%
+\def\fancyqr@hw@Qf#1#2#3#4{\M(\P{(#1)+(#3)}{#2})\C(\P{(#1)+(#3)}{(#2)+.5523*(#4)})(\P{(#1)+.5523*(#3)}{(#2)+(#4)})%
+   (\P{#1}{(#2)+(#4)})\C(\P{(#1)-.5523*(#3)}{(#2)+(#4)})(\P{(#1)-(#3)}{(#2)+.5523*(#4)})(\P{(#1)-(#3)}{#2})%
+   \C(\P{(#1)-(#3)}{(#2)-.5523*(#4)})(\P{(#1)-.5523*(#3)}{(#2)-(#4)})(\P{#1}{(#2)-(#4)})%
+   \C(\P{(#1)+.5523*(#3)}{(#2)-(#4)})(\P{(#1)+(#3)}{(#2)-.5523*(#4)})(\P{(#1)+(#3)}{#2})\Z}%
+\def\fancyqr@hw@Q#1#2#3#4{\if1\fancyqr@hw@fast
+   \expandafter\fancyqr@hw@Qs\else\expandafter\fancyqr@hw@Qf\fi{#1}{#2}{#3}{#4}}%
+\def\fancyqr@hw@Qs#1#2#3#4{\fancyqr@hw@Qp{\fancyqr@hw@sp{#1}}{\fancyqr@hw@sp{#2}}{\fancyqr@hw@sp{#3}}{\fancyqr@hw@sp{#4}}}%
+\def\fancyqr@hw@Qp#1#2#3#4{\M(\Pp{#1+#3}{#2})\C(\Pp{#1+#3}{#2+\fancyqr@hw@kk{#4}})(\Pp{#1+\fancyqr@hw@kk{#3}}{#2+#4})%
+   (\Pp{#1}{#2+#4})\C(\Pp{#1-\fancyqr@hw@kk{#3}}{#2+#4})(\Pp{#1-#3}{#2+\fancyqr@hw@kk{#4}})(\Pp{#1-#3}{#2})%
+   \C(\Pp{#1-#3}{#2-\fancyqr@hw@kk{#4}})(\Pp{#1-\fancyqr@hw@kk{#3}}{#2-#4})(\Pp{#1}{#2-#4})%
+   \C(\Pp{#1+\fancyqr@hw@kk{#3}}{#2-#4})(\Pp{#1+#3}{#2-\fancyqr@hw@kk{#4}})(\Pp{#1+#3}{#2})\Z}%
+\def\fancyqr@hw@D#1#2#3{\ifcsname fancyqr@hw@P@#1\endcsname\else\begingroup
+   \fancyqr@hw@map100100\let\Q\fancyqr@hw@Q
+   \def\M{\noexpand\moveto}\def\L{\noexpand\lineto}\def\C{\noexpand\curveto}%
+   \def\Z{\noexpand\closepath}\def\F{\noexpand\fillpath}\def\S{\noexpand\strokepath}%
+   \def\T##1{\noexpand\linethickness{##1\noexpand\unitlength}}%
+   \def\K##1{\noexpand\fancyqr@mixcolor{##1}}\def\R{\noexpand\roundcap\noexpand\roundjoin}%
+   \let\E\fancyqr@hw@ell\def\O##1##2##3{\Q{##1}{##2}{##3}{##3}}%
+   #2\expandafter\xdef\csname fancyqr@hw@P@#1\endcsname{#3}\endgroup\fi
+   \csname fancyqr@hw@P@#1\endcsname}%
+% figures are drawn from their top left module into the block below and to the
+% right of it, in the tile color with darker features; no light feature lies on
+% the center of a module
+\def\fancyqr@skull{%
+   \fancyqr@hw@P{c1/.18/.8}{\fancyqr@hw@ell{1}{.18}{.8}{.8}}\fillpath
+   \moveto(.4,-.2)\lineto(1.6,-.2)\lineto(1.5,-.76)\curveto(1.47,-.9)(1.4,-.96)(1.28,-.96)%
+   \lineto(.72,-.96)\curveto(.6,-.96)(.53,-.9)(.5,-.76)\closepath\fillpath
+   {\fancyqr@hw@dk
+   \fancyqr@hw@P{c.66/.12/.25}{\fancyqr@hw@ell{.66}{.12}{.25}{.25}}\fillpath
+   \fancyqr@hw@P{c1.34/.12/.25}{\fancyqr@hw@ell{1.34}{.12}{.25}{.25}}\fillpath
+   \moveto(1,-.14)\lineto(1.12,-.4)\lineto(.88,-.4)\closepath\fillpath
+   \linethickness{.07\unitlength}\roundcap
+   \moveto(.66,-.64)\lineto(1.34,-.64)\strokepath
+   \moveto(.84,-.52)\lineto(.84,-.9)\strokepath
+   \moveto(1,-.52)\lineto(1,-.9)\strokepath
+   \moveto(1.16,-.52)\lineto(1.16,-.9)\strokepath}}%
+% a jack-o'-lantern on a 2x2 block, #1 names it, #2 tilts it, #3 the face: 0 triangle
+% eyes and a zigzag grin, 1 round eyes and a wide mouth
+\def\fancyqr@hw@jack#1#2#3{\fancyqr@hw@D{jack#1}{#2}{%
+   \K{.!55!orange!80!black}\Q{.6}{-.12}{.54}{.8}\F\Q{1.4}{-.12}{.54}{.8}\F\Q{1}{-.12}{.48}{.84}\F
+   {\K{.!50!black}\M(\P{.94}{.66})\C(\P{.96}{.8})(\P{1}{.88})(\P{.96}{.96})\L(\P{1.1}{.96})%
+   \C(\P{1.12}{.86})(\P{1.08}{.76})(\P{1.08}{.66})\Z\F
+   \K{.!45!black}\T{.04}\M(\P{.7}{.62})\C(\P{.56}{.3})(\P{.56}{-.6})(\P{.7}{-.88})\S
+   \M(\P{1.3}{.62})\C(\P{1.44}{.3})(\P{1.44}{-.6})(\P{1.3}{-.88})\S
+   \K{.!25!black}\ifnum#3=\z@
+   \M(\P{.64}{.1})\L(\P{.86}{.1})\L(\P{.77}{.28})\Z\M(\P{1.14}{.1})\L(\P{1.36}{.1})\L(\P{1.23}{.28})\Z
+   \M(\P{.94}{-.06})\L(\P{1.06}{-.06})\L(\P{1}{.04})\Z
+   \M(\P{.62}{-.26})\L(\P{.74}{-.33})\L(\P{.84}{-.26})\L(\P{.92}{-.33})\L(\P{1}{-.26})%
+   \L(\P{1.08}{-.33})\L(\P{1.16}{-.26})\L(\P{1.26}{-.33})\L(\P{1.38}{-.26})%
+   \C(\P{1.3}{-.52})(\P{1.16}{-.58})(\P{1}{-.58})\C(\P{.84}{-.58})(\P{.7}{-.52})(\P{.62}{-.26})\Z\F
+   \else\Q{.7}{.14}{.13}{.15}\F\Q{1.3}{.14}{.13}{.15}\F\M(\P{1}{.04})\L(\P{1.08}{-.1})\L(\P{.92}{-.1})\Z
+   \M(\P{.66}{-.28})\C(\P{.8}{-.66})(\P{1.2}{-.66})(\P{1.34}{-.28})\C(\P{1.15}{-.4})(\P{.85}{-.4})(\P{.66}{-.28})\Z\F\fi}}}%
+% the grim reaper: a hooded robe with a dark void for a face and glowing eyes,
+% holding a scythe whose handle and blade stand out from the robe; #1 is the
+% bottom of the robe, #2 its zigzag, #3 the folds, #4 the scythe, #5 1 for a
+% fourth row
+\def\fancyqr@reaper{\fancyqr@reaper@draw{-1.97}{-1.8}{-1.82}{-1.88}0}%
+\def\fancyqr@reaper@tall{\fancyqr@reaper@draw{-2.97}{-2.8}{-2.82}{-2.88}1}%
+\def\fancyqr@reaper@draw#1#2#3#4#5{%
+   \moveto(.05,#1)\lineto(.38,#2)\lineto(.7,#1)\lineto(1.02,#2)\lineto(1.34,#1)%
+   \lineto(1.66,#2)\lineto(1.98,#1)\lineto(2.3,#2)\lineto(2.62,#1)\lineto(2.95,#2)%
+   \curveto(2.97,-1)(2.97,0)(2.97,.52)\curveto(2.6,.7)(2.1,.68)(1.86,.62)%
+   \curveto(1.9,.86)(1.5,.95)(1.12,.94)\curveto(.7,.93)(.36,.84)(.34,.62)%
+   \curveto(.2,.64)(.08,.6)(.03,.52)\curveto(.03,-.4)(.04,-1.2)(.05,#1)\closepath\fillpath
+   {\fancyqr@hw@dk\linethickness{.06\unitlength}\roundcap
+   \moveto(.62,-.3)\curveto(.52,-.9)(.56,-1.4)(.62,#3)\strokepath
+   \moveto(1.7,-.3)\curveto(1.9,-.8)(1.86,-1.3)(1.94,#3)\strokepath
+   \ifnum#5>\z@\moveto(1.16,-1.2)\curveto(1.06,-1.8)(1.1,-2.3)(1.2,-2.82)\strokepath\fi
+   \moveto(1.8,.45)\curveto(2.05,.15)(2.25,-.2)(2.45,-.38)\strokepath
+   \moveto(.62,-.16)\curveto(.48,.3)(.6,.96)(1.1,.96)\curveto(1.6,.96)(1.72,.3)(1.58,-.16)\strokepath
+   \fancyqr@hw@dkk
+   \moveto(1.1,.88)\curveto(1.5,.86)(1.62,.46)(1.52,.12)\curveto(1.42,-.12)(.78,-.12)(.68,.12)%
+   \curveto(.58,.46)(.72,.88)(1.1,.88)\closepath\fillpath
+   \fancyqr@hw@glow
+   \fancyqr@hw@P{c.94/.42/.07}{\fancyqr@hw@ell{.94}{.42}{.07}{.07}}\fillpath
+   \fancyqr@hw@P{c1.26/.42/.07}{\fancyqr@hw@ell{1.26}{.42}{.07}{.07}}\fillpath
+   \fancyqr@mixcolor{.!30!black}\linethickness{.11\unitlength}%
+   \moveto(2.72,#4)\lineto(2.31,.87)\strokepath
+   \fancyqr@hw@P{c2.45/-.4/.13}{\fancyqr@hw@ell{2.45}{-.4}{.13}{.13}}\fillpath}%
+   {\fancyqr@mixcolor{.!25!white}%
+   \moveto(2.33,.88)\curveto(2.05,.93)(1.72,.89)(1.55,.56)\curveto(1.78,.74)(2.05,.76)(2.29,.73)%
+   \closepath\fillpath
+   \fancyqr@mixcolor{.!40!black}\linethickness{.03\unitlength}%
+   \moveto(2.33,.88)\curveto(2.05,.93)(1.72,.89)(1.55,.56)\curveto(1.78,.74)(2.05,.76)(2.29,.73)%
+   \closepath\strokepath}}%
+\def\fancyqr@hw@stemat#1#2#3{\put(#1,#2){\unitlength=#3\unitlength\moveto(-.08,0)\curveto(-.06,.12)(-.02,.2)(-.08,.28)%
+   \lineto(.1,.28)\curveto(.12,.16)(.1,.08)(.08,0)\closepath\fillpath}}%
+\def\fancyqr@hw@widejack{%
+   {\fancyqr@hw@pk
+   \fancyqr@hw@P{wj}{\fancyqr@hw@ell{.78}{-.08}{.75}{.86}\fancyqr@hw@ell{2.22}{-.08}{.75}{.86}%
+      \fancyqr@hw@ell{1.13}{-.08}{.62}{.88}\fancyqr@hw@ell{1.87}{-.08}{.62}{.88}%
+      \fancyqr@hw@ell{1.5}{-.06}{.6}{.86}}\fillpath
+   {\fancyqr@hw@dk\linethickness{.04\unitlength}%
+   \moveto(1.02,.74)\curveto(.8,.4)(.8,-.6)(1.02,-.9)\strokepath
+   \moveto(1.98,.74)\curveto(2.2,.4)(2.2,-.6)(1.98,-.9)\strokepath
+   \moveto(.4,.56)\curveto(.22,.24)(.22,-.44)(.4,-.74)\strokepath
+   \moveto(2.6,.56)\curveto(2.78,.24)(2.78,-.44)(2.6,-.74)\strokepath}%
+   {\fancyqr@hw@stem\fancyqr@hw@stemat{1.5}{.68}{1.05}}%
+   \fancyqr@hw@glow
+   \moveto(.74,.1)\lineto(1.26,.1)\lineto(1.02,.5)\closepath
+   \moveto(1.74,.1)\lineto(2.26,.1)\lineto(1.98,.5)\closepath
+   \moveto(1.4,-.14)\lineto(1.6,-.14)\lineto(1.5,.04)\closepath
+   \moveto(.6,-.18)\lineto(.96,-.3)\lineto(1.06,-.46)\lineto(1.16,-.3)\lineto(1.84,-.3)%
+   \lineto(1.94,-.46)\lineto(2.04,-.3)\lineto(2.4,-.18)\curveto(2.32,-.58)(2,-.78)(1.66,-.8)%
+   \lineto(1.62,-.36)\lineto(1.38,-.36)\lineto(1.34,-.8)\curveto(1,-.78)(.68,-.58)(.6,-.18)%
+   \closepath\fillpath}}%
+\def\fancyqr@hw@bigjack{%
+   {\fancyqr@hw@pk
+   \fancyqr@hw@P{bj}{\fancyqr@hw@ell{.8}{-.55}{.77}{1.36}\fancyqr@hw@ell{2.2}{-.55}{.77}{1.36}%
+      \fancyqr@hw@ell{1.13}{-.55}{.62}{1.39}\fancyqr@hw@ell{1.87}{-.55}{.62}{1.39}%
+      \fancyqr@hw@ell{1.5}{-.55}{.6}{1.4}}\fillpath
+   {\fancyqr@hw@dk\linethickness{.05\unitlength}%
+   \moveto(1.02,.7)\curveto(.76,.2)(.76,-1.3)(1.02,-1.8)\strokepath
+   \moveto(1.98,.7)\curveto(2.24,.2)(2.24,-1.3)(1.98,-1.8)\strokepath
+   \moveto(.42,.44)\curveto(.2,-.06)(.2,-1.04)(.42,-1.54)\strokepath
+   \moveto(2.58,.44)\curveto(2.8,-.06)(2.8,-1.04)(2.58,-1.54)\strokepath}%
+   {\fancyqr@hw@stem\fancyqr@hw@stemat{1.5}{.68}{1}}%
+   \fancyqr@hw@glow
+   \moveto(.7,-.16)\lineto(1.3,-.16)\lineto(1.04,.34)\closepath
+   \moveto(1.7,-.16)\lineto(2.3,-.16)\lineto(1.96,.34)\closepath
+   \moveto(1.39,-.34)\lineto(1.61,-.34)\lineto(1.5,-.14)\closepath
+   \moveto(.62,-.7)\lineto(.92,-.82)\lineto(1.02,-1)\lineto(1.12,-.84)\lineto(1.88,-.84)%
+   \lineto(1.98,-1)\lineto(2.08,-.82)\lineto(2.38,-.7)\curveto(2.3,-1.1)(1.98,-1.3)(1.64,-1.32)%
+   \lineto(1.58,-1.1)\lineto(1.42,-1.1)\lineto(1.36,-1.32)\curveto(1.02,-1.3)(.7,-1.1)(.62,-.7)%
+   \closepath\fillpath}}%
+% ghosts: a round head (its sides \h@w in from \h@L and \h@R, from \h@S up to
+% \h@T) on a body that widens to a hem of \h@n waves or points (bottom \h@B),
+% eyes with thin lighter rims \h@es apart at \h@E and a mouth (\h@mo: none, o, smile,
+% frown) at \h@M; #1 names the drawing, #2 sets the points
+\def\fancyqr@hw@spook#1#2{\fancyqr@hw@D{#1}{#2\def\h@m{(\h@L+\h@R)/2}%
+   \def\h@X##1{\fpeval{\h@L+(\h@R-\h@L)*(##1)/\h@n}}%
+   \def\h@s##1{\ifnum\h@pt=\z@\C(\P{\h@X{##1-.2}}{\h@B+\h@h})(\P{\h@X{##1-.8}}{\h@B+\h@h})(\P{\h@X{##1-1}}\h@B)%
+      \else\C(\P{\h@X{##1-.25}}{\h@B+.5*\h@h})(\P{\h@X{##1-.4}}{\h@B+\h@h})(\P{\h@X{##1-.5}}{\h@B+\h@h})%
+      \C(\P{\h@X{##1-.6}}{\h@B+\h@h})(\P{\h@X{##1-.75}}{\h@B+.5*\h@h})(\P{\h@X{##1-1}}\h@B)\fi}%
+   \def\h@e##1##2{\Q{\h@m##1\h@es}\h@E{\h@erx##2}{\h@ery##2}\F}%
+   \def\h@f##1{\M(\P{\h@m-\h@mw}\h@M)\C(\P{\h@m-.5*\h@mw}{\h@M##1\h@mh})(\P{\h@m+.5*\h@mw}{\h@M##1\h@mh})%
+      (\P{\h@m+\h@mw}\h@M)\C(\P{\h@m+.5*\h@mw}{\h@M##1.4*\h@mh})(\P{\h@m-.5*\h@mw}{\h@M##1.4*\h@mh})%
+      (\P{\h@m-\h@mw}\h@M)\Z\F}}{%
+   \M(\P\h@L\h@B)\C(\P{\h@L+.01}{\h@B+.45*(\h@S-\h@B)})(\P{\h@L+\h@w}{\h@S-.35*(\h@S-\h@B)})(\P{\h@L+\h@w}\h@S)%
+   \C(\P{\h@L+\h@w}{\h@S+.5523*(\h@T-\h@S)})(\P{\h@m-.5523*(\h@m-\h@L-\h@w)}\h@T)(\P\h@m\h@T)%
+   \C(\P{\h@m+.5523*(\h@R-\h@w-\h@m)}\h@T)(\P{\h@R-\h@w}{\h@S+.5523*(\h@T-\h@S)})(\P{\h@R-\h@w}\h@S)%
+   \C(\P{\h@R-\h@w}{\h@S-.35*(\h@S-\h@B)})(\P{\h@R-.01}{\h@B+.45*(\h@S-\h@B)})(\P\h@R\h@B)%
+   \ifcase\h@n\or\or\or\h@s3\h@s2\h@s1\or\h@s4\h@s3\h@s2\h@s1\else\h@s5\h@s4\h@s3\h@s2\h@s1\fi\Z\F
+   {\K{.!88!white}\h@e-{+.015}\h@e+{+.015}\K{.!40!black}\h@e-{}\h@e+{}%
+   \ifcase\h@mo\or\Q\h@m\h@M\h@mw{1.3*\h@mh}\F\or\h@f-\else\h@f+\fi
+   \K{.!75!white}\Q{\h@m-\h@es+.3*\h@erx}{\h@E+.35*\h@ery}{.3*\h@erx}{.3*\h@erx}\F
+   \Q{\h@m+\h@es+.3*\h@erx}{\h@E+.35*\h@ery}{.3*\h@erx}{.3*\h@erx}\F}}}%
+% the variant of a figure from the place: \fancyqr@hw@h (0 to 99) for the salt
+% #1, \fancyqr@hw@dig{n}{m} its n-th digit to the base m
+\def\fancyqr@hw@var#1{\edef\fancyqr@hw@h{\the\numexpr\fancyqr@fig@hash{#1}\i\j\relax}}%
+% ... and the part of it a drawing depends on, for the name it is kept under
+\def\fancyqr@hw@key#1{\fpeval{\fancyqr@hw@h-#1*floor(\fancyqr@hw@h/#1)}}%
+\def\fancyqr@hw@dig#1#2{\fpeval{floor(\fancyqr@hw@h/#1)-#2*floor(\fancyqr@hw@h/(#1*#2))}}%
+% the common choices of a ghost: hem, mouth and eyes
+\def\fancyqr@hw@ghostvar{\edef\h@pt{\fancyqr@hw@dig12}\edef\h@mo{\fancyqr@hw@dig24}\edef\h@ov{\fancyqr@hw@dig82}}%
+\def\fancyqr@ghost{\fancyqr@hw@var{14}\fancyqr@hw@spook{gl\fancyqr@hw@key{32}}{\fancyqr@hw@ghostvar
+   \edef\h@n{\ifnum\fancyqr@hw@dig{16}2=\z@3\else4\fi}\def\h@L{.06}\def\h@R{.94}\def\h@w{.04}%
+   \def\h@B{.04}\def\h@T{.96}\def\h@S{.52}\def\h@h{.16}\def\h@E{.6}\def\h@es{.15}%
+   \edef\h@erx{\ifnum\h@ov=\z@.08\else.065\fi}\edef\h@ery{\ifnum\h@ov=\z@.08\else.11\fi}%
+   \def\h@M{.32}\def\h@mw{.1}\def\h@mh{.07}}}%
+\def\fancyqr@hw@tallghost{\fancyqr@hw@var{23}\fancyqr@hw@spook{gt\fancyqr@hw@key{32}}{\fancyqr@hw@ghostvar
+   \edef\h@n{\ifnum\fancyqr@hw@dig{16}2=\z@3\else4\fi}\def\h@L{.05}\def\h@R{1.95}\def\h@w{.12}%
+   \def\h@B{-1.92}\def\h@T{.97}\def\h@S{.12}\def\h@h{.3}\def\h@E{.16}\def\h@es{.3}%
+   \edef\h@erx{\ifnum\h@ov=\z@.12\else.1\fi}\edef\h@ery{\ifnum\h@ov=\z@.15\else.19\fi}%
+   \def\h@M{-.38}\def\h@mw{.18}\def\h@mh{.11}}}%
+% a happy big ghost on a 3x3 block: raised waving arms, big sparkly eyes, rosy
+% cheeks, an open smile with a tongue and a wavy hem; the eyes and the cheeks
+% keep off the module centers, the mouth is dark
+\def\fancyqr@hw@bigghost{\fancyqr@hw@D{bigghost}{}{%
+   \M(.1,-1.8)\C(.02,-.6)(.12,.4)(.6,.8)\C(1,1.05)(2,1.05)(2.4,.8)\C(2.88,.4)(2.98,-.6)(2.9,-1.8)%
+   \C(2.9,-2.05)(2.5,-2.05)(2.5,-1.8)\C(2.5,-2.05)(2.1,-2.05)(2.1,-1.8)\C(2.1,-2.05)(1.7,-2.05)(1.7,-1.8)%
+   \C(1.7,-2.05)(1.3,-2.05)(1.3,-1.8)\C(1.3,-2.05)(.9,-2.05)(.9,-1.8)\C(.9,-2.05)(.5,-2.05)(.5,-1.8)%
+   \C(.5,-2.05)(.1,-2.05)(.1,-1.8)\Z\F
+   \T{.24}\R\M(.45,-.4)\C(.22,-.2)(.14,.2)(.18,.62)\M(2.55,-.4)\C(2.78,-.2)(2.86,.2)(2.82,.62)\S
+   {\K{.!60!red!45!white}\Q{.78}{-.22}{.2}{.12}\F\Q{2.22}{-.22}{.2}{.12}\F}%
+   {\K{.!20!black}\Q{1.08}{.2}{.17}{.25}\F\Q{1.92}{.2}{.17}{.25}\F
+   \M(1.1,-.35)\C(1.2,-.85)(1.8,-.85)(1.9,-.35)\C(1.7,-.5)(1.3,-.5)(1.1,-.35)\Z\F}%
+   {\K{.!15!white}\Q{1.02}{.3}{.06}{.06}\F\Q{1.14}{.1}{.03}{.03}\F\Q{1.86}{.3}{.06}{.06}\F\Q{1.98}{.1}{.03}{.03}\F}%
+   {\K{.!55!red!50!white}\Q{1.5}{-.68}{.17}{.07}\F}}}%
+% a big eyeball on a 2x2 block: a veined ball in the tile color, a glowing iris with a
+% pupil and a highlight, all off the module centers
+\def\fancyqr@hw@bigeyeball{\fancyqr@hw@D{bigeyeball}{}{%
+   \Q{1}{0}{.94}{.94}\F
+   {\K{.!50!red!90!black}\T{.032}\R\M(1.834,.389)\C(1.724,.385)(1.611,.382)(1.491,.344)\M(1.16,.906)\C(1.184,.799)(1.211,.689)(1.205,.564)\M(.295,.591)\C(.345,.493)(.396,.392)(.48,.3)\M(.111,-.238)\C(.198,-.17)(.287,-.1)(.402,-.052)\M(.54,-.797)\C(.628,-.731)(.719,-.663)(.795,-.564)\M(1.46,-.797)\C(1.372,-.731)(1.281,-.663)(1.205,-.564)\M(1.889,-.238)\C(1.802,-.17)(1.713,-.1)(1.598,-.052)\S\T{.02}\M(1.7,.388)\C(1.659,.336)(1.635,.244)(1.606,.174)\M(1.194,.776)\C(1.154,.724)(1.071,.676)(1.011,.63)\M(.353,.47)\C(.417,.456)(.511,.472)(.587,.475)\M(.215,-.153)\C(.279,-.166)(.357,-.221)(.424,-.256)\M(.649,-.719)\C(.653,-.653)(.62,-.564)(.604,-.49)\M(1.351,-.719)\C(1.347,-.653)(1.38,-.564)(1.396,-.49)\M(1.785,-.153)\C(1.721,-.166)(1.643,-.221)(1.576,-.256)\S
+   \K{.!40!black}\Q{1}{0}{.5}{.5}\F\K{yellow!70!orange}\Q{1}{0}{.43}{.43}\F\K{orange!70!red}\Q{1}{0}{.3}{.3}\F
+   \K{.!8!black}\Q{1}{0}{.16}{.2}\F\K{.!15!white}\Q{.84}{.2}{.07}{.07}\F}}}%
+% a pair of eyes on a bar of two: eyeballs with a glowing iris and a slit pupil on
+% each module center
+\def\fancyqr@hw@eyes{\fancyqr@hw@D{eyes}{\def\h@e##1{\Q{##1}{.5}{.42}{.36}\F
+   {\K{.!40!black}\Q{##1}{.5}{.31}{.31}\F\K{yellow!75!orange}\Q{##1}{.5}{.26}{.26}\F
+   \K{.!8!black}\Q{##1}{.5}{.07}{.2}\F\K{.!15!white}\Q{\fpeval{##1-.1}}{.62}{.04}{.04}\F}}}{\h@e{.5}\h@e{1.5}}}%
+% gravestones on a 2x3 block, #1 the kind: 0 an arched stone with RIP, 1 a
+% pointed stone with a cross; both stand on one plinth (top \h@p) between \h@l
+% and \h@r. By the place none, one or two flaws (\h@C{type}{place}): a zigzag
+% crack, a branching one or a long jagged one from either edge at one of four
+% heights (\h@k: edge, height, direction, length, and a branch), or a chipped
+% corner
+\def\fancyqr@hw@tomb#1{\fancyqr@hw@var{19}\fancyqr@hw@D{tomb#1/\fancyqr@hw@h}{\def\h@l{.1}\def\h@r{1.9}%
+   \def\h@p{-1.72}\def\h@k##1##2##3##4##5{\M(##1,\fpeval{##2+.05})\h@z{##1}{##2}{##3}{##4}{.16}{-.06}%
+      \h@z{##1}{##2}{##3}{##4}{.12}{-.2}\h@z{##1}{##2}{##3}{##4}{.28}{-.38}\h@z{##1}{##2}{##3}{##4}{.15}{-.19}%
+      \h@z{##1}{##2}{##3}{##4}{.19}{-.07}\L(##1,\fpeval{##2-.04})\Z\F\ifnum##5=\@ne
+      \M(\fpeval{##1+##3*.14*##4},\fpeval{##2-.04*##4})\h@z{##1}{##2}{##3}{##4}{.32}{.05}%
+      \h@z{##1}{##2}{##3}{##4}{.17}{-.09}\Z\F\fi}%
+   \def\h@z##1##2##3##4##5##6{\L(\fpeval{##1+##3*##5*##4},\fpeval{##2+##6*##4})}%
+   \def\h@long##1##2##3{\M(##1,\fpeval{##2+.03})\h@z{##1}{##2}{##3}1{.18}{-.02}\h@z{##1}{##2}{##3}1{.3}{.05}%
+      \h@z{##1}{##2}{##3}1{.46}{-.03}\h@z{##1}{##2}{##3}1{.6}{.04}\h@z{##1}{##2}{##3}1{.8}{-.04}%
+      \h@z{##1}{##2}{##3}1{.92}0\h@z{##1}{##2}{##3}1{.78}{-.07}\h@z{##1}{##2}{##3}1{.6}{.01}%
+      \h@z{##1}{##2}{##3}1{.46}{-.08}\h@z{##1}{##2}{##3}1{.3}{-.01}\h@z{##1}{##2}{##3}1{.18}{-.07}%
+      \L(##1,\fpeval{##2-.03})\Z\F}%
+   \def\h@chip##1##2{\M(##1,.32)\L(##1,.06)\h@z{##1}0{##2}1{.1}{.12}\h@z{##1}0{##2}1{.05}{.2}%
+      \h@z{##1}0{##2}1{.14}{.26}\h@z{##1}0{##2}1{.06}{.3}\Z\F}%
+   \def\h@E##1{\ifodd##1 \h@r\else\h@l\fi}\def\h@D##1{\ifodd##1 -1\else1\fi}%
+   \def\h@Y##1{\ifcase##1 -1.15\or-.85\or-.95\else-1.32\fi}%
+   \def\h@C##1##2{\ifcase##1 \h@k{\h@E{##2}}{\h@Y{##2}}{\h@D{##2}}{1.15}0\or
+      \h@k{\h@E{##2}}{\h@Y{##2}}{\h@D{##2}}{1.35}\@ne\or\h@long{\h@E{##2}}{\h@Y{##2}}{\h@D{##2}}%
+      \else\h@chip{\h@E{##2}}{\h@D{##2}}\fi}}{%
+   \ifcase#1 \M(\h@l,-1.86)\L(\h@l,.2)\C(\h@l,.76)(.48,.97)(1,.97)\C(1.52,.97)(\h@r,.76)(\h@r,.2)%
+      \L(\h@r,-1.86)\Z\F
+   \else\M(\h@l,-1.86)\L(\h@l,.1)\C(\h@l,.6)(.6,.85)(1,.97)\C(1.4,.85)(\h@r,.6)(\h@r,.1)%
+      \L(\h@r,-1.86)\Z\F\fi
+   {\K{.!75!black}\M(.03,-1.97)\L(1.97,-1.97)\L(1.97,\h@p)\L(.03,\h@p)\Z\F
+   \K{.!45!black}\T{.06}\R
+   \ifcase#1 \T{.09}\M(.56,0)\L(.56,.44)\L(.7,.44)\C(.82,.44)(.82,.24)(.7,.24)\L(.56,.24)%
+      \M(.68,.24)\L(.82,0)\M(1,0)\L(1,.44)%
+      \M(1.2,0)\L(1.2,.44)\L(1.32,.44)\C(1.46,.44)(1.46,.22)(1.32,.22)\L(1.2,.22)\S
+      \T{.06}\M(.5,-.36)\L(1.5,-.36)\M(.62,-.6)\L(1.38,-.6)\S
+   \else\T{.08}\M(1,-.1)\L(1,.5)\M(.78,.28)\L(1.22,.28)\S
+      \T{.06}\M(.5,-.5)\L(1.5,-.5)\M(.62,-.74)\L(1.38,-.74)\S\fi
+   \ifcase\fancyqr@hw@dig13 \or\h@C{\fancyqr@hw@dig34}{\fancyqr@hw@dig{12}4}\else
+   \h@C{\fancyqr@hw@dig34}{\fancyqr@hw@dig{12}4}\h@C{\the\numexpr3-\fancyqr@hw@dig34\relax}{\the\numexpr3-\fancyqr@hw@dig{12}4\relax}\fi}}}%
+% a cross of six modules (a lone top, a row of three, the foot below): beam \h@b
+% high and post \h@p wide, chipped corners, on a small mound
+\def\fancyqr@hw@cross{\fancyqr@hw@D{cross}{\def\h@p{1.2}\def\h@q{1.8}\def\h@b{-.2}\def\h@c{-.8}}{%
+   \M(\h@p,-2.72)\L(\h@p,\h@c)\L(.12,\h@c)\L(.05,-.72)\L(.05,-.28)\L(.12,\h@b)\L(\h@p,\h@b)%
+   \L(\h@p,.88)\L(1.27,.96)\L(1.73,.96)\L(\h@q,.88)\L(\h@q,\h@b)\L(2.88,\h@b)\L(2.95,-.28)%
+   \L(2.95,-.72)\L(2.88,\h@c)\L(\h@q,\h@c)\L(\h@q,-2.72)\Z\F
+   {\K{.!75!black}\M(1.04,-2.97)\C(1.06,-2.7)(1.26,-2.6)(1.5,-2.6)\C(1.74,-2.6)(1.94,-2.7)(1.96,-2.97)\Z\F
+   \K{.!55!black}\T{.035}\R\M(\h@p,-.32)\L(1.34,-.46)\L(1.3,-.58)\M(\h@q,.4)\L(1.68,.3)\S}}}%
+% a fence of three pointed pickets on two rails: lying along a row of three
+% (H) or turned onto a column of three (V)
+\def\fancyqr@hw@fence#1#2{\fancyqr@hw@D{fence#1}{#2\def\h@p##1{\M(\P{##1-.2}{-.96})\L(\P{##1-.2}{.62})%
+      \L(\P{##1}{.96})\L(\P{##1+.2}{.62})\L(\P{##1+.2}{-.96})\Z}}{%
+   {\K{.!75!black}\M(\P{.04}{.12})\L(\P{2.96}{.12})\L(\P{2.96}{.34})\L(\P{.04}{.34})\Z\M(\P{.04}{-.62})\L(\P{2.96}{-.62})%
+   \L(\P{2.96}{-.4})\L(\P{.04}{-.4})\Z\F}\h@p{.5}\h@p{1.5}\h@p{2.5}\F
+   {\K{.!60!black}\Q{.5}{.5}{.05}{.05}\F\Q{1.5}{.5}{.05}{.05}\F\Q{2.5}{.5}{.05}{.05}\F}}}%
+% a witch hat on a lone module over a row of three: a bent cone that stands on
+% the brim (a, b), with a band (a, b, d, c) and a buckle; by the place the tip
+% bends left or right, more or less, the brim tilts (\h@t), is narrower (\h@w)
+% and the band higher (\h@g)
+\def\fancyqr@hw@hat{\fancyqr@hw@var{18}\fancyqr@hw@D{hat\fancyqr@hw@key{48}}{%
+   \ifnum\fancyqr@hw@dig12=\z@\else\fancyqr@hw@map{-1}00{1}{3}0\fi
+   \edef\h@t{\ifcase\fancyqr@hw@dig43 0\or.05\else-.05\fi}\edef\h@w{\ifnum\fancyqr@hw@dig{12}2=\z@.03\else.12\fi}%
+   \edef\h@g{\ifnum\fancyqr@hw@dig{24}2=\z@.1\else.17\fi}\edef\h@a{1.06,-.2}\edef\h@b{1.94,-.2}%
+   \edef\h@c{1.1,\h@g}\edef\h@d{1.9,\h@g}\edef\h@l{\h@w,\fpeval{-.42+\h@t}}\edef\h@r{\fpeval{3-\h@w},\fpeval{-.42-\h@t}}%
+   \def\h@u{\C(\fpeval{\h@w+.13},\fpeval{-.78+\h@t})(.7,-.95)(1.5,-.95)\C(2.3,-.95)(\fpeval{2.87-\h@w},\fpeval{-.78-\h@t})(\h@r)}}{%
+   \M(\h@l)\h@u\C(2.72,\fpeval{-.26-\h@t})(2.3,-.2)(\h@b)\L(\h@a)\C(.7,-.2)(.28,\fpeval{-.26+\h@t})(\h@l)\Z\F
+   \M(\Pn{1.06}{-.2})\L(\P{1.1}\h@g)\C(\Pn{1.22}{.45})(\Pn{1.32}{.68})(\Pn{1.48}{.82})%
+   \ifnum\fancyqr@hw@dig22=\z@\C(\Pn{1.62}{.95})(\Pn{1.8}{.98})(\Pn{1.96}{.9})\C(\Pn{1.82}{.84})(\Pn{1.74}{.72})(\Pn{1.76}{.5})%
+   \else\C(\Pn{1.58}{.94})(\Pn{1.7}{.97})(\Pn{1.8}{.92})\C(\Pn{1.72}{.86})(\Pn{1.7}{.72})(\Pn{1.74}{.5})\fi
+   \C(\Pn{1.78}{.32})(\Pn{1.84}{.2})(\P{1.9}\h@g)\L(\Pn{1.94}{-.2})\Z\F
+   {\K{.!80!black}\M(\h@l)\h@u\C(2.5,\fpeval{-.66-\h@t})(2,-.72)(1.5,-.72)\C(1,-.72)(.5,\fpeval{-.66+\h@t})(\h@l)\Z\F
+   \K{.!55!black}\M(\h@a)\L(\h@b)\L(\h@d)\L(\h@c)\Z\F
+   \K{.!60!white}\M(1.4,-.15)\L(1.6,-.15)\L(1.6,\fpeval{\h@g-.05})\L(1.4,\fpeval{\h@g-.05})\Z
+   \M(1.45,-.1)\L(1.45,\fpeval{\h@g-.1})\L(1.55,\fpeval{\h@g-.1})\L(1.55,-.1)\Z\F}}}%
+% bats: one head with ears and eyes (\fancyqr@hw@bathead, around (1.5,.6), the
+% ears tilted out by \h@q); a flying one on a lone row of three, its wings
+% growing from a short body with two small feet, their tips at height \h@ty,
+% darker along their scalloped hem (the curves \h@e, \h@c); or, mapped upside
+% down onto a lone bar of two (or under a branch), hanging with folded wings
+\def\fancyqr@hw@bathead{\Q{1.5}{.6}{.25}{.25}\F
+   \M(\Pn{1.36}{.74})\L(\P{1.32-\h@q}{.97})\L(\Pn{1.48}{.8})\Z\F
+   \M(\Pn{1.64}{.74})\L(\P{1.68+\h@q}{.97})\L(\Pn{1.52}{.8})\Z\F
+   {\K{.!45!yellow}\Q{1.41}{.62}{.05}{.05}\Q{1.59}{.62}{.05}{.05}\F}}%
+\def\fancyqr@hw@bat{\fancyqr@hw@var{20}\fancyqr@hw@D{bat\fancyqr@hw@key6}{\def\h@x##1##2{\fpeval{##1##2}}%
+   \edef\h@q{\ifnum\fancyqr@hw@dig12=\z@0\else.05\fi}\edef\h@ty{\ifcase\fancyqr@hw@dig23 .97\or.88\else.8\fi}%
+   \def\h@w##1{%
+      \M(\h@x{##1}{1.4},.62)\C(\h@x{##1}{1},\fpeval{\h@ty-.09})(\h@x{##1}{.5},\fpeval{\h@ty-.03})(\h@x{##1}{.03},\h@ty)%
+      \C(\h@x{##1}{.12},\fpeval{\h@ty-.17})(\h@x{##1}{.18},.6)(\h@x{##1}{.17},.4)\h@e{##1}\h@c{##1}%
+      \C(\h@x{##1}{1.08},.2)(\h@x{##1}{1.2},.16)(\h@x{##1}{1.4},.12)\Z}%
+   \def\h@v##1{\M(\h@x{##1}{.17},.4)\h@e{##1}\h@c{##1}\C(\h@x{##1}{.9},.34)(\h@x{##1}{.5},.42)(\h@x{##1}{.17},.4)\Z}%
+   \def\h@e##1{\C(\h@x{##1}{.16},.28)(\h@x{##1}{.15},.2)(\h@x{##1}{.14},.1)}%
+   \def\h@c##1{\C(\h@x{##1}{.26},.28)(\h@x{##1}{.42},.28)(\h@x{##1}{.54},.08)%
+      \C(\h@x{##1}{.64},.28)(\h@x{##1}{.88},.3)(\h@x{##1}{1},.1)}}{%
+   \h@w{}\F\h@w{3-}\F\Q{1.5}{.38}{.24}{.3}\F\fancyqr@hw@bathead
+   {\K{.!75!black}\h@v{}\F\h@v{3-}\F\T{.045}\R\M(1.43,.14)\L(1.4,.06)\M(1.57,.14)\L(1.6,.06)\S}}}%
+% the classic bat with open wings on a lone module (or a timing module): a round
+% body and head, small pointed ears, tiny feet and wings with a scalloped hem and
+% thin pale ribs that stay inside the module; the tips at height \h@t, the ears
+% tilted out by \h@q, all dark over the center
+\def\fancyqr@hw@openbat{\fancyqr@hw@var{23}\fancyqr@hw@D{obat\fancyqr@hw@key6}{\def\h@x##1##2{\fpeval{.5+.8*(##1##2-.5)}}%
+   \edef\h@t{\ifcase\fancyqr@hw@dig13 .82\or.74\else.88\fi}\edef\h@q{\ifnum\fancyqr@hw@dig32=\z@0\else.03\fi}%
+   \def\h@y##1{\fpeval{\h@t##1}}%
+   \def\h@w##1{\M(\h@x{##1}{.56},.6)\C(\h@x{##1}{.68},\h@y{+.1})(\h@x{##1}{.9},\h@y{+.08})(\h@x{##1}{1.1},\h@t)%
+      \C(\h@x{##1}{1.08},\h@y{-.12})(\h@x{##1}{1.04},\h@y{-.24})(\h@x{##1}1,\h@y{-.35})%
+      \C(\h@x{##1}{.96},\h@y{-.2})(\h@x{##1}{.88},\h@y{-.2})(\h@x{##1}{.84},\h@y{-.43})%
+      \C(\h@x{##1}{.8},\h@y{-.26})(\h@x{##1}{.72},\h@y{-.26})(\h@x{##1}{.66},\h@y{-.52})%
+      \C(\h@x{##1}{.62},\h@y{-.34})(\h@x{##1}{.58},\h@y{-.34})(\h@x{##1}{.56},.36)\Z}%
+   \def\h@f##1{\M(\h@x{##1}{.68},.6)\L(\h@x{##1}{1.06},\h@y{-.04})\M(\h@x{##1}{.68},.57)\L(\h@x{##1}{.97},\h@y{-.3})%
+      \M(\h@x{##1}{.66},.52)\L(\h@x{##1}{.8},\h@y{-.38})}}{%
+   \h@w{}\F\h@w{1-}\F
+   {\K{.!82!white}\T{.012}\R\h@f{}\h@f{1-}\S}%
+   \Q{.5}{.47}{.12}{.19}\F\Q{.5}{.69}{.1}{.095}\F
+   \M(.42,.72)\C(.41,.8)(\fpeval{.42-\h@q},.88)(\fpeval{.43-\h@q},.95)\C(.46,.9)(.48,.85)(.5,.8)\Z
+   \M(.58,.72)\C(.59,.8)(\fpeval{.58+\h@q},.88)(\fpeval{.57+\h@q},.95)\C(.54,.9)(.52,.85)(.5,.8)\Z\F
+   \Q{.46}{.27}{.022}{.04}\F\Q{.54}{.27}{.022}{.04}\F
+   {\K{.!45!yellow}\Q{.46}{.7}{.025}{.025}\F\Q{.54}{.7}{.025}{.025}\F}}}%
+% a pumpkin on a lone module, by the place: plain with ribs, a jack-o'-lantern
+% (the glowing eyes and grin stay off the center), squat with a curly stem or tall
+\def\fancyqr@hw@pump#1{\fancyqr@hw@D{pump#1}{}{%
+   \K{.!55!orange!80!black}\csname fancyqr@hw@pump@#1\endcsname}}%
+\def\fancyqr@hw@pump@lobes#1#2#3#4{\Q{.5-#1}{#2}{#3}{#4}\F\Q{.5+#1}{#2}{#3}{#4}\F\Q{.5}{#2}{#3}{#4+.03}\F}%
+\def\fancyqr@hw@pump@a{\fancyqr@hw@pump@lobes{.2}{.44}{.2}{.3}%
+   {\K{.!45!black}\T{.03}\R\M(.42,.7)\C(.35,.55)(.35,.3)(.42,.18)\M(.58,.7)\C(.65,.55)(.65,.3)(.58,.18)\S}%
+   {\K{.!50!black}\M(.46,.72)\L(.48,.88)\L(.56,.88)\L(.54,.72)\Z\F}}%
+\def\fancyqr@hw@pump@b{\fancyqr@hw@pump@lobes{.2}{.44}{.2}{.3}%
+   {\K{yellow!75!orange}\M(.28,.5)\L(.44,.5)\L(.36,.66)\Z\M(.56,.5)\L(.72,.5)\L(.64,.66)\Z
+   \M(.27,.36)\L(.36,.28)\L(.44,.34)\L(.5,.27)\L(.56,.34)\L(.64,.28)\L(.73,.36)\C(.66,.18)(.34,.18)(.27,.36)\Z\F}%
+   {\K{.!50!black}\M(.46,.72)\L(.48,.88)\L(.56,.88)\L(.54,.72)\Z\F}}%
+\def\fancyqr@hw@pump@c{\fancyqr@hw@pump@lobes{.23}{.4}{.22}{.26}%
+   {\K{.!45!black}\T{.03}\R\M(.4,.62)\C(.34,.5)(.34,.3)(.4,.2)\M(.6,.62)\C(.66,.5)(.66,.3)(.6,.2)\S}%
+   {\K{.!50!black}\T{.05}\R\M(.5,.62)\C(.5,.78)(.62,.88)(.7,.82)\C(.76,.77)(.7,.7)(.64,.74)\S}}%
+\def\fancyqr@hw@pump@d{\fancyqr@hw@pump@lobes{.12}{.48}{.15}{.38}%
+   {\K{.!45!black}\T{.03}\R\M(.44,.8)\C(.4,.6)(.4,.36)(.44,.18)\M(.56,.8)\C(.6,.6)(.6,.36)(.56,.18)\S}%
+   {\K{.!50!black}\M(.46,.84)\L(.48,.95)\L(.55,.95)\L(.54,.84)\Z\F}}%
+% a round slime blob with two curved horns, light eyes, a grin and a pointed
+% tail, on a lone module
+\def\fancyqr@hw@devil{\fancyqr@hw@D{devil}{}{%
+   \Q{.5}{.4}{.34}{.3}\F\M(.3,.6)\C(.22,.72)(.2,.84)(.27,.93)\C(.31,.82)(.38,.76)(.42,.66)\Z
+   \M(.7,.6)\C(.78,.72)(.8,.84)(.73,.93)\C(.69,.82)(.62,.76)(.58,.66)\Z\F
+   {\K{.!70!white}\Q{.37}{.46}{.07}{.08}\F\Q{.63}{.46}{.07}{.08}\F}%
+   {\K{.!35!black}\Q{.38}{.45}{.03}{.04}\F\Q{.62}{.45}{.03}{.04}\F\T{.04}\R\M(.34,.28)\C(.42,.18)(.58,.18)(.66,.28)\S
+   \M(.8,.3)\C(.9,.3)(.94,.22)(.9,.15)\S\M(.84,.17)\L(.88,.06)\L(.95,.17)\Z\F}}}%
+% a hanging iron lantern on a column of #1 modules (a chain from a ring, a roof,
+% a cage with a pale glow around a yellow core between the module centers, the
+% bars over it, a base); a street lamp and a jack-o'-lantern on a post stand
+% on a column of three, and a taller candle with a wax drip on a bar of two
+\def\fancyqr@hw@lantern#1{\fancyqr@hw@D{lantern#1}{\edef\h@b{\ifnum#1=2 -.88\else-1.85\fi}%
+   \edef\h@f{\fpeval{\h@b+.12}}\edef\h@m{\fpeval{(.28+\h@f)/2}}\edef\h@h{\fpeval{(.28-\h@f)/2}}}{%
+   \M(\P{.46}{.9})\L(\P{.54}{.9})\L(\P{.54}{.4})\L(\P{.46}{.4})\Z\F\Q{.5}{.9}{.1}{.09}\F
+   \M(.04,.26)\L(.5,.52)\L(.96,.26)\Z\F
+   \M(.16,.28)\L(.84,.28)\L(.88,\h@f)\L(.12,\h@f)\Z\F
+   {\K{yellow!30!white}\Q{.5}{\h@m}{.28}{\fpeval{.82*\h@h}}\F\K{yellow!75!orange}\Q{.5}{\h@m}{.15}{\fpeval{.45*\h@h}}\F}%
+   {\K{.!35!black}\T{.045}\M(.39,.28)\L(.38,\h@f)\M(.61,.28)\L(.62,\h@f)\S}%
+   \M(.06,\h@f)\L(.94,\h@f)\L(.86,\h@b)\L(.14,\h@b)\Z\F}}%
+\def\fancyqr@hw@tallcandle{\fancyqr@hw@D{tallcandle}{}{%
+   {\K{yellow!22!white}\Q{.5}{.8}{.3}{.2}\F}\M(.3,-.9)\L(.3,.42)\L(.7,.42)\L(.7,-.9)\Z\F\M(.6,.42)\L(.72,.42)\C(.74,.3)(.76,.16)(.72,.12)\C(.69,.09)(.66,.14)(.66,.22)\L(.6,.3)\Z\M(.4,.42)\L(.3,.42)\C(.27,.3)(.27,.04)(.29,.0)\C(.31,-.03)(.34,.02)(.34,.1)\L(.4,.25)\Z\F
+   {\K{.!60!black}\Q{.5}{.42}{.2}{.05}\F\T{.05}\R\M(.5,.46)\L(.5,.6)\S}%
+   {\K{yellow!75!orange}\M(.5,.62)\C(.62,.72)(.6,.86)(.5,.98)\C(.4,.86)(.38,.72)(.5,.62)\Z\F}}}%
+\def\fancyqr@hw@streetlamp{\fancyqr@hw@D{streetlamp}{}{%
+   \M(.43,-1.9)\L(.57,-1.9)\L(.55,.42)\L(.45,.42)\Z\F\M(.25,-1.95)\L(.75,-1.95)\L(.62,-1.7)\L(.38,-1.7)\Z\F
+   \M(.2,.4)\L(.8,.4)\L(.74,.5)\L(.26,.5)\Z\F\M(.28,.5)\L(.72,.5)\L(.78,.9)\L(.22,.9)\Z\F
+   \M(.12,.9)\L(.5,.99)\L(.88,.9)\Z\F
+   {\K{yellow!35!white}\Q{.5}{.7}{.2}{.17}\F\K{yellow!75!orange}\Q{.5}{.7}{.1}{.1}\F}%
+   {\K{.!35!black}\T{.04}\R\M(.5,.52)\L(.5,.89)\S}}}%
+\def\fancyqr@hw@jacklamp{\fancyqr@hw@D{jacklamp}{}{%
+   \M(.43,-1.9)\L(.57,-1.9)\L(.55,.42)\L(.45,.42)\Z\F\M(.25,-1.95)\L(.75,-1.95)\L(.62,-1.7)\L(.38,-1.7)\Z\F
+   \Q{.28}{.7}{.2}{.3}\F\Q{.72}{.7}{.2}{.3}\F\Q{.5}{.7}{.24}{.31}\F
+   {\K{.!50!black}\M(.46,.96)\L(.48,.99)\L(.56,.99)\L(.54,.96)\Z\F}%
+   {\K{yellow!75!orange}\M(.3,.72)\L(.44,.72)\L(.37,.86)\Z\M(.56,.72)\L(.7,.72)\L(.63,.86)\Z
+   \M(.3,.6)\L(.4,.55)\L(.5,.6)\L(.6,.55)\L(.7,.6)\C(.64,.5)(.36,.5)(.3,.6)\Z\F}}}%
+% a candelabra with three candles, flames with pale halos, on a 3x2 block; the
+% arms run through the lower centers
+\def\fancyqr@hw@candelabra{\fancyqr@hw@D{candelabra}{\def\h@c##1{\M(\fpeval{##1-.12},.06)\L(\fpeval{##1-.12},.62)\L(\fpeval{##1+.12},.62)\L(\fpeval{##1+.12},.06)\Z\F
+      \M(\fpeval{##1-.17},.1)\L(\fpeval{##1+.17},.1)\L(\fpeval{##1+.1},-.04)\L(\fpeval{##1-.1},-.04)\Z\F}%
+   \def\h@f##1{{\K{yellow!22!white}\Q{##1}{.8}{.2}{.17}\F}%
+      {\K{yellow!75!orange}\M(##1,.66)\C(\fpeval{##1+.1},.74)(\fpeval{##1+.08},.86)(##1,.97)\C(\fpeval{##1-.08},.86)(\fpeval{##1-.1},.74)(##1,.66)\Z\F}}}{%
+   \h@c{.5}\h@c{1.5}\h@c{2.5}%
+   \T{.1}\R\M(1.5,-.95)\L(1.5,.06)\M(.5,.04)\L(.5,-.5)\C(.5,-.8)(1.2,-.78)(1.5,-.78)\M(2.5,.04)\L(2.5,-.5)\C(2.5,-.8)(1.8,-.78)(1.5,-.78)\S
+   \M(.8,-.96)\L(2.2,-.96)\L(2.0,-.76)\L(1.0,-.76)\Z\F
+   \h@f{.5}\h@f{1.5}\h@f{2.5}}}%
+% a scythe on an L of four (A: the handle on the left, B: mirrored): the handle
+% down the column with a ferrule and a knob, the blade over the top row curving
+% to a tip, a pale edge on its upper side only
+\def\fancyqr@hw@scythe#1#2{\fancyqr@hw@D{scythe#1}{#2}{%
+   {\K{.!60!black}\T{.11}\R\M(\P{.5}{-1.8})\L(\P{.5}{.5})\S\T{.15}\M(\P{.5}{-1.8})\L(\P{.5}{-1.78})\S}%
+   {\K{.!60!black}\T{.07}\R\M(\P{.5}{-.62})\L(\P{.74}{-.5})\S}%
+   \M(\P{.42}{.58})\C(\P{.75}{1})(\P{1.5}{1})(\P{1.97}{.36})\C(\P{1.62}{.5})(\P{1.05}{.38})(\P{.5}{.24})\Z\F
+   {\K{.!35!white}\T{.035}\R\M(\P{.62}{.74})\C(\P{.86}{.93})(\P{1.45}{.93})(\P{1.84}{.46})\S}%
+   {\K{.!45!black}\T{.07}\M(\P{.43}{.27})\L(\P{.57}{.27})\M(\P{.43}{.17})\L(\P{.57}{.17})\S}}}%
+% a broom drawn lying with the bristles to the left on a row of three: a handle
+% through the centers, a straw head with frayed ends and strands, two bindings;
+% #1 names it, #2 mirrors or turns it upright
+\def\fancyqr@hw@broombody{%
+   {\K{.!55!black}\T{.09}\R\M(\P{.9}{.5})\L(\P{2.93}{.5})\S}%
+   \M(\P{1}{.6})\C(\P{.7}{.62})(\P{.4}{.8})(\P{.12}{.86})\L(\P{.07}{.8})\L(\P{.15}{.74})\L(\P{.06}{.66})\L(\P{.15}{.6})%
+   \L(\P{.05}{.5})\L(\P{.15}{.42})\L(\P{.06}{.34})\L(\P{.15}{.28})\L(\P{.07}{.2})\L(\P{.12}{.14})%
+   \C(\P{.4}{.2})(\P{.7}{.38})(\P{1}{.4})\Z\F
+   {\K{.!60!black}\T{.025}\R\M(\P{.95}{.5})\L(\P{.12}{.8})\M(\P{.95}{.5})\L(\P{.1}{.65})\M(\P{.95}{.5})\L(\P{.08}{.5})%
+   \M(\P{.95}{.5})\L(\P{.1}{.35})\M(\P{.95}{.5})\L(\P{.12}{.2})\S
+   \K{.!40!black}\M(\P{.9}{.38})\L(\P{1.04}{.4})\L(\P{1.04}{.6})\L(\P{.9}{.62})\Z
+   \M(\P{.6}{.32})\L(\P{.68}{.34})\L(\P{.68}{.66})\L(\P{.6}{.68})\Z\F}%
+   \Q{2.93}{.5}{.06}{.06}\F}%
+\def\fancyqr@hw@broom#1#2{\fancyqr@hw@D{broom#1}{#2}{\fancyqr@hw@broombody}}%
+% a whole bone on a row of three (or upright): a shaft with a knob pair at each end
+\def\fancyqr@hw@bonewhole#1#2{\fancyqr@hw@D{wbone#1}{#2}{%
+   \M(\P{.3}{.38})\L(\P{2.7}{.38})\L(\P{2.7}{.62})\L(\P{.3}{.62})\Z\F
+   \Q{.27}{.67}{.17}{.17}\F\Q{.27}{.33}{.17}{.17}\F\Q{2.73}{.67}{.17}{.17}\F\Q{2.73}{.33}{.17}{.17}\F
+   {\K{.!70!black}\T{.03}\R\M(\P{.6}{.5})\L(\P{1.3}{.5})\M(\P{1.7}{.46})\L(\P{2.4}{.46})\S}}}%
+% a candy cane on a bar of two, lying with the hook to the right or upright
+\def\fancyqr@hw@cane#1#2{\fancyqr@hw@D{cane#1}{#2}{%
+   {\K{.!60!black}\T{.24}\R\M(\P{.2}{.5})\L(\P{1.4}{.5})\C(\P{1.72}{.5})(\P{1.78}{.88})(\P{1.52}{.86})\C(\P{1.42}{.85})(\P{1.38}{.78})(\P{1.4}{.72})\S}%
+   \T{.17}\R\M(\P{.2}{.5})\L(\P{1.4}{.5})\C(\P{1.72}{.5})(\P{1.78}{.88})(\P{1.52}{.86})\C(\P{1.42}{.85})(\P{1.38}{.78})(\P{1.4}{.72})\S
+   {\K{.!60!black}\T{.06}\R\M(\P{.4}{.4})\L(\P{.52}{.6})\M(\P{.7}{.4})\L(\P{.82}{.6})\M(\P{1}{.4})\L(\P{1.12}{.6})\M(\P{1.3}{.4})\L(\P{1.42}{.6})\S}}}%
+% a witch on a broom over a row of three, flying right: hair and hat streaming
+% back, a skirt with a ragged hem, an arm on the handle, a pale face with a nose
+\def\fancyqr@hw@witchfly{\fancyqr@hw@D{witchfly}{}{\fancyqr@hw@broombody
+   {\K{.!45!black}\M(1.7,.72)\C(1.55,.74)(1.4,.68)(1.25,.62)\L(1.3,.54)\C(1.45,.58)(1.58,.6)(1.7,.62)\Z\F}%
+   \M(1.42,.52)\C(1.3,.4)(1.25,.25)(1.2,.12)\L(1.32,.2)\L(1.4,.1)\L(1.5,.18)\L(1.6,.1)\L(1.68,.2)\L(1.78,.12)\C(1.84,.3)(1.86,.42)(1.88,.52)\Z\F
+   \M(1.4,.5)\C(1.42,.62)(1.52,.68)(1.68,.7)\C(1.82,.7)(1.88,.62)(1.88,.5)\Z\F
+   {\K{.!75!black}\T{.07}\R\M(1.78,.64)\L(2.15,.54)\S}%
+   {\K{.!35!white}\Q{1.8}{.72}{.085}{.085}\F\M(1.88,.72)\L(1.97,.68)\L(1.88,.66)\Z\F}%
+   \M(1.62,.79)\C(1.64,.88)(1.66,.95)(1.56,.98)\C(1.78,.95)(1.84,.88)(1.96,.79)\Z\F\Q{1.78}{.79}{.22}{.035}\F}}%
+% a standing witch with a stirring pot on a 2x3 block: a bent pointed hat with a
+% band over a brim, hair, a pale profile with a nose, a flowing dress with a
+% ragged hem and an arm to the stick of a cauldron (a brew that glows green,
+% bubbles, lugs, on a fire or on legs by the place); the stick runs through the
+% centers on the right, the hat band, the dress and the pot over the others
+\def\fancyqr@hw@witch#1#2{\fancyqr@hw@var{33}\fancyqr@hw@D{witch#1\fancyqr@hw@dig12}{#2}{%
+   {\K{.!50!black}\M(\P{.34}{.36})\C(\P{.14}{.24})(\P{.06}{-.1})(\P{.14}{-.55})\C(\P{.2}{-.66})(\P{.32}{-.56})(\P{.36}{-.42})\L(\P{.44}{-.05})\Z\F}%
+   \M(\P{.4}{-.1})\C(\P{.56}{-.16})(\P{.66}{-.3})(\P{.7}{-.55})\C(\P{.8}{-1.1})(\P{.95}{-1.6})(\P{1.08}{-1.88})\L(\P{.97}{-1.99})\L(\P{.87}{-1.86})\L(\P{.75}{-1.99})%
+   \L(\P{.63}{-1.85})\L(\P{.51}{-1.98})\L(\P{.39}{-1.86})\L(\P{.27}{-1.99})\L(\P{.15}{-1.87})\L(\P{.04}{-1.97})\C(\P{.07}{-1.5})(\P{.16}{-1})(\P{.24}{-.6})%
+   \C(\P{.26}{-.4})(\P{.3}{-.2})(\P{.4}{-.1})\Z\F
+   {\K{.!75!black}\M(\P{.27}{-.62})\L(\P{.7}{-.58})\L(\P{.69}{-.48})\L(\P{.26}{-.52})\Z\F
+   \M(\P{.56}{-.22})\C(\P{.8}{-.2})(\P{1.1}{-.28})(\P{1.38}{-.38})\L(\P{1.4}{-.5})\C(\P{1.1}{-.46})(\P{.8}{-.46})(\P{.6}{-.5})\Z\F}%
+   {\K{.!35!white}\Q{1.4}{-.44}{.055}{.06}\F\M(\P{.34}{.36})\L(\P{.6}{.36})\C(\P{.6}{.3})(\P{.61}{.25})(\P{.63}{.2})\L(\P{.73}{.1})\L(\P{.63}{.08})%
+   \C(\P{.64}{.04})(\P{.64}{0})(\P{.62}{-.04})\L(\P{.6}{-.09})\C(\P{.5}{-.15})(\P{.4}{-.13})(\P{.34}{-.05})\Z\F}%
+   {\K{.!25!black}\Q{.52}{.2}{.025}{.025}\F}%
+   \Q{.5}{.38}{.55}{.07}\F\M(\P{.27}{.4})\C(\P{.32}{.62})(\P{.4}{.8})(\P{.54}{.9})\C(\P{.66}{.97})(\P{.8}{.96})(\P{.9}{.86})\C(\P{.78}{.88})(\P{.68}{.84})(\P{.66}{.74})%
+   \C(\P{.64}{.62})(\P{.68}{.5})(\P{.74}{.42})\Z\F
+   {\K{.!55!black}\M(\P{.29}{.44})\L(\P{.73}{.44})\L(\P{.71}{.53})\L(\P{.31}{.53})\Z\F}%
+   \ifnum\fancyqr@hw@dig12=\z@
+      {\K{.!50!black}\T{.1}\R\M(\P{1.1}{-1.93})\L(\P{1.9}{-1.82})\M(\P{1.1}{-1.82})\L(\P{1.9}{-1.93})\S}%
+      {\K{yellow!75!orange}\M(\P{1.12}{-1.95})\C(\P{1.04}{-1.8})(\P{1.18}{-1.7})(\P{1.1}{-1.52})\C(\P{1.3}{-1.66})(\P{1.36}{-1.82})(\P{1.32}{-1.95})\Z
+      \M(\P{1.68}{-1.95})\C(\P{1.64}{-1.8})(\P{1.7}{-1.66})(\P{1.9}{-1.52})\C(\P{1.82}{-1.7})(\P{1.96}{-1.8})(\P{1.88}{-1.95})\Z
+      \M(\P{1.4}{-1.96})\C(\P{1.34}{-1.86})(\P{1.44}{-1.8})(\P{1.5}{-1.72})\C(\P{1.56}{-1.8})(\P{1.66}{-1.86})(\P{1.6}{-1.96})\Z\F
+      \K{yellow!30!white}\Q{1.5}{-1.93}{.05}{.03}\F}%
+   \else{\K{.!45!black}\T{.1}\R\M(\P{1.2}{-1.72})\L(\P{1.1}{-1.97})\M(\P{1.8}{-1.72})\L(\P{1.9}{-1.97})\M(\P{1.5}{-1.78})\L(\P{1.5}{-1.97})\S}\fi
+   {\K{.!40!black}\Q{1.04}{-1.15}{.05}{.07}\F\Q{1.95}{-1.15}{.05}{.07}\F}%
+   {\K{green!30!white}\Q{1.5}{-.95}{.5}{.15}\F}%
+   \Q{1.5}{-1.38}{.5}{.4}\F
+   {\K{.!35!black}\Q{1.5}{-1}{.45}{.08}\F}%
+   {\K{green!70!yellow}\Q{1.5}{-1}{.37}{.05}\F\K{yellow!60!green!30!white}\Q{1.38}{-1}{.12}{.02}\F
+   \K{green!60!yellow!60!white}\Q{1.34}{-.88}{.05}{.05}\F\Q{1.68}{-.84}{.04}{.04}\F\Q{1.58}{-.72}{.03}{.03}\F\Q{1.3}{-.72}{.02}{.02}\F}%
+   {\K{.!55!black}\T{.09}\R\M(\P{1.5}{.6})\L(\P{1.5}{-.99})\S\M(\P{1.5}{.6})\C(\P{1.5}{.8})(\P{1.35}{.85})(\P{1.3}{.75})\S}}}%
+\def\fancyqr@hw@roost{\fancyqr@hw@D{roost}{}{%
+   \M(.04,.4)\C(.6,.34)(1,.5)(1.5,.45)\C(2,.4)(2.5,.34)(2.96,.42)\L(2.96,.62)\C(2.5,.55)(2,.62)(1.5,.66)%
+   \C(1,.7)(.6,.58)(.04,.62)\Z\F\M(.8,.6)\C(.9,.72)(1,.8)(1.12,.9)\L(1.18,.84)\C(1.06,.74)(.98,.66)(.92,.57)\Z\F
+   {\K{.!70!black}\T{.025}\R\M(.2,.52)\C(.5,.48)(.8,.56)(1.1,.54)\M(1.9,.5)\C(2.2,.48)(2.5,.44)(2.8,.5)\S
+   \Q{2.2}{.53}{.06}{.04}\F}}\put(1.14,-.23){\unitlength=.72\unitlength\fancyqr@hw@hangbatx}}%
+\def\fancyqr@hw@hangbat{\fancyqr@hw@D{hangbat}{\fancyqr@hw@map{1}{0}{0}{-1}{-1}{0}\def\h@q{0}}{%
+   \M(.5,.9)\C(.86,.8)(.94,.2)(.8,-.3)\C(.72,-.52)(.62,-.56)(.5,-.56)%
+   \C(.38,-.56)(.28,-.52)(.2,-.3)\C(.06,.2)(.14,.8)(.5,.9)\Z\F\fancyqr@hw@bathead
+   {\K{.!75!black}\M(.5,.9)\C(.7,.8)(.74,.2)(.66,-.4)\C(.6,-.2)(.56,.3)(.5,.9)\Z
+   \M(.5,.9)\C(.3,.8)(.26,.2)(.34,-.4)\C(.4,-.2)(.44,.3)(.5,.9)\Z\F
+   \T{.05}\R\M(.44,.86)\L(.42,.96)\M(.56,.86)\L(.58,.96)\S}}}%
+% sweets on a lone module, by the place: a bonbon with twisted ends (wide or
+% narrow), a lollipop, a candy corn (bands from \h@a up to \h@b, its sides
+% \h@x, \h@y) or a toffee; all wrappers and bands darker, highlights lighter
+\def\fancyqr@hw@sweet#1{\fancyqr@hw@D{sw#1\fancyqr@hw@key{16}}{\edef\h@k{#1}%
+   \edef\h@w{\ifnum\fancyqr@hw@dig42=\z@.3\else.21\fi}%
+   \def\h@t##1{\M(\fpeval{.5##1.24},.5)\L(\fpeval{.5##1.45},\fpeval{.5+\h@w})\C(\fpeval{.5##1.47},\fpeval{.5+.6*\h@w})%
+      (\fpeval{.5##1.47},\fpeval{.5-.6*\h@w})(\fpeval{.5##1.45},\fpeval{.5-\h@w})\Z\F}%
+   \def\h@x##1{\fpeval{.14+.3*(##1-.1)/.76}}\def\h@y##1{\fpeval{.86-.3*(##1-.1)/.76}}}{%
+   \ifcase\h@k\space\Q{.5}{.5}{.3}{.28}\F{\K{.!70!black}\h@t-\h@t+\ifnum\fancyqr@hw@dig82=\z@
+      \M(.36,.3)\L(.46,.26)\L(.66,.72)\L(.56,.76)\Z\F\K{.!65!white}\Q{.41}{.62}{.08}{.045}\F\else
+      \K{.!65!white}\Q{.38}{.58}{.04}{.04}\F\Q{.6}{.38}{.04}{.04}\F\Q{.62}{.64}{.04}{.04}\F\Q{.44}{.38}{.035}{.035}\F\fi}%
+   \or\M(.45,.05)\L(.55,.05)\L(.55,.3)\L(.45,.3)\Z\F\Q{.5}{.58}{.34}{.34}\F
+      {\K{.!60!black}\T{.05}\R\M(.5,.58)\C(.62,.58)(.62,.74)(.5,.74)\C(.32,.74)(.3,.48)(.5,.43)%
+      \C(.72,.38)(.76,.72)(.58,.84)\S}%
+   \or\M(.14,.1)\L(.86,.1)\L(.56,.86)\C(.53,.93)(.47,.93)(.44,.86)\Z\F
+      {\K{.!70!black}\M(.14,.1)\L(.86,.1)\L(\h@y{.32},.32)\L(\h@x{.32},.32)\Z\F
+      \K{.!60!white}\M(\h@x{.68},.68)\L(\h@y{.68},.68)\L(.56,.86)\C(.53,.93)(.47,.93)(.44,.86)\Z\F}%
+   \or\M(.34,.3)\L(.66,.3)\C(.71,.3)(.74,.33)(.74,.38)\L(.74,.62)\C(.74,.67)(.71,.7)(.66,.7)%
+      \L(.34,.7)\C(.29,.7)(.26,.67)(.26,.62)\L(.26,.38)\C(.26,.33)(.29,.3)(.34,.3)\Z\F
+      {\K{.!70!black}\h@t-\h@t+\M(.37,.3)\L(.43,.3)\L(.43,.7)\L(.37,.7)\Z\M(.57,.3)\L(.63,.3)\L(.63,.7)%
+      \L(.57,.7)\Z\F}%
+   \or\Q{.5}{.5}{.4}{.4}\F{\K{.!65!black}\fancyqr@hw@rays\F\K{.!70!white}\Q{.34}{.68}{.05}{.04}\F\Q{.68}{.3}{.04}{.04}\F}%
+   \else\M(.2,.18)\L(.8,.18)\C(.84,.5)(.7,.84)(.5,.84)\C(.3,.84)(.16,.5)(.2,.18)\Z\F
+      {\K{.!70!white}\Q{.34}{.4}{.035}{.035}\F\Q{.66}{.4}{.035}{.035}\F\Q{.5}{.7}{.035}{.035}\F\Q{.32}{.58}{.03}{.03}\F\Q{.68}{.58}{.03}{.03}\F}%
+      {\K{.!60!black}\M(.18,.14)\L(.82,.14)\L(.8,.22)\L(.2,.22)\Z\F}\fi}}%
+\def\fancyqr@hw@rays{\M(.5,.5)\L(.5,.9)\L(.3,.86)\Z\M(.5,.5)\L(.87,.35)\L(.84,.58)\Z\M(.5,.5)\L(.2,.2)\L(.5,.1)\Z}%
+% small things on a lone module, by the place: a skull, an eyeball, a pumpkin or
+% jack-o'-lantern (the cores, smaller), a candle with a flame, a bat, a potion
+% and crossed bones; all dark over the center, details darker, lights lighter
+\def\fancyqr@hw@tiny#1{\ifnum#1=\tw@\put(.5,.5){\unitlength=.9\unitlength\fancyqr@hw@cpumpkin}\else
+   \ifnum#1=\thr@@\put(.5,.5){\unitlength=.9\unitlength\fancyqr@hw@cjack}\else
+   \fancyqr@hw@D{tiny#1}{}{%
+   \ifcase#1\space\Q{.5}{.56}{.36}{.33}\F\M(.33,.32)\L(.67,.32)\L(.64,.12)\C(.63,.09)(.61,.08)(.58,.08)%
+      \L(.42,.08)\C(.39,.08)(.37,.09)(.36,.12)\Z\F{\K{.!40!black}\Q{.37}{.54}{.09}{.1}\F\Q{.63}{.54}{.09}{.1}\F
+      \M(.5,.42)\L(.54,.33)\L(.46,.33)\Z\F\T{.03}\R\M(.45,.22)\L(.45,.12)\M(.55,.22)\L(.55,.12)\S}%
+   \or\Q{.5}{.5}{.4}{.4}\F{\K{.!55!black}\Q{.5}{.5}{.2}{.2}\F\K{.!25!black}\Q{.5}{.5}{.1}{.1}\F
+      \K{.!65!white}\Q{.43}{.57}{.04}{.04}\F\K{.!70!black}\T{.025}\R\M(.12,.5)\C(.18,.56)(.22,.48)(.3,.5)%
+      \M(.82,.42)\C(.78,.36)(.74,.42)(.7,.4)\M(.6,.86)\C(.58,.8)(.62,.76)(.6,.7)\S}%
+   \or\or\or\M(.36,.06)\L(.64,.06)\L(.64,.6)\C(.6,.64)(.56,.58)(.52,.62)\C(.46,.66)(.42,.6)(.36,.62)\Z\F
+      {\K{.!70!black}\M(.56,.6)\C(.58,.5)(.6,.46)(.6,.4)\C(.6,.36)(.64,.36)(.64,.4)\L(.64,.6)\Z\F
+      \T{.025}\M(.5,.63)\L(.5,.7)\S\K{.!45!yellow}\M(.5,.7)\C(.56,.76)(.56,.84)(.5,.95)\C(.44,.84)(.44,.76)(.5,.7)\Z\F}%
+   \or\M(.44,.6)\C(.32,.72)(.18,.76)(.04,.76)\C(.08,.66)(.08,.56)(.06,.46)\C(.12,.52)(.18,.52)(.22,.44)%
+      \C(.28,.52)(.34,.5)(.44,.42)\Z\F\M(.56,.6)\C(.68,.72)(.82,.76)(.96,.76)\C(.92,.66)(.92,.56)(.94,.46)%
+      \C(.88,.52)(.82,.52)(.78,.44)\C(.72,.52)(.66,.5)(.56,.42)\Z\F\Q{.5}{.46}{.13}{.22}\F\Q{.5}{.66}{.1}{.1}\F
+      \M(.43,.7)\L(.42,.82)\L(.48,.74)\Z\F\M(.57,.7)\L(.58,.82)\L(.52,.74)\Z\F
+      {\K{.!45!yellow}\Q{.47}{.67}{.02}{.02}\F\Q{.53}{.67}{.02}{.02}\F}%
+   \or\Q{.5}{.38}{.32}{.3}\F\M(.42,.6)\L(.58,.6)\L(.58,.84)\L(.42,.84)\Z\F
+      {\K{.!60!black}\M(.4,.82)\L(.6,.82)\L(.6,.94)\L(.4,.94)\Z\F\M(.2,.32)\C(.3,.38)(.7,.26)(.8,.32)%
+      \C(.78,.16)(.62,.08)(.5,.08)\C(.38,.08)(.22,.16)(.2,.32)\Z\F\K{.!65!white}\Q{.62}{.5}{.04}{.04}\F
+      \Q{.54}{.24}{.03}{.03}\F\Q{.36}{.46}{.05}{.07}\F}%
+   \else\T{.14}\R\M(.2,.2)\L(.8,.8)\M(.2,.8)\L(.8,.2)\S\Q{.12}{.24}{.08}{.08}\F\Q{.24}{.12}{.08}{.08}\F
+      \Q{.88}{.76}{.08}{.08}\F\Q{.76}{.88}{.08}{.08}\F\Q{.12}{.76}{.08}{.08}\F\Q{.24}{.88}{.08}{.08}\F
+      \Q{.88}{.24}{.08}{.08}\F\Q{.76}{.12}{.08}{.08}\F\fi}\fi\fi}%
+% candies on a lone bar of two, #1 the name, #2 the map (as it is, mirrored,
+% turned upright), #3 the kind: 0 a striped candy, 1 a toffee bar, both wrapped
+% with darker twists (stripes and bands end on the straight edges \h@b, \h@t),
+% 2 a lollipop with its stick to the left
+\def\fancyqr@hw@candy#1#2#3{\fancyqr@hw@D{candy#1#3}{#2\def\h@b{.28}\def\h@t{.72}}{%
+   \ifnum#3<\tw@
+   \M(\P{.5}{\h@b})\L(\P{1.5}{\h@b})\C(\P{1.64}{\h@b})(\Pn{1.74}{.38})(\Pn{1.74}{.5})%
+   \C(\Pn{1.74}{.62})(\P{1.64}{\h@t})(\P{1.5}{\h@t})\L(\P{.5}{\h@t})\C(\P{.36}{\h@t})(\Pn{.26}{.62})(\Pn{.26}{.5})%
+   \C(\Pn{.26}{.38})(\P{.36}{\h@b})(\P{.5}{\h@b})\Z\F
+   {\K{.!70!black}\M(\Pn{.3}{.5})\L(\Pn{.06}{.76})\C(\Pn{.03}{.6})(\Pn{.03}{.4})(\Pn{.06}{.24})\Z\F
+   \M(\Pn{1.7}{.5})\L(\Pn{1.94}{.76})\C(\Pn{1.97}{.6})(\Pn{1.97}{.4})(\Pn{1.94}{.24})\Z\F
+   \ifnum#3=\z@\M(\P{.62}{\h@b})\L(\P{.76}{\h@b})\L(\P{.9}{\h@t})\L(\P{.76}{\h@t})\Z\F
+   \M(\P{1.06}{\h@b})\L(\P{1.2}{\h@b})\L(\P{1.34}{\h@t})\L(\P{1.2}{\h@t})\Z\F
+   \else\M(\P{.6}{\h@b})\L(\P{.68}{\h@b})\L(\P{.68}{\h@t})\L(\P{.6}{\h@t})\Z\F
+   \M(\P{1.32}{\h@b})\L(\P{1.4}{\h@b})\L(\P{1.4}{\h@t})\L(\P{1.32}{\h@t})\Z\F
+   \K{.!65!white}\M(\Pn{.8}{.6})\L(\Pn{1.2}{.6})\L(\Pn{1.2}{.64})\L(\Pn{.8}{.64})\Z\F\fi}%
+   \else\M(\Pn{.06}{.4})\L(\Pn{1.12}{.4})\L(\Pn{1.12}{.6})\L(\Pn{.06}{.6})\Z\F\Q{1.5}{.5}{.44}{.44}\F
+   {\K{.!60!black}\T{.06}\R\M(\Pn{1.5}{.5})\C(\Pn{1.66}{.5})(\Pn{1.66}{.72})(\Pn{1.5}{.72})%
+   \C(\Pn{1.26}{.72})(\Pn{1.22}{.4})(\Pn{1.5}{.34})\C(\Pn{1.8}{.28})(\Pn{1.86}{.72})(\Pn{1.6}{.86})\S}\fi}}%
+% a bone broken on an L of three modules, drawn for xx/x. and mirrored (#1 the
+% name, #2 the map): an upright half with knobs at its foot and a jagged top over
+% the corner, and a lying half with knobs at its end and a jagged end apart from
+% it; the shafts run from \h@l to \h@h. By the place: the top at height \h@t
+% slants by \h@s, the end at \h@j by \h@u (up to 45 degrees), the jags of depth
+% \h@a follow one of four splinter shapes, the gap between the halves varies
+\def\fancyqr@hw@bone#1#2{\fancyqr@hw@var{16}\edef\fancyqr@hw@k{\fancyqr@hw@key{48}}\fancyqr@hw@var{22}%
+   \fancyqr@hw@D{bone#1\fancyqr@hw@k/\fancyqr@hw@key{48}}{#2\def\h@l{.29}\def\h@h{.71}%
+   \edef\h@a{\ifnum\fancyqr@hw@dig{12}2=\z@.08\else.06\fi}\edef\h@t{\ifnum\fancyqr@hw@dig{24}2=\z@.64\else.68\fi}%
+   \ifcase\fancyqr@hw@dig14\fancyqr@hw@bk{-.5}{.6}{-.7}{.8}{-.6}{.2}\or\fancyqr@hw@bk{.3}{-.8}{.9}{-.3}{.6}{-.5}%
+   \or\fancyqr@hw@bk0{.4}{-.2}1{-.4}0\else\fancyqr@hw@bk{-.3}{.3}{-.3}{.3}{-.3}{.3}\fi
+   \edef\h@g{\ifcase\fancyqr@hw@dig43 .04\or.1\else.18\fi}%
+   \def\h@d##1##2{\fpeval{floor(\fancyqr@hw@k/##1)-##2*floor(\fancyqr@hw@k/(##1*##2))}}%
+   \edef\h@s{\fpeval{(\h@d32=0?1:-1)*(\h@d13=0?.15:(\h@d13=1?.36:.7))}}%
+   \edef\h@u{\fpeval{(\h@d{24}2=0?1:-1)*(\h@d64=0?.27:(\h@d64=1?.47:(\h@d64=2?.7:1)))}}%
+   \edef\h@j{\fpeval{min(1.12,.74+abs(\h@u)*.21+\h@a+\h@g)}}%
+   \def\h@y##1##2{\P{##1}{\fpeval{\h@t+\h@s*(##1-.5)+\h@a*(##2)}}}%
+   \def\h@x##1##2{\P{\fpeval{\h@j+\h@u*(##1-.5)+\h@a*(##2)}}{##1}}}{%
+   \M(\P\h@l{-.7})\L(\h@y\h@l\h@pa)\L(\h@y{.37}\h@pb)\L(\h@y{.45}\h@pc)\L(\h@y{.54}\h@pd)\L(\h@y{.62}\h@pe)%
+   \L(\h@y\h@h\h@pf)\L(\P\h@h{-.7})\Z\F
+   \M(\P{1.7}\h@l)\L(\h@x\h@l\h@pf)\L(\h@x{.37}\h@pe)\L(\h@x{.46}\h@pd)\L(\h@x{.55}\h@pc)\L(\h@x{.63}\h@pb)%
+   \L(\h@x\h@h\h@pa)\L(\P{1.7}\h@h)\Z\F
+   \Q{1.71}{.67}{.19}{.19}\F\Q{1.71}{.33}{.19}{.19}\F\Q{.33}{-.71}{.19}{.19}\F\Q{.67}{-.71}{.19}{.19}\F}}%
+\def\fancyqr@hw@bk#1#2#3#4#5#6{\def\h@pa{#1}\def\h@pb{#2}\def\h@pc{#3}\def\h@pd{#4}\def\h@pe{#5}\def\h@pf{#6}}%
+% a spider on a module over a row of three, the abdomen up, the head below it,
+% four arched legs to a side, one of them over the center of the side module; it
+% hangs on a thread from a dark tile right above it, else it sits. By the place
+% the legs arch higher or lower (\h@p), the abdomen is wider (\h@r), a second
+% pair of eyes shows, and the spider sits a little aside or lower (\h@dx, \h@dy)
+\def\fancyqr@hw@spider{\fancyqr@hw@var{21}%
+   \edef\h@dx{\ifcase\fancyqr@hw@dig{12}3 0\or.04\else-.04\fi}\edef\h@dy{\ifcase\fancyqr@hw@dig{36}3 0\or-.06\else.02\fi}%
+   \count@\@ne\fancyqr@hw@up
+   \ifnum\count@>\z@{\linethickness{.04\unitlength}\moveto(\fpeval{1.5+\h@dx},\the\numexpr\count@\relax.4)%
+      \lineto(\fpeval{1.5+\h@dx},.6)\strokepath}\fi
+   \fancyqr@hw@D{spider\fancyqr@hw@h}{\fancyqr@hw@map100{1}\h@dx\h@dy\def\h@x##1##2{(##1##2)}%
+   \edef\h@p{\ifcase\fancyqr@hw@dig13 0\or.03\else-.06\fi}\edef\h@r{\ifnum\fancyqr@hw@dig32=\z@.34\else.4\fi}%
+   \def\h@y##1{(##1+\h@p)}%
+   \def\h@l##1{\M(\P{\h@x{##1}{1.26}}{-.3})\C(\P{\h@x{##1}1}{\h@y{-.14}})(\P{\h@x{##1}{.4}}{\h@y{-.14}})(\P{\h@x{##1}{.17}}{-.34})%
+      \M(\P{\h@x{##1}{1.24}}{-.4})\C(\P{\h@x{##1}{.9}}{\h@y{-.17}})(\P{\h@x{##1}{.4}}{\h@y{-.2}})(\P{\h@x{##1}{.17}}{-.62})%
+      \M(\P{\h@x{##1}{1.24}}{-.5})\C(\P{\h@x{##1}{.9}}{\h@y{-.32}})(\P{\h@x{##1}{.5}}{\h@y{-.36}})(\P{\h@x{##1}{.24}}{-.84})%
+      \M(\P{\h@x{##1}{1.27}}{-.58})\C(\P{\h@x{##1}1}{\h@y{-.55}})(\P{\h@x{##1}{.75}}{\h@y{-.6}})(\P{\h@x{##1}{.62}}{-.86})}}{%
+   \T{.12}\R\h@l{}\h@l{3-}\S
+   \Q{1.5}{.28}\h@r{.45}\F\Q{1.5}{-.42}{.3}{.3}\F
+   {\K{.!65!black}\M(\Pn{1.38}{.5})\L(\Pn{1.62}{.5})\L(\Pn{1.5}{.3})\Z\M(\Pn{1.5}{.24})\L(\Pn{1.62}{.04})\L(\Pn{1.38}{.04})\Z\F
+   \K{.!45!yellow}\Q{1.4}{-.5}{.05}{.05}\F\Q{1.6}{-.5}{.05}{.05}\F
+   \ifnum\fancyqr@hw@dig62=\z@\else\Q{1.44}{-.36}{.035}{.035}\F\Q{1.56}{-.36}{.035}{.035}\F\fi}}}%
+% the cores of the finder and alignment patterns, drawn in [-.5,.5] and scaled:
+% a pumpkin, a jack-o'-lantern, a ghost or a skull, drawn at random for each
+% pattern (\fancyqr@hw@coredraw); all of them dark and without strong edges
+% inside, so that they read as a block
+\def\fancyqr@shape@halloween#1#2#3{%
+   \edef\@fq@s{\fpeval{(#2-#1)*((#2-#1)<2 ? \fancyqr@star@boost : 1)}}%
+   \edef\@fq@c{\fpeval{(#1+#2)/2}}%
+   % only the alignment patterns get a tint inside: in a finder it costs scanners;
+   % none in the galleries, where the faint ring would make it look filled
+   \iffancyqr@faint@\else\ifdim\fpeval{#2-#1}\p@<2\p@\ifx\fancyqr@finder@style\fancyqr@hw@rounded
+      {\fancyqr@hw@tint\fancyqr@hw@inner{#2}\fillpath}\fi\fi\fi
+   \put(\@fq@c,\@fq@c){\unitlength=\@fq@s\unitlength
+      \ifdim\@fq@s\p@<2\p@\fancyqr@mixcolor{.!70!orange}\let\fancyqr@hw@pk\fancyqr@hw@apk\fi
+      \ifcase\fancyqr@hw@coredraw\relax
+         \fancyqr@hw@cpumpkin\or\fancyqr@hw@cjack\or\fancyqr@hw@cghost\else\fancyqr@hw@cskull\fi}}%
+% the inside of a rounded ring around a core that ends at #1 (the pattern is
+% #1+2 wide), for a pale tint (\fancyqr@hw@tint): the inner edge of the ring,
+% corners and all
+\def\fancyqr@hw@rounded{rounded}%
+\def\fancyqr@hw@tint{\fancyqr@mixcolor{.!12!white}}%
+\def\fancyqr@hw@inner#1{%
+   \edef\@fq@l{\fancyqr@finder@thickness}\edef\@fq@h{\fpeval{#1+2-\@fq@l}}%
+   \edef\@fq@r{\fpeval{max(0,\fancyqr@finder@radius*(#1+2-\@fq@l)/2-\@fq@l/2)}}%
+   \edef\@fq@k{\fpeval{.4477*\@fq@r}}%
+   \moveto(\fpeval{\@fq@l+\@fq@r},\@fq@l)\lineto(\fpeval{\@fq@h-\@fq@r},\@fq@l)%
+   \curveto(\fpeval{\@fq@h-\@fq@k},\@fq@l)(\@fq@h,\fpeval{\@fq@l+\@fq@k})(\@fq@h,\fpeval{\@fq@l+\@fq@r})%
+   \lineto(\@fq@h,\fpeval{\@fq@h-\@fq@r})%
+   \curveto(\@fq@h,\fpeval{\@fq@h-\@fq@k})(\fpeval{\@fq@h-\@fq@k},\@fq@h)(\fpeval{\@fq@h-\@fq@r},\@fq@h)%
+   \lineto(\fpeval{\@fq@l+\@fq@r},\@fq@h)%
+   \curveto(\fpeval{\@fq@l+\@fq@k},\@fq@h)(\@fq@l,\fpeval{\@fq@h-\@fq@k})(\@fq@l,\fpeval{\@fq@h-\@fq@r})%
+   \lineto(\@fq@l,\fpeval{\@fq@l+\@fq@r})%
+   \curveto(\@fq@l,\fpeval{\@fq@l+\@fq@k})(\fpeval{\@fq@l+\@fq@k},\@fq@l)(\fpeval{\@fq@l+\@fq@r},\@fq@l)\closepath}%
+\def\fancyqr@hw@coredraw{\csname int_rand:nn\endcsname{0}{3}}%
+% a value mod 4, #1 an expression that is not negative
+\def\fancyqr@hw@mod#1{(#1-4*((#1-2)/4))}%
+\def\fancyqr@hw@cbody{\fancyqr@hw@pk
+   \fancyqr@hw@P{cp}{\fancyqr@hw@ell{-.2}{-.04}{.3}{.43}\fancyqr@hw@ell{.2}{-.04}{.3}{.43}%
+      \fancyqr@hw@ell{0}{-.04}{.28}{.46}}\fillpath
+   {\fancyqr@hw@stem\fancyqr@hw@stemat{0}{.34}{.5}}}%
+\def\fancyqr@hw@cpumpkin{{\fancyqr@hw@cbody
+   \fancyqr@hw@crib\linethickness{.04\unitlength}%
+   \moveto(-.08,.34)\curveto(-.22,.12)(-.22,-.24)(-.08,-.44)\strokepath
+   \moveto(.08,.34)\curveto(.22,.12)(.22,-.24)(.08,-.44)\strokepath
+   \moveto(-.3,.3)\curveto(-.44,.1)(-.44,-.22)(-.3,-.4)\strokepath
+   \moveto(.3,.3)\curveto(.44,.1)(.44,-.22)(.3,-.4)\strokepath}}%
+% the jack-o'-lantern core: triangular eyes (inner x \h@i, outer \h@o, base
+% \h@y, tip \h@t) and a grin from corner to corner (\h@c) with two teeth
+% (\h@d to \h@e) hanging from its top
+\def\fancyqr@hw@cjack{{\fancyqr@hw@cbody\fancyqr@hw@cglow
+   \fancyqr@hw@D{cjack}{\def\h@i{.07}\def\h@o{.33}\def\h@y{.05}\def\h@t{.27}\def\h@c{.32,-.1}%
+      \def\h@d{.05}\def\h@e{.14}\def\h@f{-.16}\def\h@g{-.25}}{%
+   \M(-\h@o,\h@y)\L(-\h@i,\h@y)\L(-.2,\h@t)\Z\M(\h@o,\h@y)\L(\h@i,\h@y)\L(.2,\h@t)\Z
+   \M(-\h@c)\L(-\h@e,\h@f)\L(-\h@e,\h@g)\L(-\h@d,\h@g)\L(-\h@d,\h@f)\L(\h@d,\h@f)%
+   \L(\h@d,\h@g)\L(\h@e,\h@g)\L(\h@e,\h@f)\L(\h@c)\C(.26,-.36)(.14,-.42)(0,-.42)%
+   \C(-.14,-.42)(-.26,-.36)(-\h@c)\Z\F}}}%
+\def\fancyqr@hw@cghost{%
+   \moveto(-.47,-.46)\lineto(-.47,0)\curveto(-.47,.32)(-.26,.49)(0,.49)\curveto(.26,.49)(.47,.32)(.47,0)%
+   \lineto(.47,-.46)\curveto(.4,-.36)(.32,-.36)(.24,-.48)\curveto(.16,-.36)(.08,-.36)(0,-.48)%
+   \curveto(-.08,-.36)(-.16,-.36)(-.24,-.48)\curveto(-.32,-.36)(-.4,-.36)(-.47,-.46)\closepath\fillpath
+   {\fancyqr@hw@dkk
+   \fancyqr@hw@P{cg}{\fancyqr@hw@ell{-.17}{.1}{.09}{.13}\fancyqr@hw@ell{.17}{.1}{.09}{.13}}\fillpath}}%
+\def\fancyqr@hw@cskull{\fancyqr@hw@D{cskull}{}{%
+   \O0{.02}{.48}\F\M(-.34,-.16)\L(.34,-.16)\L(.3,-.42)\C(.29,-.47)(.25,-.49)(.2,-.49)%
+   \L(-.2,-.49)\C(-.25,-.49)(-.29,-.47)(-.3,-.42)\Z\F
+   {\K{.!55!black}\O{-.18}{.04}{.13}\F\O{.18}{.04}{.13}\F\M(0,-.1)\L(.06,-.22)\L(-.06,-.22)\Z\F
+   \T{.04}\R\M(-.09,-.31)\L(-.09,-.44)\M(0,-.31)\L(0,-.44)\M(.09,-.31)\L(.09,-.44)\S}}}%
+\def\fancyqr@halloween@tile#1#2#3#4{\FancyQrFigureTile{%
+   \FancyQrIfTiming{\ifnum\@up\@left\@right\@down=\z@\FancyQrIfExtra{timing}{\fancyqr@hw@timing}{\fancyqr@rounded@rect#1#2#3#4}\else
+      \fancyqr@hw@tile#1#2#3#4\fi}{\fancyqr@hw@tile#1#2#3#4}}}%
+\def\fancyqr@hw@tile#1#2#3#4{\fancyqr@rounded@rect#1#2#3#4%
+   \fancyqr@hw@extras#1#2#3#4}%
+\def\fancyqr@hw@extras#1#2#3#4{%
+   \FancyQrExtra{web/corner}{\ifnum\@right\@down=11 \ifnum\fancyqr@hw@free{\i+\@ne}{\j+\@ne}=\@ne
+      \fancyqr@hw@var{27}\ifnum\fancyqr@hw@h<\fancyqr@hw@webs\relax\fancyqr@hw@web
+      \xdef\fancyqr@hw@skip{\the\i/\the\numexpr\j+\@ne}\fi\fi\fi}
+   \ifnum\@down=\z@\ifcsname fancyqr@F@\the\numexpr\i+\@ne\relax @\the\j\endcsname\else
+      \edef\fancyqr@hw@here{\the\i/\the\j}\ifx\fancyqr@hw@here\fancyqr@hw@skip\else
+      \FancyQrExtra{web/thread}{\ifnum\j<\@max@x\ifnum\fancyqr@hw@free{\i+\@ne}\j=\@ne\fancyqr@hw@var{28}%
+         \ifnum\fancyqr@hw@h<\fancyqr@hw@threads\relax\fancyqr@hw@hang\fi\fi\fi}%
+      \FancyQrExtra{slime}{\ifnum\i<\@max@y\ifnum\j<\@max@x\fancyqr@hw@spy\ifnum\count@=\z@\fancyqr@slime#1#4\fi\fi\fi}\fi\fi\fi}% no slime onto a figure, into the web left of it or onto the thread of a spider
+% 1 if the thread of a big spider below reaches this tile
+\def\fancyqr@hw@spy{\count@\@ne\fancyqr@hw@dn
+   \ifcsname fancyqr@F@\the\numexpr\i+\count@\relax @\the\j\endcsname
+      \expandafter\expandafter\expandafter\fancyqr@hw@isspy\csname fancyqr@F@\the\numexpr\i+\count@\relax @\the\j\endcsname
+   \else\count@\z@\fi}%
+\def\fancyqr@hw@isspy#1#2{\def\@tempa{#1}\count@\ifx\@tempa\fancyqr@hw@spn\@ne\else\z@\fi}\def\fancyqr@hw@spn{spider}%
+\def\fancyqr@hw@dn{\ifnum\count@<8 \ifnum\fancyqr@hw@free{\i+\count@}\j=\@ne\advance\count@\@ne\expandafter\expandafter\expandafter\fancyqr@hw@dn\fi\fi}%
+\gdef\fancyqr@hw@skip{}%
+% 1 for a light module at row #1, column #2 (expressions) that no pattern,
+% hole, web or thread takes
+\def\fancyqr@hw@free#1#2{\ifnum\numexpr#1\relax<1 0\else\ifnum\numexpr#1\relax>\@max@y\space 0\else
+   \ifnum\numexpr#2\relax<1 0\else\ifnum\numexpr#2\relax>\@max@x\space 0\else
+   \ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr#1}{\the\numexpr#2}=\z@
+   \ifcsname fancyqr@B@\the\numexpr#1\relax @\the\numexpr#2\endcsname0\else
+   \ifcsname fancyqr@W@\the\numexpr#1\relax @\the\numexpr#2\endcsname0\else1\fi\fi\else0\fi\fi\fi\fi\fi}%
+\def\fancyqr@hw@dark#1#2{\ifnum\numexpr#1\relax<1 0\else\ifnum\numexpr#1\relax>\@max@y\space 0\else
+   \ifnum\numexpr#2\relax<1 0\else\ifnum\numexpr#2\relax>\@max@x\space 0\else
+   \ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr#1}{\the\numexpr#2}=\@ne1\else0\fi\fi\fi\fi\fi}%
+% the big spider hangs on a thread from the first tile up to six modules above
+% it, over free light modules; \count@ ends as their number plus one, or 0
+\def\fancyqr@hw@up{\ifnum\count@>6 \count@\z@\else
+   \ifnum\fancyqr@hw@dark{\i-\count@}\j=\@ne
+      \ifcsname fancyqr@F@\the\numexpr\i-\count@\relax @\the\j\endcsname\count@\z@\fi
+   \else\ifnum\fancyqr@hw@free{\i-\count@}\j=\@ne\advance\count@\@ne\expandafter\expandafter\expandafter\fancyqr@hw@up
+   \else\count@\z@\fi\fi\fi}%
+% the number of free light modules below, up to three, counted into \count@
+\def\fancyqr@hw@kfree{\ifnum\count@<3 \ifnum\fancyqr@hw@free{\i+\numexpr\count@+1}\j=\@ne
+   \advance\count@\@ne \expandafter\fancyqr@hw@kfree\fi\fi}%
+% a thread that hangs from the lower edge of a tile into the light modules
+% below (up to three, by the place), beside their centers, with a small spider
+% at its end; not where a corner web may hang
+\def\fancyqr@hw@hang{\ifnum\fancyqr@hw@dark\i{\j-\@ne}\fancyqr@hw@dark{\i+\@ne}{\j-\@ne}=11 \else
+   \count@=\@ne \fancyqr@hw@kfree
+   \edef\fancyqr@hw@k{\the\numexpr1+\fancyqr@hw@h-\count@*((\fancyqr@hw@h*2-\count@+1)/(2*\count@))}%
+   \put(.5,0){\advance\unitlength-\fancyqr@edge@compensate\fancyqr@hw@webc\linethickness{\iffancyqr@hl@.09\else.03\fi\unitlength}%
+   \moveto(0,.02)\lineto(0,\fpeval{.15-\fancyqr@hw@k})\strokepath
+   \put(0,\fpeval{.15-\fancyqr@hw@k}){\fancyqr@hw@D{hangspider}{}{%
+      {\K{.!60!black}\Q0{-.04}{.05}{.06}\F\T{.015}\R\M(-.04,-.02)\L(-.1,.02)\M(-.04,-.06)\L(-.1,-.1)%
+      \M(.04,-.02)\L(.1,.02)\M(.04,-.06)\L(.1,-.1)\S}}}}\fi}%
+% webs of up to 4x4 light modules, placed after the figures by the seeded
+% generator, the larger first, where a square of free light modules ends
+% (\fancyqr@S@ holds the side of the largest one): a quarter web in a corner of dark
+% modules, a half web under a row of them or a full web in the open, held by
+% longer threads to the dark modules beside its middle; more threads and rings
+% the larger it is
+\def\fancyqr@hw@S#1#2{\ifcsname fancyqr@S@\the\numexpr#1\relax @\the\numexpr#2\endcsname
+   \csname fancyqr@S@\the\numexpr#1\relax @\the\numexpr#2\endcsname\else0\fi}%
+\def\fancyqr@hw@webscan{\fancyqr@hw@cells{\ifnum\fancyqr@hw@free\fancyqr@hw@a\fancyqr@hw@b=\@ne
+      \expandafter\edef\csname fancyqr@S@\the\fancyqr@hw@a @\the\fancyqr@hw@b\endcsname{\the\numexpr1+\fpeval{%
+      min(\fancyqr@hw@S{\fancyqr@hw@a-1}\fancyqr@hw@b,\fancyqr@hw@S\fancyqr@hw@a{\fancyqr@hw@b-1},%
+      \fancyqr@hw@S{\fancyqr@hw@a-1}{\fancyqr@hw@b-1})}}\fi}%
+   \def\fancyqr@hw@k{4}\fancyqr@hw@cells\fancyqr@hw@square\def\fancyqr@hw@k{3}\fancyqr@hw@cells\fancyqr@hw@square
+   \def\fancyqr@hw@k{2}\fancyqr@hw@cells\fancyqr@hw@square\def\fancyqr@hw@k{1}\fancyqr@hw@cells\fancyqr@hw@square}%
+\def\fancyqr@hw@cells#1{\fancyqr@hw@a\@ne
+   \@whilenum\fancyqr@hw@a<\numexpr\@max@y+\@ne\do{\fancyqr@hw@b\@ne
+      \@whilenum\fancyqr@hw@b<\numexpr\@max@x+\@ne\do{#1\advance\fancyqr@hw@b\@ne}%
+      \advance\fancyqr@hw@a\@ne}}%
+\def\fancyqr@hw@square{\ifnum\fancyqr@hw@S\fancyqr@hw@a\fancyqr@hw@b<\fancyqr@hw@k\relax\else
+   \ifnum\csname int_rand:nn\endcsname{1}{1000}>\numexpr\fancyqr@hw@bigwebs*\ifcase\fancyqr@hw@k\or1\or12\else40\fi\relax
+   \else\@tempswatrue\fancyqr@hw@c\numexpr\fancyqr@hw@a-\fancyqr@hw@k\relax
+      \@whilenum\fancyqr@hw@c<\fancyqr@hw@a\do{\advance\fancyqr@hw@c\@ne\@tempcnta\numexpr\fancyqr@hw@b-\fancyqr@hw@k\relax
+         \@whilenum\@tempcnta<\fancyqr@hw@b\do{\advance\@tempcnta\@ne
+            \ifcsname fancyqr@W@\the\fancyqr@hw@c @\the\@tempcnta\endcsname\@tempswafalse\fi}}%
+      \if@tempswa\fancyqr@hw@bigweb\fi\fi\fi}%
+\def\fancyqr@hw@bigweb{\edef\fancyqr@hw@r{\the\numexpr\fancyqr@hw@a-\fancyqr@hw@k+1}%
+   \edef\fancyqr@hw@q{\the\numexpr\fancyqr@hw@b-\fancyqr@hw@k+1}\fancyqr@hw@c\fancyqr@hw@r
+   \@whilenum\fancyqr@hw@c<\numexpr\fancyqr@hw@a+1\do{\@tempcnta\fancyqr@hw@q
+      \@whilenum\@tempcnta<\numexpr\fancyqr@hw@b+1\do{%
+         \expandafter\let\csname fancyqr@W@\the\fancyqr@hw@c @\the\@tempcnta\endcsname\@empty
+         \advance\@tempcnta\@ne}\advance\fancyqr@hw@c\@ne}%
+   \edef\fancyqr@hw@kind{\ifnum\fancyqr@hw@dark{\fancyqr@hw@r-1}\fancyqr@hw@q
+      \fancyqr@hw@dark\fancyqr@hw@r{\fancyqr@hw@q-1}=11 q\else\ifnum\fancyqr@hw@dark{\fancyqr@hw@r-1}\fancyqr@hw@q
+      \fancyqr@hw@dark{\fancyqr@hw@r-1}{\fancyqr@hw@q+\fancyqr@hw@k-1}=11 h\else f\fi\fi}%
+   \edef\fancyqr@hw@x{\fpeval{\fancyqr@hw@q+(\if q\fancyqr@hw@kind0\else\fancyqr@hw@k/2\fi)}}%
+   \edef\fancyqr@hw@y{\fpeval{\@max@y-\fancyqr@hw@r+1-(\if f\fancyqr@hw@kind\fancyqr@hw@k/2\else0\fi)}}%
+   \edef\fancyqr@hw@g{fancyqr@hw@WB@\fancyqr@hw@kind\fancyqr@hw@k/\the\unitlength}%
+   \iffancyqr@rec@\else\ifcsname\fancyqr@hw@g\endcsname\else\expandafter\newbox\csname\fancyqr@hw@g\endcsname
+      \global\expandafter\setbox\csname\fancyqr@hw@g\endcsname\hbox{\begin{picture}(0,0)%
+      \fancyqr@hw@webpath\end{picture}}\fi\fi
+   \fancyqr@gradient@row{\the\numexpr\fancyqr@hw@r+\fancyqr@hw@k/2\relax}%
+   \fancyqr@ci=\numexpr\fancyqr@hw@q+\fancyqr@hw@k/2\relax
+   \fancyqr@tilecolor{\fancyqr@hw@webc\put(\fancyqr@hw@x,\fancyqr@hw@y){%
+      \iffancyqr@rec@\fancyqr@hw@webpath\else\expandafter\usebox\csname\fancyqr@hw@g\endcsname\fi
+      \if f\fancyqr@hw@kind\linethickness{.025\unitlength}\edef\fancyqr@hw@m{\the\numexpr(\fancyqr@hw@k-1)/2}%
+         \fancyqr@hw@anchor{-1}\fancyqr@hw@m{0}{1}\fancyqr@hw@anchor\fancyqr@hw@k\fancyqr@hw@m{0}{-1}%
+         \fancyqr@hw@anchor\fancyqr@hw@m{-1}{-1}{0}\fancyqr@hw@anchor\fancyqr@hw@m\fancyqr@hw@k{1}{0}\fi}}}%
+% a thread from the full web to the edge of its square where a dark module
+% lies beyond (#1, #2 its offset from the square in rows and columns, #3, #4
+% the direction)
+\def\fancyqr@hw@anchor#1#2#3#4{\ifnum\fancyqr@hw@dark{\fancyqr@hw@r+(#1)}{\fancyqr@hw@q+(#2)}=\@ne
+   \moveto(\fpeval{.4*\fancyqr@hw@k*(#3)},\fpeval{.4*\fancyqr@hw@k*(#4)})%
+   \lineto(\fpeval{.5*\fancyqr@hw@k*(#3)},\fpeval{.5*\fancyqr@hw@k*(#4)})\strokepath\fi}%
+% the threads and rings of a web of kind q (from the corner, into the lower
+% right), h (from the middle of the top edge, downwards) or f (all around), side
+% \fancyqr@hw@k, kept as a path
+\def\fancyqr@hw@webpath{\fancyqr@hw@D{webk\fancyqr@hw@kind\fancyqr@hw@k}{%
+   \edef\h@n{\the\numexpr4+2*\fancyqr@hw@k}\edef\h@m{\the\numexpr2+\fancyqr@hw@k}%
+   \edef\h@r{\fpeval{\fancyqr@hw@k*\if q\fancyqr@hw@kind.92\else\if h\fancyqr@hw@kind.47\else.44\fi\fi}}%
+   \edef\h@a{\if q\fancyqr@hw@kind-6\else\if h\fancyqr@hw@kind-174\else0\fi\fi}%
+   \edef\h@d{\fpeval{\if f\fancyqr@hw@kind360/\h@n\else(\if q\fancyqr@hw@kind-78\else168\fi)/(\h@n-1)\fi}}%
+   % cosine and sine (in sp) of the angles at the thread j (c0, s0 at 3j),
+   % and a third before and after it (3j-2, 3j-1), once for all rings
+   \def\h@t##1##2{\expandafter\edef\csname h@c##1\endcsname{\number\dimexpr\fpeval{cosd(##2)}pt\relax}%
+      \expandafter\edef\csname h@s##1\endcsname{\number\dimexpr\fpeval{sind(##2)}pt\relax}}%
+   \@tempcnta\z@\h@t0\h@a
+   \@whilenum\@tempcnta<\h@n\do{\advance\@tempcnta\@ne
+      \h@t{\the\numexpr3*\@tempcnta-2}{\h@a+(\the\@tempcnta-.67)*\h@d}%
+      \h@t{\the\numexpr3*\@tempcnta-1}{\h@a+(\the\@tempcnta-.33)*\h@d}%
+      \h@t{\the\numexpr3*\@tempcnta}{\h@a+\the\@tempcnta*\h@d}}%
+   \def\h@p##1##2{\fancyqr@sl@pt{\dimexpr##1 sp*\csname h@c##2\endcsname/65536\relax},%
+      \fancyqr@sl@pt{\dimexpr##1 sp*\csname h@s##2\endcsname/65536\relax}}%
+   \edef\h@R{\number\dimexpr\h@r pt\relax}%
+   \let\h@acc\@empty\def\h@add##1{\edef\h@acc{\unexpanded\expandafter{\h@acc}##1}}%
+   \@tempcnta\z@\@whilenum\@tempcnta<\h@n\do{%
+      \h@add{\noexpand\moveto(0,0)\noexpand\lineto(\h@p\h@R{\the\numexpr3*\@tempcnta})}\advance\@tempcnta\@ne}%
+   \@tempcntb\@ne\@whilenum\@tempcntb<\numexpr\h@m+1\do{%
+      \edef\h@s{\number\dimexpr\h@R sp*\@tempcntb/\h@m\relax}\edef\h@u{\number\dimexpr\h@s sp*84/100\relax}%
+      \h@add{\noexpand\moveto(\h@p\h@s0)}%
+      \@tempcnta\@ne\@whilenum\@tempcnta<\numexpr\h@n+\if f\fancyqr@hw@kind1\else0\fi\do{%
+         \h@add{\noexpand\curveto(\h@p\h@u{\the\numexpr3*\@tempcnta-2})%
+            (\h@p\h@u{\the\numexpr3*\@tempcnta-1})(\h@p\h@s{\the\numexpr3*\@tempcnta})}%
+         \advance\@tempcnta\@ne}\advance\@tempcntb\@ne}}{%
+   \T{.025}\unexpanded\expandafter{\h@acc}\S}}%
+% a spider web in the white module below and right of a tile that has dark
+% modules to its right and below: radial threads from the inner corner (1,0)
+% and three sagging rings, all thin and pale, so the module stays light;
+% by the place it is larger or smaller and some hold a small spider near the
+% corner. \h@r is its radius, \h@p the point at radius ##1 and angle ##2; the
+% threads are kept in a box per kind and size (drawn directly while recording), in
+% the pale tint
+\def\fancyqr@hw@web{\edef\fancyqr@hw@k{fancyqr@hw@WB@\fancyqr@hw@key3/\the\unitlength}%
+   \def\fancyqr@hw@webbody{\fancyqr@hw@D{web\fancyqr@hw@key3}{%
+      \edef\h@r{\ifcase\fancyqr@hw@dig13 .85\or.9\else.95\fi}%
+      \def\h@p####1####2{\fpeval{1+(####1)*cosd(####2)},\fpeval{-(####1)*sind(####2)}}%
+      \def\h@k####1####2####3{\C(\h@p{.8*(####1)}{####2+(####3-####2)/3})(\h@p{.8*(####1)}{####3-(####3-####2)/3})(\h@p{####1}{####3})}%
+      \def\h@a####1{\M(\h@p{####1}8)\h@k{####1}8{32}\h@k{####1}{32}{58}\h@k{####1}{58}{82}}}{%
+      \T{.025}\M(1,0)\L(\h@p\h@r8)\M(1,0)\L(\h@p\h@r{32})\M(1,0)\L(\h@p\h@r{58})%
+      \M(1,0)\L(\h@p\h@r{82})\h@a{.36*\h@r}\h@a{.68*\h@r}\h@a\h@r\S}}%
+   \iffancyqr@rec@\else\ifcsname\fancyqr@hw@k\endcsname\else\expandafter\newbox\csname\fancyqr@hw@k\endcsname
+      \global\expandafter\setbox\csname\fancyqr@hw@k\endcsname\hbox{\begin{picture}(0,0)%
+      \fancyqr@hw@webbody\end{picture}}\fi\fi
+   {\fancyqr@hw@webc\iffancyqr@rec@\fancyqr@hw@webbody\else\expandafter\usebox\csname\fancyqr@hw@k\endcsname\fi}%
+   \ifnum\fancyqr@hw@dig{12}2=7 \fancyqr@hw@D{webspider}{}{{\K{.!80!black}\Q{1.19}{-.2}{.055}{.06}\F
+      \Q{1.17}{-.13}{.035}{.035}\F\T{.015}\R\M(1.14,-.18)\L(1.07,-.14)\M(1.14,-.22)\L(1.08,-.27)%
+      \M(1.24,-.18)\L(1.3,-.13)\M(1.24,-.22)\L(1.3,-.28)\S}}\fi}%
+\def\fancyqr@hw@timing{\fancyqr@hw@tgo0{1}{1}{%
+   \fancyqr@hw@var{26}\ifnum\fancyqr@hw@h<20 \fancyqr@hw@tghost\else\ifnum\fancyqr@hw@h<36 \fancyqr@hw@tsweet{\fancyqr@hw@dig14}%
+   \else\edef\@tempa{\the\numexpr\fancyqr@hw@h-8*((\fancyqr@hw@h-4)/8)\relax}\expandafter\fancyqr@hw@ttiny\expandafter{\@tempa}\fi\fi}}%
+\let\fancyqr@hw@tghost\fancyqr@ghost \let\fancyqr@hw@tsweet\fancyqr@hw@sweet
+\let\fancyqr@hw@ttiny\fancyqr@hw@tiny \let\fancyqr@hw@hangbatx\fancyqr@hw@hangbat%
+\let\fancyqr@style@begin\fancyqr@hw@begin
+\FancyQrExtras{web/corner,web/sized,web/thread,slime,timing}%
+% what another style gets with add=halloween
+\FancyQrLend{begin}{\fancyqr@hw@begin}\FancyQrLend{tile}{\fancyqr@hw@extras}%
+\FancyQrLend{extras}{web/corner,web/sized,web/thread,slime}%
+\FancyQrRoundedPatterns\fancyqr@halloween@tile
+\FancyQrInnerRoundings
+\FancyQrStyleSet{%
+   r color=orange!90!red,l color=violet!55!black,%
+   finder=rounded,finder core=halloween%
+}%

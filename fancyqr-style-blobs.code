@@ -1,13 +1,20 @@
 % style `blobs': every module is an irregular round blob
+% the directions of the twelve vertices, computed once
+\@tempcnta=\z@
+\loop\advance\@tempcnta by 30
+   \expandafter\edef\csname fancyqr@blob@cos\the\@tempcnta\endcsname{\fpeval{cos(\@tempcnta)}}%
+   \expandafter\edef\csname fancyqr@blob@sin\the\@tempcnta\endcsname{\fpeval{sin(\@tempcnta)}}%
+\ifnum\@tempcnta<360\relax\repeat
 \def\@fancy@qr@blobb{%
 \@tempcnta=\z@
 \roundjoin
 \roundcap
-\moveto(.5,.5)
+\moveto(.5,.5)%
 \loop
 \advance\@tempcnta by 30
 \edef\rad{\fpeval{.3+.2*abs(rand())}}%
-\lineto(\fpeval{cos(\@tempcnta)*\rad+.5},\fpeval{sin(\@tempcnta)*\rad+.5})
+\lineto(\fpeval{\csname fancyqr@blob@cos\the\@tempcnta\endcsname*\rad+.5},%
+        \fpeval{\csname fancyqr@blob@sin\the\@tempcnta\endcsname*\rad+.5})%
 \ifnum\@tempcnta<360\relax
 \repeat
 \fillpath
@@ -28,4 +35,4 @@
 \newpattern1011{\@fancy@qr@blobb}%
 \newpattern1101{\@fancy@qr@blobb}%
 \newpattern1110{\@fancy@qr@blobb}%
-\fancyqrset{finder=circle}
+\FancyQrStyleSet{finder=circle}%

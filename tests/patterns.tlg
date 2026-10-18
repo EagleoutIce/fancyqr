@@ -72,6 +72,36 @@ Don't change this file in any respect.
 <QR code requested for "abc" in version 7-M.>
 <Error-correction level increased from M to H at no cost.>
 <Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-keeps-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] core-color-keeps-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-inherit-rings
+[PASS] alignment-inherit-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-inherit-cores
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-finder-rings
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-hide-rings
+[PASS] alignment-hide-shapes
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
+[PASS] alignment-hide-drops-tiles
+<QR code requested for "abc" in version 7-M.>
+<Error-correction level increased from M to H at no cost.>
+<Copying the QR code for "abc" in version 7-H as previously calculated.>
 [PASS] map-is-cleared
-===== fancyqr tests: 16 passed, 0 failed =====
+===== fancyqr tests: 25 passed, 0 failed =====
 [2]

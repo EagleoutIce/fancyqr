@@ -70,7 +70,10 @@ function tag_hook(tagname)
     end
     git("add", "*.sty")
     git("add", "*-doc.tex")
-    os.execute("github_changelog_generator --user EagleoutIce --future-release \"" .. tagname .. "\" --project \"" .. module .. "\" --token \"" .. token .. "\"")
+    -- the changelog is generated only with the token of build-private.lua
+    if token then
+        os.execute("github_changelog_generator --user EagleoutIce --future-release \"" .. tagname .. "\" --project \"" .. module .. "\" --token \"" .. token .. "\"")
+    end
     git("add", "CHANGELOG.md")
     git("status")
     -- ask for verification if the tag is correct and all is updated correctly
@@ -86,6 +89,17 @@ end
 
 -- collecting files for ctan =========================================
 typesetfiles = { module .. "-doc.tex" }
+-- the manual externalizes its codes, see the key externalize
+typesetopts = "-interaction=nonstopmode -shell-escape"
+docfiles = { module .. "-doc.ist" }
+indexstyle = module .. "-doc.ist"
+-- the manual highlights its listings with xlistings (a git submodule)
+function docinit_hook()
+    cp("xlistings.sty", "xlistings", typesetdir)
+    cp("code-link.sty", "xlistings", typesetdir)
+    cp("*.cfg", "xlistings/langs", typesetdir)
+    return 0
+end
 
 textfiles = {"README.md", "LICENSE"}
 ctanreadme = "README.md"
@@ -110,6 +124,39 @@ checksuppfiles = {"*.sty"}
 checkengines   = {"pdftex"}
 stdengine      = "pdftex"
 checkformat    = "latex"
+-- text beyond ASCII is handled differently by every engine
+checkconfigs   = {"build", "config-unicode"}
 
 -- cleanup ===========================================================
 cleanfiles = { module .. "-ctan.curlopt", module .. "-ctan.zip"}
+
+-- scanning ==========================================================
+-- `l3build scan` draws random codes over all styles and scans them with zxing
+-- and ZBar, see tests/scan/scancheck.py; SCAN_COUNT, SCAN_DPI (e.g. "100 300")
+-- and SCAN_STYLES narrow it, or names as in `l3build scan 100 castle 150dpi`;
+-- SCAN_PYTHON picks the interpreter that has zxing-cpp
+target_list = target_list or {}
+target_list.scan = {
+    desc = "Scans random codes of every style with zxing and ZBar",
+    func = function()
+        local function opt(name, flag)
+            local v = os.getenv(name)
+            return (v and v ~= "") and (" " .. flag .. " " .. v) or ""
+        end
+        -- names on the command line: a number is the count, NNNdpi a resolution,
+        -- anything else a style, as in `l3build scan 100 castle 150dpi`
+        local count, dpis, styles = nil, {}, {}
+        for _, n in ipairs(options["names"] or {}) do
+            if n:match("^%d+$") then count = n
+            elseif n:match("^%d+dpi$") then dpis[#dpis + 1] = n:gsub("dpi$", "")
+            else styles[#styles + 1] = n end
+        end
+        local cmd = (os.getenv("SCAN_PYTHON") or "python3") .. " tests/scan/scancheck.py"
+            .. (count and (" --count " .. count) or opt("SCAN_COUNT", "--count"))
+            .. (#dpis > 0 and (" --dpi " .. table.concat(dpis, " ")) or opt("SCAN_DPI", "--dpi"))
+            .. (#styles > 0 and (" --styles " .. table.concat(styles, " ")) or opt("SCAN_STYLES", "--styles"))
+        print("Executing: " .. cmd)
+        local ok, _, code = os.execute(cmd)
+        return (ok == true or ok == 0) and 0 or (code or 1)
+    end
+}

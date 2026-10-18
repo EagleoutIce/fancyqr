@@ -8,6 +8,8 @@
 \ProvidesPackage{fancyqrtest}[2026/08/17 fancyqr test harness]
 
 \RequirePackage{etoolbox}
+% every test draws its codes, none is replayed from an earlier run
+\fancyqrset{persist=false}
 
 \newcount\fancyqrtest@passed
 \newcount\fancyqrtest@failed

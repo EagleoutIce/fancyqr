@@ -1,0 +1,453 @@
+% Finder colors, alignment modes, merging, the pumpkin, style switching, the
+% halloween and snow styles, figures and diagonals, and alignment patterns on
+% the first run.
+% `version=7' gives three finder and six alignment patterns:
+%   finder: 24 ring + 9 core dark modules, alignment: 16 ring + 1 core
+\input{regression-test}
+\documentclass{article}
+\usepackage{fancyqr}
+\usepackage{fancyqrtest}
+\makeatletter
+% counts how often \color{\Watch} is used, so a test can tell which modules
+% got which fixed color (the gradient and `color' do not go through \color)
+\newcount\Seen
+\let\TestOrigColor\color
+\def\color{\@ifnextchar[\TestOrigColor\TestColor}
+\def\TestColor#1{\edef\@tempa{#1}\ifx\@tempa\Watch\global\advance\Seen\@ne\fi\TestOrigColor{#1}}
+% #1 name, #2 color, #3 expected uses, #4 code
+\newcommand\TestColorUse[4]{\def\Watch{#2}\global\Seen\z@
+  \fancyqrtest@run{#4}\TestValue{#1}{#3}{\the\Seen}}
+% \FQ[options]{text}: a version 7 code in black with further options
+\newcommand\FQ[2][]{\fancyqr[size=3cm,tight,version=7,color=black,#1]{#2}}
+% like \TestValue, but the expected value is expanded first
+\def\TestValueE#1#2#3{\edef\@tempb{{#1}{#2}}\expandafter\TestValue\@tempb{#3}}
+\def\Trace#1{\edef#1{\detokenize\expandafter{\fancyqrtest@trace}}}
+\begin{document}
+\START
+\section*{Features}
+
+\FancyQrLoad{default}
+\fancyqrtest@run{\FQ{abc}}\Trace\Plain
+
+% --- colors ------------------------------------------------------------------
+% tiles: every core module in the core color, every ring module in the finder color
+\TestColorUse{core-color-tiles}{orange}{33}{\FQ[finder core color=orange]{abc}}
+\TestColorUse{finder-color-tiles}{teal}{168}{\FQ[finder color=teal,finder core color=orange]{abc}}
+\TestColorUse{core-color-falls-back}{teal}{201}{\FQ[finder color=teal]{abc}}
+% shapes: one ring and one core per pattern
+\TestColorUse{core-color-shapes}{orange}{9}{\FQ[finder=circle,finder color=teal,finder core color=orange]{abc}}
+\TestColorUse{finder-color-shapes}{teal}{9}{\FQ[finder=circle,finder color=teal,finder core color=orange]{abc}}
+% a core shape alone
+\TestColorUse{core-color-core-only}{orange}{9}{\FQ[finder core=star,finder core color=orange]{abc}}
+% `inherit' leaves the alignment patterns to the data colors
+\TestColorUse{core-color-no-alignment}{orange}{27}{\FQ[finder core color=orange,alignment=inherit]{abc}}
+\TestColorUse{finder-color-no-alignment}{teal}{99}{\FQ[finder color=teal,alignment=inherit]{abc}}
+% the 6 alignment patterns apart: 16 ring and 1 core module each, as tiles; as
+% shapes one ring and one core each
+\TestColorUse{alignment-color-tiles}{violet}{102}{\FQ[finder color=teal,alignment color=violet]{abc}}
+\TestColorUse{alignment-leaves-finders}{teal}{99}{\FQ[finder color=teal,alignment color=violet]{abc}}
+\TestColorUse{alignment-core-color-tiles}{red}{6}{\FQ[alignment core color=red]{abc}}
+\TestColorUse{alignment-color-shapes}{violet}{12}{\FQ[finder=circle,finder color=teal,alignment color=violet]{abc}}
+\TestColorUse{alignment-core-color-shapes}{red}{6}{\FQ[finder=circle,alignment color=violet,alignment core color=red]{abc}}
+% the timing patterns of version 7: row and column 7 between the finders, 29
+% modules each, alternating from dark, so 2*15 dark ones
+\TestColorUse{timing-color}{red}{30}{\FQ[timing color=red]{abc}}
+% ... of which the two alignment patterns on row and column 7 take 3 each when
+% they are shapes
+\TestColorUse{timing-color-with-shapes}{red}{24}{\FQ[finder=circle,timing color=red]{abc}}
+% every tile but the 9 shapes
+\TestColorUse{content-color}{blue}{803}{\FQ[content color=blue,finder=circle]{abc}}
+% the background is one fill, rounded or not, and the next style drops a style's one
+\TestColorUse{background}{yellow}{1}{\FQ[background=yellow]{abc}}
+\TestColorUse{background-square}{yellow}{1}{\FQ[background=yellow,background radius=0]{abc}}
+\TestColorUse{no-background}{yellow}{0}{\FQ{abc}}
+\FancyQrLoad{castle}\TestValue{style-background}{green!60!yellow!14!white}{\fancyqr@background}
+\FancyQrLoad{default}\TestValue{style-background-undone}{}{\fancyqr@background}
+
+% --- alignment ---------------------------------------------------------------
+\fancyqrtest@run{\FQ[alignment=hide]{abc}}\Trace\HideA
+\fancyqrtest@run{\FQ[alignment=hide]{abc}}\Trace\HideB
+\TestValue{hide-is-reproducible}{same}{\ifx\HideA\HideB same\else different\fi}
+\TestValue{hide-fills-the-area}{different}{\ifx\HideA\Plain same\else different\fi}
+% 1004 tiles, less the 6*17 dark alignment modules, plus 52 that fill them up
+\TestCounts{hide-counts}{P=954 M=954 L=5666 A+=1022 A-=370 C=0 F=954 S=0 Z=0 O=0 o=0}{\FQ[alignment=hide]{abc}}
+\fancyqrtest@run{\FQ[finder=circle,alignment=hide]{abc}}%
+\TestValue{hide-keeps-finders}{3}{\fancyqrtest@n{S}}
+\fancyqrtest@run{\FQ{abc}}\Trace\After
+\TestValue{hide-restores-matrix}{same}{\ifx\Plain\After same\else different\fi}
+\fancyqrtest@run{\FQ[alignment=inherit]{abc}}\Trace\Inherit
+\TestValue{inherit-without-shapes-is-plain}{same}{\ifx\Plain\Inherit same\else different\fi}
+
+% --- merging into the rings --------------------------------------------------
+\fancyqrtest@run{\FQ[finder=rounded]{abc}}%
+\TestValue{merge-leaves-no-markers}{none}{%
+  \ifcsname fancyqr@skip@1@4\endcsname left\else
+  \ifcsname fancyqr@skip@1@32\endcsname left\else none\fi\fi}
+\fancyqrtest@run{\FQ{abc}}\Trace\After
+\TestValue{merge-restores-matrix}{same}{\ifx\Plain\After same\else different\fi}
+% how many modules at each end of a side the curve of a ring takes (the outer
+% corner radius, rounded up); the rest stays black for the neighbours to merge into
+\def\Margin#1#2#3{\begingroup\def\fancyqr@finder@style{#1}\def\fancyqr@finder@radius{#2}%
+  \def\fancyqr@rect##1##2##3##4{}\fancyqr@edges11{#3}\xdef\Got{\Got\fancyqr@em/}\endgroup}
+\def\Margins#1#2{\gdef\Got{}\Margin{#1}{#2}5\Margin{#1}{#2}7}
+\Margins{square}{.5}\TestValue{merge-square}{0/0/}{\Got}
+\Margins{rounded}{.5}\TestValue{merge-rounded}{2/2/}{\Got}
+\Margins{rounded}{.15}\TestValue{merge-rounded-tight}{1/1/}{\Got}
+\Margins{circle}{.5}\TestValue{merge-circle}{2/3/}{\Got}
+
+% --- hidden center -----------------------------------------------------------
+% the center alignment pattern of version 7 lies in the hole, so it is not drawn,
+% and the hole must not damage the matrix the patterns take apart
+\fancyqrtest@run{\FancyQrDoNotPrintSquare33\FQ[finder=circle]{abc}\FancyQrDoNotPrintSquare00}%
+\TestValue{hole-skips-pattern}{8}{\fancyqrtest@n{S}}
+\fancyqrtest@run{\FQ{abc}}\Trace\After
+\TestValue{hole-restores-matrix}{same}{\ifx\Plain\After same\else different\fi}
+
+% --- pumpkin -----------------------------------------------------------------
+% per pattern: one ring, three lobes and a stem (closed), two grooves (stroked)
+\fancyqrtest@run{\FQ[finder=square,finder core=pumpkin]{abc}}%
+\TestValue{pumpkin-closed-paths}{45}{\fancyqrtest@n{Z}}
+\TestValue{pumpkin-strokes}{27}{\fancyqrtest@n{S}}
+
+% --- styles ------------------------------------------------------------------
+\fancyqrset{r color=green}
+\FancyQrLoad{halloween}
+\TestValue{halloween-finder}{rounded/halloween}{\fancyqr@finder@style/\fancyqr@finder@core}
+% the rings follow the gradient of the tiles
+\TestValue{halloween-finder-color}{}{\fancyqr@finder@color}
+\FancyQrLoad{snow}
+\TestValue{snow-undoes-halloween}{rounded/auto/}{\fancyqr@finder@style/\fancyqr@finder@core/\fancyqr@core@color}
+\TestValue{snow-passes}{2}{\fancyqr@passes}
+\FancyQrLoadDefault
+\TestValue{default-resets-passes}{1}{\fancyqr@passes}
+\TestValue{default-undoes-snow}{inherit/auto}{\fancyqr@finder@style/\fancyqr@finder@core}
+\extractcolorspec{qr@fancy@gradient@tl}\Spec
+\TestValue{style-colors-restored}{{rgb}{0,1,0}}{\Spec}
+\FancyQrLoad{glows}\FancyQrLoadDefault
+\TestValue{default-after-glows}{1}{\fancyqr@passes}
+\fancyqrset{r color=red!68!black!88!white!90!white}
+
+% the snow is drawn in a second pass; \Caps counts the caps (tiles and rings)
+\newcount\Caps
+\FancyQrLoad{snow}
+\let\OrigCap\fancyqr@snow@draw \def\fancyqr@snow@draw{\global\advance\Caps\@ne\OrigCap}
+\def\SnowRun#1{\global\Caps\z@\fancyqrtest@run{#1}}
+% with chance 1 every tile with white above gets snow: 438 tiles (counted in the
+% matrix by a separate script) and the 3 finder rings, but not the 10 tiles and 2
+% rings on the top edge; the 6 alignment rings all have tiles on top of them
+\def\fancyqr@snow@chance{1}\def\fancyqr@snow@icicle@chance{0}
+\SnowRun{\FQ[seed=1]{abc}}
+\TestValue{snow-caps-all}{429}{\the\Caps}
+\edef\AllSnow{\fancyqrtest@n{F}}
+% icicles are extra fills, none without a chance
+\def\fancyqr@snow@icicle@chance{1}
+\SnowRun{\FQ[seed=1]{abc}}
+\TestValue{snow-icicles}{more}{\ifnum\fancyqrtest@n{F}>\AllSnow more\fi}
+\def\fancyqr@snow@icicle@chance{0}
+% with chance 0 only the finder rings have snow, not those on the top edge
+\def\fancyqr@snow@chance{0}
+\SnowRun{\FQ[seed=1]{abc}}
+\TestValue{snow-caps-rings}{1}{\the\Caps}
+% a cap is one fill
+\TestValueE{snow-fill-per-cap}{\the\numexpr\AllSnow-428\relax}{\fancyqrtest@n{F}}
+% the default leaves some runs bare, but every run as a whole
+\def\fancyqr@snow@chance{.7}
+\SnowRun{\FQ[seed=1]{abc}}
+\TestValue{snow-caps-some}{fewer}{\ifnum\Caps<429 \ifnum\Caps>1 fewer\fi\fi}
+\let\fancyqr@snow@draw\OrigCap
+\FancyQrLoadDefault
+\fancyqrtest@run{\FQ[finder=rounded]{abc}}\edef\Single{\fancyqrtest@n{P}}
+\FancyQrLoad{snow}
+\fancyqrtest@run{\FQ[seed=1]{abc}}%
+% every tile twice, the 9 ring shapes and the one below the top edge with a cap once
+\TestValueE{snow-second-pass}{\the\numexpr2*\Single-8\relax}{\fancyqrtest@n{P}}
+% the geometry of a cap: record the points of its outline
+\FancyQrLoad{snow}
+\def\SnowPoints#1{\def\Pts{}\begingroup
+  \def\moveto(##1,##2){\xdef\Pts{\Pts(##1,##2)}}\let\lineto\moveto
+  \def\curveto(##1,##2)(##3,##4)(##5,##6){\xdef\Pts{\Pts(##5,##6)}}%
+  \def\circlearc##1##2##3##4##5{\xdef\Pts{\Pts(\fpeval{##1+##3*cosd(##5)},\fpeval{##2+##3*sind(##5)})}}%
+  \def\fancyqr@snow@height{.3}\def\fancyqr@snow@wave{.1}#1\fancyqr@snow@waves{4}{6}\fancyqr@snow@path\lineto
+  \endgroup}
+\def\Lowest(#1,#2)#3\relax{\ifx\relax#3\relax#2\else\fpeval{min(#2,\Lowest#3\relax)}\fi}
+% a cap between two neighbours lies on the tile: nothing below its top
+\SnowPoints{\def\fancyqr@snow@one{1.045}\fancyqr@snow@setup1{.5}00}
+\TestValue{snow-flat-bottom}{1.045}{\expandafter\Lowest\Pts\relax}
+% a free end runs out on the corner circle (radius .5*1.045 around (.5225, .5225))
+\begingroup
+  \def\fancyqr@snow@one{1.045}\def\fancyqr@snow@height{.3}\fancyqr@snow@setup1{.5}11%
+  \def\OnCorner(#1,#2){\fpeval{round(sqrt((#1-.5225)^2+(#2-.5225)^2),4)}}%
+  \TestValue{snow-end-on-corner}{0.5225}{\expandafter\OnCorner\fancyqr@snow@end}
+\endgroup
+% two caps meet at the same height: the right end of one is the left end of the next
+\def\fancyqr@snow@height{.3}\def\fancyqr@snow@wave{.1}\def\fancyqr@snow@one{1}%
+\fancyqr@snow@setup1{.5}00\fancyqr@snow@waves{4}{6}\let\RightEnd\fancyqr@snow@up
+\fancyqr@snow@setup1{.5}00\fancyqr@snow@waves{5}{6}%
+\edef\NextLeft{\fancyqr@snow@tl}
+\def\EndOf#1\curveto(#2)(#3)(#4,#5){#5}
+\TestValueE{snow-seams-meet}{\NextLeft}{\expandafter\EndOf\RightEnd}
+% the tiles under the snow are larger by their overlap
+\begingroup
+  \qr@modulesize=10pt \fancyqr@edge@compensate=.45pt \fancyqr@style@begin
+  \TestValue{snow-scale}{1.045}{\fancyqr@snow@scale}
+\endgroup
+\FancyQrLoadDefault
+
+% the snow on the rings goes with the style
+\FancyQrLoadDefault
+\fancyqrtest@run{\FQ[finder=rounded]{abc}}%
+\TestValueE{default-has-no-snow}{\Single}{\fancyqrtest@n{P}}
+% halloween: with every chance 0 it is the default style with its cores (the
+% same design for every core here, else each core draws its own)
+\FancyQrLoad{halloween}\let\OrigCoreDraw\fancyqr@hw@coredraw\def\fancyqr@hw@coredraw{1}
+\let\OrigIfTiming\FancyQrIfTiming \def\FancyQrIfTiming#1#2{#2}% the timing garland apart
+\def\fancyqr@slime@chance{0}\def\fancyqr@skull@chance{0}\def\fancyqr@ghost@chance{0}
+\def\fancyqr@reaper@chance{0}\def\fancyqr@big@chance{0}\def\fancyqr@hat@chance{0}
+\def\fancyqr@lamp@chance{0}\def\fancyqr@scythe@chance{0}
+\def\fancyqr@bat@chance{0}\def\fancyqr@spider@chance{0}\def\fancyqr@cross@chance{0}\def\fancyqr@candy@chance{0}\def\fancyqr@bone@chance{0}\def\fancyqr@broom@chance{0}\def\fancyqr@web@chance{0}\def\fancyqr@bigweb@chance{0}\def\fancyqr@thread@chance{0}
+\fancyqrtest@run{\FQ[seed=1]{abc}}\edef\Dry{\fancyqrtest@n{F}}
+\FancyQrLoadDefault
+\fancyqrtest@run{\FQ[finder=rounded,finder core=halloween]{abc}}%
+\TestValueE{halloween-dry-is-default}{\fancyqrtest@n{F}}{\Dry}
+% every finder gets one core, of the design drawn for it
+\FancyQrLoad{halloween}
+\newcount\CoreP \newcount\CoreJ \newcount\CoreG \newcount\CoreS
+\def\CoreHook#1#2{\expandafter\let\csname Orig#1\expandafter\endcsname\csname fancyqr@hw@#1\endcsname
+  \expandafter\def\csname fancyqr@hw@#1\endcsname{\global\advance#2\@ne\csname Orig#1\endcsname}}
+\CoreHook{cpumpkin}\CoreP\CoreHook{cjack}\CoreJ\CoreHook{cghost}\CoreG\CoreHook{cskull}\CoreS
+\def\fancyqr@hw@coredraw{1}
+\fancyqrtest@run{\FQ[alignment=hide]{abc}}%
+\TestValue{halloween-cores-fixed}{0/3/0/0}{\the\CoreP/\the\CoreJ/\the\CoreG/\the\CoreS}
+\let\fancyqr@hw@coredraw\OrigCoreDraw \global\CoreP\z@\global\CoreJ\z@\global\CoreG\z@\global\CoreS\z@
+\fancyqrtest@run{\FQ[alignment=hide,seed=3]{abc}}%
+\TestValue{halloween-cores}{3}{\the\numexpr\CoreP+\CoreJ+\CoreG+\CoreS}
+% with chance 1 every tile above white drips
+\def\fancyqr@slime@chance{1.1}\def\fancyqr@hw@coredraw{1}
+\fancyqrtest@run{\FQ[seed=1]{abc}}\edef\Wet{\fancyqrtest@n{F}}
+\TestValue{halloween-drops}{410}{\the\numexpr\Wet-\Dry}
+\let\FancyQrIfTiming\OrigIfTiming \let\fancyqr@hw@coredraw\OrigCoreDraw
+% with chance 1 a web hangs in every light module below and right of a tile
+% that has dark modules to its right and below (and no figure there)
+\newcount\Webs \let\OrigWeb\fancyqr@hw@web \def\fancyqr@hw@web{\global\advance\Webs\@ne\OrigWeb}
+\def\fancyqr@slime@chance{0}\def\fancyqr@web@chance{1.1}
+\fancyqrtest@run{\FQ{abc}}\TestValue{halloween-webs}{75}{\the\Webs}
+\def\fancyqr@web@chance{0}
+% every figure replaces the tiles of its block: 3x3 (reaper, big jack-o'-lantern
+% or big ghost), 3x4 (tall reaper), 2x2 (skull, jack-o'-lantern, big eyeball), lone module
+% (ghost, sweet, small thing), 3x2 and 2x3 (wide jack-o'-lantern, fence,
+% gravestones, tall ghost), a cross of six, four (hat, bat on a branch, spider),
+% two (candy, hanging bat), three (bone, flying bat), and a timing module; the
+% counts were checked against the matrix by a separate script that places the
+% figures by the documented rules
+\newcount\Rects \newcount\Skulls \newcount\Pumpkins \newcount\Threes \newcount\Lones
+\newcount\Timing \newcount\Twelves \newcount\Sixes \newcount\Fours \newcount\Twos \newcount\Bones
+\let\OrigRect\fancyqr@rounded@rect \def\fancyqr@rounded@rect{\global\advance\Rects\@ne\OrigRect}
+\def\Hook#1#2{\expandafter\let\csname Orig\string#1\endcsname#1%
+  \edef#1{\global\advance\noexpand#2\@ne\expandafter\noexpand\csname Orig\string#1\endcsname}}
+\Hook\fancyqr@skull\Skulls \Hook\fancyqr@hw@jack\Pumpkins \Hook\fancyqr@hw@bigeyeball\Pumpkins
+\Hook\fancyqr@reaper\Threes \Hook\fancyqr@hw@bigjack\Threes \Hook\fancyqr@hw@bigghost\Threes \Hook\fancyqr@reaper@tall\Twelves
+\Hook\fancyqr@ghost\Lones \Hook\fancyqr@hw@sweet\Lones \Hook\fancyqr@hw@tiny\Lones \Hook\fancyqr@hw@openbat\Lones
+\Hook\fancyqr@hw@pump\Lones \Hook\fancyqr@hw@devil\Lones
+\Hook\fancyqr@hw@widejack\Sixes \Hook\fancyqr@hw@tomb\Sixes \Hook\fancyqr@hw@fence\Sixes \Hook\fancyqr@hw@cross\Sixes
+\Hook\fancyqr@hw@tallghost\Sixes \Hook\fancyqr@hw@candelabra\Sixes \Hook\fancyqr@hw@witch\Sixes
+\Hook\fancyqr@hw@hat\Fours \Hook\fancyqr@hw@roost\Fours \Hook\fancyqr@hw@spider\Fours \Hook\fancyqr@hw@scythe\Fours
+\Hook\fancyqr@hw@candy\Twos \Hook\fancyqr@hw@cane\Twos \Hook\fancyqr@hw@eyes\Twos \Hook\fancyqr@hw@hangbat\Twos \Hook\fancyqr@hw@tallcandle\Twos
+\Hook\fancyqr@hw@bat\Bones \Hook\fancyqr@hw@bone\Bones \Hook\fancyqr@hw@bonewhole\Bones \Hook\fancyqr@hw@broom\Bones
+\Hook\fancyqr@hw@streetlamp\Bones \Hook\fancyqr@hw@jacklamp\Bones \Hook\fancyqr@hw@witchfly\Bones \Hook\fancyqr@hw@timing\Timing
+\let\OrigLantern\fancyqr@hw@lantern
+\def\fancyqr@hw@lantern#1{\ifnum#1=2 \global\advance\Twos\@ne\else\global\advance\Bones\@ne\fi\OrigLantern{#1}}
+\def\Count#1{\global\Rects\z@\global\Skulls\z@\global\Pumpkins\z@\global\Threes\z@
+  \global\Lones\z@\global\Timing\z@\global\Twelves\z@\global\Sixes\z@\global\Fours\z@\global\Twos\z@\global\Bones\z@
+  \fancyqrtest@run{#1}\edef\Figs{\the\Threes/\the\Skulls/\the\Pumpkins/\the\Lones}%
+  \edef\More{\the\Twelves/\the\Sixes/\the\Fours/\the\Twos/\the\Bones}}
+\def\Covered{\the\numexpr\Rects+\Timing+9*\Threes+4*\Skulls+4*\Pumpkins+\Lones+12*\Twelves+6*\Sixes
+  +4*\Fours+2*\Twos+3*\Bones}
+\def\fancyqr@slime@chance{0}
+\Count{\FQ{abc}}\edef\AllTiles{\the\numexpr\Rects+\Timing}
+\Count{\FQ[version=10]{abc}}\edef\AllTilesX{\the\numexpr\Rects+\Timing}
+\def\fancyqr@skull@chance{1.1}
+\Count{\FQ{abc}}
+\TestValue{skulls}{0/7/2/0}{\Figs}
+\TestValueE{skull-covers-block}{\AllTiles}{\Covered}
+\def\fancyqr@skull@chance{0}\def\fancyqr@reaper@chance{1}
+\Count{\FQ[version=10]{abc}}
+\TestValue{reapers}{7/0/0/0}{\Figs}
+\TestValueE{reaper-covers-block}{\AllTilesX}{\Covered}
+% a 3x3 figure takes the place of a jack-o'-lantern that overlaps it
+\def\fancyqr@skull@chance{1.1}
+\Count{\FQ[version=10]{abc}}
+\TestValue{reapers-and-skulls}{7/17/8/0}{\Figs}
+\TestValueE{figures-cover-blocks}{\AllTilesX}{\Covered}
+\def\fancyqr@reaper@chance{0}
+\Count{\FQ[version=10]{abc}}
+\TestValue{skulls-without-reapers}{0/22/9/0}{\Figs}
+\def\fancyqr@skull@chance{0}\def\fancyqr@ghost@chance{1.1}
+\Count{\FQ{abc}}
+\TestValue{ghosts}{0/0/0/55}{\Figs}
+\TestValueE{ghost-covers-module}{\AllTiles}{\Covered}
+\def\fancyqr@ghost@chance{0}\def\fancyqr@big@chance{1.1}\def\fancyqr@hat@chance{1.1}
+\def\fancyqr@lamp@chance{1.1}\def\fancyqr@scythe@chance{1.1}\def\fancyqr@bat@chance{1.1}\def\fancyqr@spider@chance{1.1}\def\fancyqr@cross@chance{1.1}\def\fancyqr@candy@chance{1.1}\def\fancyqr@bone@chance{1.1}\def\fancyqr@broom@chance{1.1}
+\Count{\FQ[version=10]{abc}}
+\TestValue{more-figures}{0/41/83/18/16}{\More}
+\TestValueE{more-figures-cover-blocks}{\AllTilesX}{\Covered}
+% the defaults pick the same figures for any seed
+\def\fancyqr@lamp@chance{.5}\def\fancyqr@scythe@chance{1}
+\def\fancyqr@skull@chance{.82}\def\fancyqr@ghost@chance{.4}\def\fancyqr@reaper@chance{1}
+\def\fancyqr@big@chance{.6}\def\fancyqr@hat@chance{.22}\def\fancyqr@bat@chance{.2}
+\def\fancyqr@spider@chance{.17}\def\fancyqr@cross@chance{.15}\def\fancyqr@candy@chance{.3}\def\fancyqr@bone@chance{.5}\def\fancyqr@broom@chance{.2}
+\Count{\FQ[version=10,seed=1]{abc}}\edef\SeedOne{\Figs/\More}
+% the lone dark modules of the timing patterns that no figure takes
+\TestValue{timing-figures}{6}{\the\Timing}
+\TestValue{default-figures}{6/3/3/39/0/23/32/7/11}{\SeedOne}
+\Count{\FQ[version=10,seed=2]{abc}}
+\TestValueE{figures-are-fixed}{\SeedOne}{\Figs/\More}
+% no figure reaches into a hidden center or into the finder patterns
+\def\fancyqr@lamp@chance{0}\def\fancyqr@scythe@chance{0}
+\def\fancyqr@ghost@chance{0}\def\fancyqr@reaper@chance{0}\def\fancyqr@big@chance{0}
+\def\fancyqr@hat@chance{0}\def\fancyqr@bat@chance{0}\def\fancyqr@candy@chance{0}
+\def\fancyqr@spider@chance{0}\def\fancyqr@cross@chance{0}\def\fancyqr@bone@chance{0}\def\fancyqr@broom@chance{0}\def\fancyqr@skull@chance{1.1}
+\Count{\FQ[finder=inherit,finder core=inherit]{abc}}
+\TestValue{skulls-with-tile-finders}{0/7/2/0}{\Figs}
+\Count{\FancyQrDoNotPrintSquare{5}{5}\FQ{abc}\FancyQrDoNotPrintSquare{0}{0}}
+\TestValue{skulls-around-hole}{0/6/1/0}{\Figs}
+\def\fancyqr@reaper@chance{1}
+\Count{\FancyQrDoNotPrintSquare{9}{9}\FQ[version=10]{abc}\FancyQrDoNotPrintSquare{0}{0}}
+\TestValue{figures-around-hole}{5/15/7/0}{\Figs}
+\let\fancyqr@rounded@rect\OrigRect
+\def\fancyqr@slime@chance{.35}\def\fancyqr@skull@chance{.82}\def\fancyqr@ghost@chance{.4}
+\def\fancyqr@big@chance{.6}\def\fancyqr@hat@chance{.22}\def\fancyqr@bat@chance{.2}
+\def\fancyqr@spider@chance{.17}\def\fancyqr@cross@chance{.15}\def\fancyqr@candy@chance{.3}\def\fancyqr@bone@chance{.5}\def\fancyqr@broom@chance{.2}\def\fancyqr@web@chance{.4}\def\fancyqr@bigweb@chance{.008}\def\fancyqr@thread@chance{.08}
+\FancyQrLoadDefault
+
+% --- figures -----------------------------------------------------------------
+% four figures on the default tiles; the salts follow the order of declaration,
+% the bigger figures are placed first; every count was checked against the
+% matrix by a separate script that places them by the documented rules (and
+% finds no overlaps and no figure on a pattern or in the hole)
+\FancyQrLoadDefault
+\TestValue{default-has-no-figures}{}{\fancyqr@figures}
+\newcount\Sides \newcount\UpLeft \newcount\Figbar \newcount\Figpair \newcount\Figlone \newcount\Figbig
+\def\FigLog#1{\global\advance\csname Fig#1\endcsname\@ne
+  \ifnum\pdfstrcmp{#1}{big}=\z@\xdef\BigAt{\BigAt\the\i/\the\j\space}\fi}
+\def\FigSide#1#2#3{\ifnum\qr@matrixentry\fancyqr@currprint{\the\numexpr\i+#1}{\the\numexpr\j+#2}>#3
+  \global\advance\Sides\@ne\fi}
+\def\TestTile#1#2#3#4{\iffancyqr@diag@\ifnum\@upleft=\@ne\global\advance\UpLeft\@ne\fi\fi
+  \FancyQrFigureTile{\global\advance\Rects\@ne
+    \FigSide{-1}0\@up\FigSide0{-1}\@left\FigSide01\@right\FigSide10\@down}}
+\FancyQrFigure{bar}{1}{0x0/0x0/0x0}{\FigLog{bar}}
+\FancyQrFigure{pair}{.6}{xx/xx}{\FigLog{pair}}
+\FancyQrFigure{lone}{.5}{.0./0x0/.0.}{\FigLog{lone}}
+\FancyQrFigure*{big}{1}{xx/xx/xx}{\FigLog{big}}
+\FancyQrRoundedPatterns\TestTile
+{\def\fancyqr@fig@item#1#2{#2/}\xdef\Order{\fancyqr@figures}}
+\TestValue{api-figure-order}{big/pair/bar/lone/}{\Order}
+\def\FigRun#1{\global\Rects\z@\global\Sides\z@\global\UpLeft\z@\gdef\BigAt{}%
+  \global\Figbar\z@\global\Figpair\z@\global\Figlone\z@\global\Figbig\z@
+  \fancyqrtest@run{#1}%
+  \edef\Figs{\the\Figbig/\the\Figpair/\the\Figbar/\the\Figlone}}
+% a figure is drawn once, its other modules not at all: 1644 tiles in all
+\def\FigCovered{\the\numexpr\Rects+6*\Figbig+4*\Figpair+3*\Figbar+\Figlone}
+\FigRun{\FQ[version=10]{abc}}
+\TestValue{api-figures}{7/47/3/59}{\Figs}
+\TestValue{api-figure-grid}{10/23 31/1 31/33 34/5 40/33 49/33 52/21 }{\BigAt}
+\TestValue{api-figure-tiles}{1346}{\the\Rects}
+\TestValue{api-figure-covers-blocks}{1644}{\FigCovered}
+% the tiles next to a figure see it as white
+\TestValue{api-figure-neighbours}{197}{\the\Sides}
+\FigRun{\FancyQrDoNotPrintSquare44\FQ[version=10]{abc}\FancyQrDoNotPrintSquare00}
+\TestValue{api-figures-around-hole}{6/45/2/57}{\Figs}
+\TestValue{api-figure-tiles-around-hole}{1319}{\the\Rects}
+\TestValue{api-figure-neighbours-around-hole}{184}{\the\Sides}
+% the same figures for any seed
+\FigRun{\FQ[version=10,seed=7]{abc}}
+\TestValue{api-figures-are-fixed}{7/47/3/59}{\Figs}
+\FancyQrDiagonals
+\FigRun{\FQ[version=10]{abc}}
+\TestValue{api-diagonals}{752}{\the\UpLeft}
+\FancyQrLoadDefault
+\TestValue{default-has-no-diagonals}{false}{\iffancyqr@diag@ true\else false\fi}
+
+% the finder shapes of castle and christmas (see the smoke test for the rest)
+\FancyQrLoad{castle}
+\TestValue{castle-finder}{inherit/auto}{\fancyqr@finder@style/\fancyqr@finder@core}
+\FancyQrLoad{christmas}
+\TestValue{christmas-finder}{rounded/circle}{\fancyqr@finder@style/\fancyqr@finder@core}
+% christmas: the figures of every kind (counts checked against the matrix by a
+% separate script that places them by the documented rules, with the timing
+% patterns kept free), the pieces on lone modules of the timing patterns, and
+% the cores, which the seed picks for each finder
+\def\XCount#1{\global\advance\csname X@#1\endcsname\@ne}
+\def\XNew#1{\expandafter\newcount\csname X@#1\endcsname}
+\XNew{trees}\XNew{cane}\XNew{present}\XNew{bauble}\XNew{sledge}\XNew{bench}\XNew{train}\XNew{teddy}\XNew{drum}
+\XNew{stocking}\XNew{soldier}\XNew{sock}\XNew{lone}\XNew{core}
+\def\XBase#1/#2\@nil{#1}
+\def\XKind#1{\expandafter\XKind@\expandafter{\XBase#1/\@nil}}
+\def\XKind@#1{\ifcsname X@#1\endcsname#1\else\ifcsname XK@#1\endcsname\csname XK@#1\endcsname\fi\fi}
+\def\XK@fir{trees}\def\XK@tree{trees}\def\XK@spire{trees}\def\XK@smalltree{trees}\def\XK@smallfir{trees}
+\def\XK@slimtree{trees}\def\XK@slimfir{trees}
+\let\XGo\fancyqr@fig@go
+\def\fancyqr@fig@go#1#2{\ifnum#2<\z@\else\edef\x{\XKind{#1}}\ifx\x\@empty\else\XCount\x\fi\fi\XGo{#1}{#2}}
+\def\XHook#1#2{\expandafter\let\csname X\string#1\endcsname#1%
+  \edef#1{\noexpand\XCount{#2}\expandafter\noexpand\csname X\string#1\endcsname}}
+\XHook\fancyqr@xm@soldier{soldier}
+\XHook\fancyqr@xm@sock{sock}\XHook\fancyqr@xm@item{lone}
+\let\XCore\fancyqr@xm@core \def\fancyqr@xm@core{\XCore\XCount{core}\xdef\XCores{\XCores\fancyqr@xm@v}}
+\def\XRun#1{\@for\x:=trees,cane,present,bauble,sledge,bench,train,teddy,drum,stocking,soldier,sock,lone,core\do
+  {\global\csname X@\x\endcsname\z@}\gdef\XCores{}\fancyqrtest@run{#1}%
+  \edef\XFigs{\the\X@trees/\the\X@cane/\the\X@present/\the\X@bauble/\the\X@sledge/\the\X@bench/\the\X@train/\the\X@teddy/%
+    \the\X@drum/\the\X@stocking/\the\X@soldier/\the\X@sock/\the\X@lone/\the\X@core}}
+\XRun{\FQ[version=10]{abc}}
+\TestValue{christmas-figures}{46/14/13/65/5/3/8/0/10/23/0/8/16/3}{\XFigs}
+\XRun{\FQ[version=10,seed=7]{abc}}
+\TestValue{christmas-figures-are-fixed}{46/14/13/65/5/3/8/0/10/23/0/8/16/3}{\XFigs}
+\let\XSc\fancyqr@sledge@chance\let\XBc\fancyqr@bench@chance\let\XTc\fancyqr@train@chance\let\XYc\fancyqr@toy@chance\let\XKc\fancyqr@stocking@chance\let\XPc\fancyqr@pair@chance
+\def\fancyqr@bench@chance{1.1}\def\fancyqr@sledge@chance{1.1}\def\fancyqr@train@chance{1.1}\def\fancyqr@toy@chance{1.1}
+\def\fancyqr@stocking@chance{1.1}\def\fancyqr@pair@chance{1.1}
+\XRun{\FQ{abc}}
+\TestValue{christmas-new-figures}{26/12/6/37/8/15/0/0/18/50/18/12/13/3}{\XFigs}
+\def\fancyqr@sledge@chance{0}\XRun{\FQ{abc}}
+\let\fancyqr@sledge@chance\XSc\let\fancyqr@bench@chance\XBc\let\fancyqr@train@chance\XTc
+\let\fancyqr@toy@chance\XYc\let\fancyqr@stocking@chance\XKc\let\fancyqr@pair@chance\XPc
+% the cores differ between seeds (one of six designs per finder)
+\def\XSeeds{}\@for\s:=1,2,3,4\do{\XRun{\FQ[seed=\s]{abc}}\xdef\XSeeds{\XSeeds\XCores/}}
+\def\XDiff#1/#2/#3/#4/\@nil{\def\XA{#1}\def\XB{#2}\def\XC{#3}\def\XD{#4}%
+  \edef\XVary{\ifx\XA\XB\ifx\XA\XC\ifx\XA\XD false\else true\fi\else true\fi\else true\fi}}
+\expandafter\XDiff\XSeeds\@nil
+\TestValue{christmas-cores-vary}{true}{\XVary}
+\FancyQrLoadDefault
+
+% --- loading in a paragraph ---------------------------------------------------
+% loading a style in running text adds no space
+\setbox0\hbox{ab}\edef\Ref{\the\wd0}
+\def\NoSpace#1{\setbox0\hbox{a\FancyQrLoad{#1}b}\FancyQrLoadDefault
+  \TestValueE{load-#1-adds-no-space}{\Ref}{\the\wd0}}
+\NoSpace{rounded}\NoSpace{flat}\NoSpace{frame}\NoSpace{dots}\NoSpace{blobs}
+\NoSpace{glitch}\NoSpace{glows}\NoSpace{goo}\NoSpace{halloween}\NoSpace{snow}
+\NoSpace{castle}\NoSpace{christmas}
+
+% --- castle ------------------------------------------------------------------
+% the green grass is the background: an empty or a white one removes it
+\FancyQrLoad{castle}
+\TestColorUse{castle-background}{green!60!yellow!14!white}{1}{\FQ{abc}}
+\TestColorUse{castle-no-background}{green!60!yellow!14!white}{0}{\FQ[background=]{abc}}
+\TestColorUse{castle-white-background}{white}{1}{\FQ[background=white]{abc}}
+% the people on the towers and walls (the extra gallery raises their chance) and the banners
+\TestRuns{castle-people}{\FQ[seed=4,extras={people/tower,people/guard}]{abc}}
+\TestRuns{castle-banners}{\FQ[seed=4,extras=wall/banner,color=green!40!black]{abc}}
+% decorations of other styles on the castle
+\TestRuns{castle-add-halloween}{\FQ[seed=4,add=halloween,extras=web*]{abc}}
+\TestRuns{castle-add-snow-christmas}{\FQ[seed=4,add={snow,christmas,snow},extras={snow,lights,stars}]{abc}}
+\FancyQrLoadDefault
+% a rounded hole hides the modules of a rounded rectangle
+\TestRuns{hole-rounded}{{\FancyQrDoNotPrintSquare{3}{3}\FancyQrDoNotPrintRadius{.6}\fancyqr[level=H,color=black]{abc}}}
+
+% --- first run ---------------------------------------------------------------
+% codes computed here for the first time: the alignment patterns are styled,
+% and a smaller code does not inherit those of the larger one before it
+\TestCounts{first-run-version-7}{P=818 M=827 L=5248 A+=1056 A-=388 C=0 F=818 S=9 Z=18 O=0 o=0}{\fancyqr[size=3cm,tight,version=7,color=black,finder=rounded]{first run}}
+\fancyqrtest@run{\fancyqr[size=3cm,tight,version=1,color=black,finder=rounded]{small}}%
+\TestValue{first-run-version-1}{3}{\fancyqrtest@n{S}}
+
+\TestSummary
+\END
+\end{document}

@@ -10,275 +10,687 @@
 % version 2008 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is Florian Sihler
 %
 % This work consists of the fancyqr.sty, alongside the `fancyqr-style-*.code` files and the documentation `fancyqr-doc.tex`.
-\documentclass[parskip=half,english,numbers=noenddot,footnotes=nomultiple,oneside,10pt]{scrartcl}
+\documentclass[10pt,DIV=12,parskip=half,english,numbers=noenddot,footnotes=nomultiple,oneside]{scrartcl}
 
 \usepackage[T1]{fontenc}
-
+\usepackage[utf8]{inputenc}
 \usepackage{babel}
-
+\usepackage{newpxtext,newpxmath}
+\usepackage[varqu,varl,scaled=.96]{inconsolata}
+\usepackage[margin=2cm,includefoot]{geometry}
 \usepackage{microtype}
-\usepackage[allcolors=purple!30!red!45!black,colorlinks]{hyperref}
-
-\usepackage{array,booktabs}
-\usepackage{float}
-\usepackage{footnote}
-\usepackage{fontawesome}
-
-\usepackage{fancyqr}
+\raggedbottom
+\widowpenalty=10000 \clubpenalty=10000 \interfootnotelinepenalty=10000
+\setlength\emergencystretch{3em}
 \usepackage{xcolor}
-\usepackage[prefix=@]{xcolor-material}
-\usepackage[tex]{listings}
-\usepackage{amssymb}
-\usepackage[defaultfam]{montserrat}
-\usepackage{beramono}
-\usepackage[margin=2cm]{geometry}
+% the colors of the examples
+\definecolor{ocean}{HTML}{0E6E6B}\definecolor{deepsea}{HTML}{0B3D4F}
+\definecolor{lagoon}{HTML}{1C8C9A}\definecolor{slate}{HTML}{3D4F63}
+\definecolor{amber}{HTML}{F0A202}\definecolor{plum}{HTML}{6C4AA8}
+\definecolor{rose}{HTML}{D8466E}
+\usepackage[hlnumbers=false]{xlistings}
+\LoadLanguages{latex}
+\usepackage{booktabs,needspace}
+\usepackage{float}
 \usepackage{enumitem}
-\usepackage[skins,breakable,hooks,xparse,listingsutf8,external]{tcolorbox}
-\tcbset{%
-	colframe=gray,enhanced,breakable, arc=2mm,
-	fonttitle=\bfseries, sidebyside,
-	listing options={language=ltx},
-	boxrule=.35mm,center lower,segmentation at break=false,
-	righthand width=4.75cm, bottom=0pt, top=0pt,boxsep=4.25pt,
-	before lower app={}, colback=white
-}
-
+\usepackage{fontawesome}
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,skins,breakable}
+\usepackage{fancyqr}
+\fancyqrset{externalize}% every code is drawn once, into a pdf of its own
+\usepackage{hyperref}
+\usepackage[underline]{code-link}
+\usepackage{imakeidx}
+\makeindex[title={Index of commands, keys and styles},name=\jobname,columns=2,columnsep=.75cm,noautomatic=true,intoc]
+\definecolor{fqcmd}{HTML}{7A1F3D}
+\hypersetup{colorlinks=true,linkcolor=fqcmd,urlcolor=fqcmd,citecolor=fqcmd}
 \urlstyle{same}
 
-\lstdefinelanguage{ltx}{
-	language={[LaTeX]TeX},
-	moretexcs=[1]{fancyqr,qrcode,textcolor,FancyQrDoNotPrintSquare,FancyQrRoundCut,FancyQrHardCut,FancyQrLoad,FancyQrLoadDefault,fancyqrset,faGithub,FancyQrDoNotPrintRadius,FancyQrSeed,FancyQrInnerRoundings,FancyQrNoInnerRoundings},
-	commentstyle=\color{gray}\ttfamily\itshape,
-}
-\lstset{basicstyle=\ttfamily,breaklines,texcsstyle=*\color{purple!30!red!35!black}\bfseries,language=ltx}
-\lstMakeShortInline|
-\def\ltx#1{\lstinline/#1/}
-\interfootnotelinepenalty=10000
+% the layout of the other manuals: sections, lists, header and footer
+\setkomafont{disposition}{\rmfamily\bfseries}
+\setkomafont{subtitle}{\rmfamily\itshape}
+\setkomafont{descriptionlabel}{\normalfont}
+\setlist{nosep,itemsep=2pt,leftmargin=*}
+\newcommand\descbullet[1]{\llap{\textbullet\enspace}#1}
+\setlist[description]{format=\descbullet,labelindent=0pt,leftmargin=1.5em,itemsep=\medskipamount}
+\usepackage[headsepline]{scrlayer-scrpage}
+\clearpairofpagestyles
+\ihead{\texttt{fancyqr}}
+\ohead{\hypersetup{urlcolor=.}\fqrepo}
+\cfoot*{\pagemark}
+\setkomafont{pageheadfoot}{\normalfont\small\color{gray}}
+\RedeclareSectionCommand[tocbeforeskip=2pt]{section}
 
+% ---------------------------------------------------------------- listings
+\colorlet{xlst@colors@lst@command}{purple}
+\newif\iffqnextcs
+\newcommand\csidstyle{\iffqnextcs\global\fqnextcsfalse\color{purple}\fi}
+\newcommand\csplain[1]{\textbackslash#1}
+\makeatletter\lst@AddToHook{Init}{\global\fqnextcsfalse}\lst@AddToHook{OutputOther}{\global\fqnextcsfalse}\makeatother
+\lstdefinestyle{fq}{language=lLatex,basicstyle=\ttfamily\small,columns=fullflexible,keepspaces,
+   breaklines=true,breakatwhitespace=true,breakindent=0pt,postbreak=\mbox{\tiny$\hookrightarrow$},
+   keywordstyle=[3]{},alsoother={\\},identifierstyle=\csidstyle,
+   add to literate={\\}{{\csplain{}\global\fqnextcstrue\CodeLinkMarkBackslash\nobreak}}1}
+\lstMakeShortInline[style=fq,breaklines=false]|
+\tcbset{fqbox/.style={enhanced,colback=white,colframe=black!15,boxrule=.4pt,arc=2pt,left=4pt,right=4pt,
+   top=2pt,bottom=2pt,segmentation style={black!15},halign lower=center,valign lower=center,
+   listing options={style=fq,basicstyle=\ttfamily\footnotesize}}}
+% the code on the left, what it draws on the right
+\newtcblisting{example}{fqbox,listing side text,righthand width=4.2cm}
+\newtcblisting{code}{fqbox,listing only}
 
-\title{The \texttt{fancyqr} package}
-\author{%
-	\texorpdfstring{%
-		\parbox{2.83cm}{\fancyqr[height=2.5cm,padding]{https://github.com/EagleoutIce/fancyqr}}\quad%
-		\parbox{7cm}{\href{mailto:florian.sihler@uni-ulm.de}{Florian Sihler}\\*
-			Version v2.4 \textendash{} 2026/08/17\\[-6.5pt]
-			{\footnotesize LPPL~1.3c or later}
-			\medskip\\
-			\textcolor{gray}{\href{https://github.com/EagleoutIce/fancyqr}{github.com/EagleoutIce/fancyqr}}
-		}%
-	}{Florian Sihler}}
-\date{}
+% ------------------------------------------------- commands, keys and styles
+% every command and key links to the place that explains it, in the text and in
+% the listings
+\CodeLinkStyle{api}{\color{fqcmd}}
+\CodeLinkGroup{api}{prefix=api:,style=api}
+\CodeLinkGroup{key}{prefix=key:,style=api}
+\CodeLinkStyle{val}{\color{fqcmd!60!white}}
+\CodeLinkGroup{val}{prefix=val:,style=val}
+% the names of figures and decorations link to the galleries, the first of a name wins
+\makeatletter
+% style names link to their samples, not to a figure or value of the same name
+\@for\@tempa:=default,rounded,flat,frame,dots,blobs,glitch,goo,glows,halloween,snow,castle,christmas\do{%
+   \global\expandafter\let\csname fq@anchor@\@tempa\endcsname\relax}
+\ExplSyntaxOn
+\cs_new_protected:Npn \fq_anchor:n #1 {
+   \cs_if_exist:cF {fq@anchor@#1} { \cs_gset_eq:cN {fq@anchor@#1} \relax \CodeLinkAnchor[group=val]{#1} } }
+\cs_generate_variant:Nn \fq_anchor:n { V }
+% a name links its entry, and so does the word behind the slash of a variant, if it is one
+\cs_new_protected:Npn \fq_anchor_name:n #1 {
+   \seq_set_split:Nnn \l_tmpa_seq {/} {#1}
+   \seq_get_right:NN \l_tmpa_seq \l_tmpb_tl
+   \int_compare:nNnTF { \seq_count:N \l_tmpa_seq } = {1} { \fq_anchor:n {#1} }
+      { \regex_match:nVT {\A[a-z]{3,}\Z} \l_tmpb_tl { \fq_anchor:V \l_tmpb_tl } } }
+\RenewDocumentCommand\FancyQrGalleryAnchor{m}{\clist_map_function:nN {#1} \fq_anchor_name:n}
+\ExplSyntaxOff
+\makeatother
+\let\T\texttt
+\NewDocumentCommand\idxkind{m}{\textcolor{gray}{\small(#1)}}
+\newcommand\meta[1]{\ensuremath{\langle}\textit{#1}\ensuremath{\rangle}}
+\newcommand\marg[1]{\T{\{}\meta{#1}\T{\}}}
+\newcommand\oarg[1]{\T{[}\meta{#1}\T{]}}
+% listings ends a word before a comma with \lst@nolig, which hides it from the links
+\makeatletter
+\def\fq@nolig#1\lst@nolig#2\@nil{\lst@token{#1}}
+\lst@AddToHook{Output}{\expandafter\fq@nolig\the\lst@token\lst@nolig\@nil}
+\makeatother
+% a command: \api where it is explained, \cmd everywhere else
+\newcommand\api[1]{\CodeLinkAnchor[group=api,command]{#1}\T{\color{fqcmd}\textbackslash#1}%
+   \index{#1@\texttt{\color{fqcmd}\textbackslash #1}\string|hyperpage}}
+\newcommand\cmd[1]{\CodeLinkRef[group=api,command]{#1}}
+% a key: \option where it is explained (#2 values, #3 default), \opt everywhere else
+\newcommand\option[3]{\CodeLinkAnchor[group=key]{#1}\T{\bfseries\color{fqcmd}#1}%
+   \index{#1@\texttt{\bfseries\color{fqcmd}#1} \idxkind{key}\string|hyperpage}%
+   \ifx\relax#2\relax\else\T{=}#2\fi
+   \ifx\relax#3\relax\else\,\textcolor{gray}{\small(default \T{#3})}\fi}
+\newcommand\opt[1]{\CodeLinkRef[group=key]{#1}}
+% the version a key, command or style came with
+\newcommand\since[1]{\nobreak\hskip.4em{\mdseries\scriptsize\color{black!50}v#1}}
+% a value of key #1 (spaces as -), linked to the key
+\ExplSyntaxOn
+\newcommand\val[2]{\hyperref[key:#1]{\T{\color{fqcmd!60!white}#2}}%
+   \regex_match:nnT {\A[a-z]{3,}\Z} {#2} {\cs_if_exist:cF {fq@anchor@#2}
+      {\cs_gset_eq:cN {fq@anchor@#2} \relax \CodeLinkRegister[group=val,label=key:#1]{#2}}}}
+\ExplSyntaxOff
+\newcommand\style[1]{\hyperlink{style:#1}{\T{#1}}\index{#1@\texttt{#1} \idxkind{style}\string|hyperpage}}
+% key=value pairs, each key linked to its explanation; \fqkvs breaks the line after every pair
+\makeatletter
+\newcommand\fqkv[1]{\fq@kv#1==\@nil}
+\def\fq@kv#1=#2=#3\@nil{\opt{#1}\ifx\relax#2\relax\else\T{=#2}\fi}
+\newcommand\fqkvs[1]{\let\fq@sep\relax\@for\fq@i:=#1\do{\fq@sep\let\fq@sep\fq@br\expandafter\fqkv\expandafter{\fq@i}}}
+\def\fq@br{,\\}
+\makeatother
+\newcommand\pkg[1]{\href{https://ctan.org/pkg/#1}{\T{#1}}}
+\newcommand\fqrepo{\href{https://github.com/EagleoutIce/fancyqr}{\T{github.com/EagleoutIce/fancyqr}}}
 
+% one code of a figure, #1 are its options and #2 the caption below it
+\newcommand*\ShowFinder[2][]{%
+   \begin{minipage}[t]{.31\linewidth}\centering
+      \fancyqr[height=2.6cm,tight,#2]{https://github.com/EagleoutIce/fancyqr}\par
+      \vspace{.6ex}{\scriptsize\ttfamily\ifx\relax#1\relax\fqkvs{#2}\else\fqkvs{#1}\fi\par}
+   \end{minipage}}
+\newcommand*\ShowStyle[1]{%
+   \begin{minipage}[t]{.23\linewidth}\centering
+      \hypertarget{style:#1}{}\CodeLinkAnchor[group=val]{#1}\FancyQrLoad{#1}%
+      \fancyqr[height=2.6cm,tight,seed=4]{https://github.com/EagleoutIce/fancyqr}\par
+      \vspace{.4ex}{\small\ttfamily#1\par}
+   \end{minipage}}
+
+\title{\T{fancyqr}}
+\subtitle{\small\fqrepo}
+\author{Florian Sihler\thanks{Released under the \href{https://www.latex-project.org/lppl.txt}{LaTeX Project Public License}, version 1.3c or later.}}
+\makeatletter
+\long\def\fq@parsever#1 version #2 #3\relax{\def\fqdocdate{#1}\def\fqdocversion{#2}}
+\expandafter\expandafter\expandafter\fq@parsever\csname ver@fancyqr.sty\endcsname\relax
+\makeatother
+\date{Version \fqdocversion{} \textendash{} \fqdocdate}
+
+% the table of contents needs no heading
+\deftocheading{toc}{}
 \begin{document}
-   \maketitle\vspace*{-\baselineskip}
+\maketitle
+\thispagestyle{empty}
 
-	\texttt{fancyqr} is a simple package to create fancy qr-codes with the help of the \textit{\href{https://www.ctan.org/pkg/qrcode}{qrcode}}-package.
-	You can use the |\fancyqr|-macro as a drop-in replacement for the normal |\qrcode|.\footnote{\ltx{\\fancyqr[<qr-options>]\{<url>\}}}
+\noindent\T{fancyqr} draws QR codes with rounded, colored and decorated modules.
+\pkg{qrcode} computes the code, so \cmd{fancyqr} takes the options of |\qrcode| and more.
+It also encodes text beyond ASCII with every engine.
+\begin{example}
+\fancyqr{https://ctan.org}
+\end{example}
+\begin{example}
+\FancyQrLoad{snow}
+\fancyqr[seed=3,r color=lagoon,
+   l color=deepsea]{https://ctan.org}
+\end{example}
+\begin{example}
+\fancyqr[seed=3,height=4cm,style=castle]{https://ctan.org}
+\end{example}
 
-	If you do want to hide a center square (e.g, because you want to embed an image) you can use |\FancyQrDoNotPrintSquare{<x>}{<y>}| to hide a rectangle with radius x and y set from the center (with |\FancyQrDoNotPrintRadius{<factor>}| you can apply a \href{https://github.com/EagleoutIce/fancyqr/pull/41}{rounding} to this!). If you choose this option, the default |\FancyQrRoundCut| that rounds cut corners can be changed with |\FancyQrHardCut|.
-	The styles that draw randomized tiles use the random number generator of \LaTeX; |\FancyQrSeed{<n>}| (or the |seed| option) fixes its seed and makes them reproducible.
+\setcounter{tocdepth}{1}
+\tableofcontents
 
-	All of the extra qr-options (you can set all of them with |\fancyqrset{<keys>}|) are showcased in \autoref{tbl:extra-keys}.
-	The defaults are set like this:
-\begin{lstlisting}
-\fancyqrset{image padding=0,gradient=true,
-	gradient angle=135,
-	r color=red!68!black!88!white!90!white,
-	l color=purple!40!red!20!black!90!white}
-\end{lstlisting}
-	Consider the following examples (uses \href{https://www.ctan.org/pkg/fontawesome}{fontawesome}, but you can use include images,~\ldots):
-
-\begin{tcblisting}{}
-\fancyqr[
-   classic,image=\LARGE\faGithub,
-]{https://github.com/EagleoutIce/fancyqr}
-\end{tcblisting}
-\begin{tcblisting}{}
-\FancyQrLoad{goo}%
-\fancyqr[
-   seed=3,content color=black
-]{https://github.com/EagleoutIce/fancyqr}%
-\end{tcblisting}
-\begin{tcblisting}{}
-% needs \usepackage[prefix=@]{xcolor-material}
-\FancyQrLoad{dots}%
-\fancyqr[
-   height=4cm,
+\section{Getting started}
+\begin{description}
+\item[\api{fancyqr}\oarg{options}\marg{text}] draws a QR code for the text.
+   It goes wherever |\qrcode| goes.
+   All options are listed in Section~\ref{sec:options}.
+\item[\api{fancyqrset}\marg{options}] sets options for the following codes in the current group.
+\end{description}
+The package starts with these settings:
+\begin{code}
+\fancyqrset{image padding=0,gradient=true,gradient angle=135,
+   r color=red!68!black!88!white!90!white,
+   l color=purple!40!red!20!black!90!white,persist=true}
+\end{code}
+The examples use a few colors of their own:
+\begin{code}
+\definecolor{ocean}{HTML}{0E6E6B}  \definecolor{deepsea}{HTML}{0B3D4F}
+\definecolor{lagoon}{HTML}{1C8C9A} \definecolor{slate}{HTML}{3D4F63}
+\definecolor{amber}{HTML}{F0A202}  \definecolor{plum}{HTML}{6C4AA8}
+\definecolor{rose}{HTML}{D8466E}
+\end{code}
+\opt{classic} gives black squares like a plain QR code.
+Any \LaTeX\ content can go in the center (the logo is from \pkg{fontawesome}):
+\begin{example}
+\fancyqr[classic,
+   image=\LARGE\faGithub]{https://ctan.org}
+\end{example}
+\begin{example}
+\FancyQrLoad{dots}
+\fancyqr[height=3.6cm,
    image={\textbf{\textcolor{gray}{fancy}qr}},
-   random color={@Red800}{@Purple800}{@Indigo800}{@Teal800}{@Green800}
-	{@DeepOrange800}{@Brown700}{@BlueGrey700}
-]{https://github.com/EagleoutIce/fancyqr}%
-\end{tcblisting}
+   random color={ocean}{deepsea}
+      {lagoon}{slate}{plum},
+   ]{https://ctan.org}
+\end{example}
 
 \section{Styles}\label{sec:styles}
+A style decides how the modules are drawn.
+Figure~\ref{fig:styles} shows all thirteen.
+\begin{description}
+\item[\api{FancyQrLoad}\marg{name}] loads a style for the rest of the current group.
+\item[\option{style}{\meta{name}}{}\since{2.5}] loads a style for this code alone. The other options of the code still override it.
+\item[\option{add}{\marg{name}\T{,}\ldots}{}\since{2.5}] adds the decorations of other styles to the loaded one: \style{halloween} lends its webs, threads and slime, \style{christmas} its lights, stars, snowflakes and candles, and \style{snow} its snow on the tiles.
+   Their tiles, figures and colors stay with them.
+   The added decorations count as extras (Section~\ref{sec:figures}), so \opt{extras} and \opt{no extras} pick from them as well.
+\item[\api{FancyQrAdd}\marg{name}\T{,}\ldots] does the same for the rest of the current group, up to the next \cmd{FancyQrLoad}.
+\item[\api{FancyQrLoadDefault}] goes back to \style{default}, as does |\FancyQrLoad{default}|.
+\item[\api{FancyQrSeed}\marg{number}] fixes the random numbers, like \opt{seed}.
+   \style{blobs}, \style{glitch}, \style{goo}, \style{halloween} and \style{snow} are random and change on every run without it.
+\end{description}
 
-	Besides the |default| style there are eight more, all loaded (locally) with |\FancyQrLoad{<name>}|; |\FancyQrLoad{default}| and |\FancyQrLoadDefault| reset to the default.
-	\autoref{fig:styles} shows every one of them with the same payload and the call that produced it.
-
-\begin{figure}[H]
-	\centering
-	\newcommand*\ShowStyle[1]{%
-		\begin{minipage}{.31\linewidth}\centering
-			\FancyQrLoad{#1}%
-			\fancyqr[height=2.6cm,tight,seed=4]{https://github.com/EagleoutIce/fancyqr}%
-			\\[.5ex]\texttt{\textbackslash FancyQrLoad\{#1\}}
-		\end{minipage}}
-	\ShowStyle{default}\hfill\ShowStyle{rounded}\hfill\ShowStyle{flat}\\[2ex]
-	\ShowStyle{frame}\hfill\ShowStyle{dots}\hfill\ShowStyle{blobs}\\[2ex]
-	\ShowStyle{glitch}\hfill\ShowStyle{glows}\hfill\ShowStyle{goo}%
-	\FancyQrLoadDefault
-	\caption{Every style that \texttt{fancyqr} ships with. \texttt{blobs}, \texttt{glitch} and \texttt{goo} are randomized and therefore shown with a fixed \texttt{seed}. Every one of them but \texttt{frame} is read by a scanner as it is; \texttt{frame} leaves the center of a module white, which is where a scanner samples, so it needs \texttt{finder=square} to be found at all.}
-	\label{fig:styles}
+\begin{figure}[tb]
+   \centering
+   \ShowStyle{default}\hfill\ShowStyle{rounded}\hfill\ShowStyle{flat}\hfill\ShowStyle{frame}\\[2.5ex]
+   \ShowStyle{dots}\hfill\ShowStyle{blobs}\hfill\ShowStyle{glitch}\hfill\ShowStyle{glows}\\[2.5ex]
+   \ShowStyle{goo}\hfill\ShowStyle{halloween}\hfill\ShowStyle{snow}\hfill\ShowStyle{castle}\\[2.5ex]
+   \ShowStyle{christmas}%
+   \FancyQrLoadDefault
+   \caption{The styles, all with \fqkv{seed=4}.}
+   \label{fig:styles}
 \end{figure}
 
-	The |default| style rounds the free corners of a tile with the |rounding| radius.
-	A corner that is enclosed by two black neighbours but not by the diagonal one is an \emph{inner} corner; it is softened with a fillet of the (smaller) |inner rounding| radius instead of staying a hard 90 degree edge.
-	Setting |inner rounding=0|, or loading the |rounded| style, brings back the sharp notches of earlier versions:
+\subsection{Rounding}
+\begin{description}
+\item[\option{rounding}{\meta{number}}{0.5}] the corner radius of a tile in the \style{default} style, in modules.
+\item[\option{inner rounding}{\meta{number}}{0.25}] the radius of an inner corner, where two black neighbours meet at a white diagonal.
+   |0| makes them sharp, like the \style{rounded} style.
+\end{description}
+\begin{example}
+\fancyqr[color=black,
+   inner rounding=0]{https://ctan.org}
+\end{example}
+\begin{example}
+\fancyqr[color=black,rounding=.25,
+   inner rounding=.35]{https://ctan.org}
+\end{example}
 
-\begin{tcblisting}{}
-\fancyqr[
-   color=black,inner rounding=0
-]{https://github.com/EagleoutIce/fancyqr}
-\end{tcblisting}
-\begin{tcblisting}{}
-\fancyqr[
-   color=black,rounding=.25,inner rounding=.35
-]{https://github.com/EagleoutIce/fancyqr}
-\end{tcblisting}
+\subsection{Settings of the styles}\label{sec:tuning}
+Most of these are internal macros: set them between |\makeatletter| and |\makeatother|, before or after loading the style.
+\begin{description}
+\item[\style{glows}] \api{FancyQrGlow}\marg{width}\marg{strength}\marg{falloff} sets the width of the glow in modules (keep it below 1), how much color it keeps in percent, and how fast it fades.
+   \api{FancyQrGlowColor}\marg{from}\marg{to} sets its colors. |.| is the color of the tile.
+\item[\style{glitch}] |\fancyqr@glitch@detach| is the chance that a shard breaks away from its neighbour (|.3|).
+\item[\style{goo}] |\fancyqr@goo@drip| is how far the tiles drip (|.45|). |0| stops the dripping.
+\item[\style{halloween}\since{2.5}] Figures take the place of blocks of black modules that fit them: reapers, jack-o'-lanterns, ghosts, gravestones and crosses, witch hats, spiders, bats, skulls, bones, candies, and small figures such as eyeballs, candles and potions on single modules.
+   Most of them come in variants, cracks, poses and faces differ from place to place. Slime drips from lower edges, and pale spider webs and threads fill some of the white corners and gaps.
+   The finder cores (|finder core=halloween|) are pumpkins, jack-o'-lanterns, ghosts or skulls, drawn at random.
+   Every figure is drawn in the color of its tiles and only where modules are black, so the code reads the same, and with the same \opt{seed} a code always gets the same figures.
+   |\fancyqr@<figure>@chance| sets how often a figure appears (for example |\fancyqr@bat@chance|, default |.2|), |\fancyqr@slime@chance| (|.35|) how often a tile drips, |\fancyqr@web@chance| (|.4|), |\fancyqr@bigweb@chance| (|.008|) and |\fancyqr@thread@chance| (|.08|) how many webs and threads there are.
+\item[\style{castle}\since{2.5}] Rows of tiles become walls with battlements, columns towers with roofs and flags, single modules turrets, tents, wells, houses or trees, and larger blocks keeps, gatehouses, halls, castles and citadels, all in masonry whose colors follow the gradient.
+   The stones follow the gradient. With the colors of the style, every region of the code gets its own stone, mixed in waves between a grey granite and a reddish brick, and its roofs and banners lean to blue, orange or green, so the town looks built over time. With colors you set, the stones keep your colors and only their lightness varies, and roofs, banners and trees are darker or lighter shades of them.
+   The finder patterns are fortresses with a moat, a drawbridge mostly at the bottom and a keep, the alignment patterns ponds with a boat. Rivers, training grounds and, rarely, a princess, archer or knight fill the land in between, which lies on grass (\opt{background}).
+   |\fancyqr@<building>@chance| sets how often a building appears (for example |\fancyqr@keep@chance|, default |.6|), |\fancyqr@princess@chance| (|.25|) how likely the figures are.
+\item[\style{christmas}\since{2.5}] Trees, candy canes, presents, baubles, stockings, sledges, trains, toys and nutcrackers take the place of dark modules that fit their shape, the timing patterns carry lights and baubles, and snow lies on top as in \style{snow}.
+   The finder patterns are wreaths around a core drawn at random: a bauble, a ring of lights, a gift, a wreath, a snowflake or candy canes.
+   |\fancyqr@<figure>@chance| sets how often a figure appears, for example |\fancyqr@tree@chance| (|1|) or |\fancyqr@present@chance| (|.15|).
+\item[\style{snow}\since{2.5}] Snow lies on the finder rings without tiles on top and on most upper edges, in wavy layers that run on across neighbouring tiles.
+   |\fancyqr@snow@chance| (|.7|) is the chance that a row of tiles gets snow, |\fancyqr@snow@height| (|.32|) how high it lies and |\fancyqr@snow@wave| (|.1|) how high its waves are. |\fancyqr@snow@color| and |\fancyqr@snow@line| are its fill and outline.
+\end{description}
+Some styles also set finder shapes: \style{frame} draws square finder patterns with round cores, which it needs to scan, \style{dots} and \style{blobs} round ones and \style{snow} rounded ones.
+\style{halloween}, \style{castle} and \style{christmas} also bring their colors, with pumpkins, fortresses and wreaths as finder patterns.
+Options given to \cmd{fancyqr} override them, and the next style puts them back.
+\begin{example}
+\FancyQrLoad{glows}
+\FancyQrGlow{.5}{60}{2}
+\FancyQrGlowColor{white}{black}
+\fancyqr[seed=2]{https://ctan.org}
+\end{example}
+\begin{example}
+\FancyQrLoad{halloween}
+\makeatletter
+\def\fancyqr@slime@chance{.9}
+\makeatother
+\fancyqr[seed=5]{https://ctan.org}
+\end{example}
 
-	Every style picks the pattern shape that suits it: |dots| and |blobs| a |circle|, everything else |inherit|, which leaves the patterns to the tiles of the style itself.
-	The |glows| style draws every module once per halo ring and once for the tile itself; |\FancyQrPasses{<n>}| is what a style uses to ask for that.
-	It is tuned with |\FancyQrGlow{<width>}{<strength>}{<falloff>}| -- the width of the widest ring in modules, the percentage of color it keeps, and how quickly the rings gain color towards the tile -- and with |\FancyQrGlowColor{<from>}{<to>}|, where |.| is the color of the tile the halo surrounds: |\FancyQrGlowColor{white}{black}| turns it into a white backglow.
-	Keep the width below one module, or the halos of two modules with a white one between them run into each other.
-	|glitch| uses the passes as well, for the two displaced ghosts it puts behind its shards; its |\fancyqr@glitch@detach| is the chance that a shard tears off a neighbour instead of merging with it.
-	|goo| hangs its tiles downwards by |\fancyqr@goo@drip|; |0| makes it symmetric again.
-	|frame| outlines the shape the modules form -- only the sides facing white are stroked, so a run of modules becomes one pill -- and puts a dot inside every module, because a scanner samples the center of a module and a bare outline would leave it white.
-	|dots| and |blobs| additionally draw the position and alignment patterns as solid shapes, because a scanner first has to find those; with |finder=inherit| they are made of tiles as well and the code no longer reads.
-	A style declares with |\FancyQrInnerRoundings| (or |\FancyQrNoInnerRoundings|) whether its tiles understand inner corners at all; only |default| and |glows| do, so no other style pays for the extra lookups.
+\section{Figures and extras}\label{sec:figures}
+\style{halloween}, \style{castle} and \style{christmas} draw figures on blocks of dark modules that fit their pattern, and extras around them, such as webs, rivers or people, that scanners take for white.
+The lists below take names separated by commas.
+A trailing |*| makes a name a prefix: it matches every name that begins with the text before it.
+So |cane*| matches |cane/R|, |cane/L| and the other canes, |small*| matches |smalltree| and |smallfir|, and |land/*| every extra of the group |land|.
+It works only at the end of a name.
+\begin{description}
+\item[\option{figures}{\marg{name}\T{,}\ldots, \T{all} or \T{none}}{all}\since{2.5}] draws only the figures named.
+\item[\option{no figures}{\marg{name}\T{,}\ldots}{}\since{2.5}] leaves out the figures named.
+\item[\option{place}{\meta{name}\T{=}\meta{row}\T{/}\meta{column}\T{,}\ldots}{}\since{2.5}] puts a figure with the top left of its block at a module, counted from 1 at the top left, before all others. Where its pattern does not fit, it takes the closest place that fits.
+\item[\option{faint}{\T{true} or \T{false}}{false}\since{2.5}] draws the code in a faint grey, but the figures named in |place| in full colors.
+\item[\option{figure chance}{\marg{name}\T{=}\meta{chance}\T{,}\ldots}{}\since{2.5}] sets how often a figure takes a block that fits, from |0| to |1|.
+\item[\option{extras}{\marg{name}\T{,}\ldots, \T{all} or \T{none}}{all}, \option{no extras}{\marg{name}\T{,}\ldots}{}\since{2.5}] do the same for the extras.
+\item[\api{FancyQrListFigures}, \api{FancyQrListExtras}] write the names for the loaded style to the log.
+\item[\api{FancyQrShowFigure}\oarg{options}\marg{name}] draws a figure of the loaded style on its own, at the current position, at a module size of |\FancyQrFigureModule| (|3mm|), so it also works in running text. The starred form draws the module grid over it. \api{FancyQrShowPattern}\marg{name} draws the pattern it replaces.
+\item[\api{FancyQrTileGallery}\oarg{options}, \api{FancyQrFigureGallery}\oarg{options}, \api{FancyQrExtraGallery}\oarg{options}] draw the plain tiles on a few shapes (|\FancyQrTileShapes|), every figure with its pattern, name and size, and a code with faint tiles for every extra.
+\end{description}
+A hat and a jack-o'-lantern in a line of text:
+\begin{example}
+\FancyQrLoad{halloween}
+\FancyQrFigureModule=1.2ex
+Beware the \FancyQrShowFigure{hat} and
+the \FancyQrShowFigure{bigjack}!
+\end{example}
+Only keeps, towers and huts, a hut on every lone module:
+\begin{example}
+\FancyQrLoad{castle}
+\fancyqr[seed=2,figures={keep,tower,hut},
+   figure chance={hut=1}]{https://ctan.org}
+\end{example}
+All figures but trees and tents, without people and training grounds:
+\begin{example}
+\FancyQrLoad{castle}
+\fancyqr[seed=2,no figures={trees,tent},
+   no extras={people/*,land/training}]{https://ctan.org}
+\end{example}
+Just one figure, in one variant: only lollipops with the stick to the left, wherever they fit, and one more at a place of its own:
+\begin{example}
+\FancyQrLoad{halloween}
+\fancyqr[seed=2,figures={lollipop/left},
+   figure chance={lollipop/left=1},
+   place={lollipop/left=10/10}]{https://ctan.org}
+\end{example}
+A keep near the middle and a house at the top, the rest faint:
+\begin{example}
+\FancyQrLoad{castle}
+\fancyqr[seed=2,faint,place={keep=12/12,
+   house=9/10}]{https://ctan.org}
+\end{example}
+No figures, and of the extras only the water:
+\begin{example}
+\FancyQrLoad{castle}
+\fancyqr[seed=2,figures=none,
+   extras=water/*]{https://ctan.org}
+\end{example}
+Castle walls with the spider webs of \style{halloween}, without its slime:
+\begin{example}
+\fancyqr[seed=2,style=castle,add=halloween,
+   no extras=slime]{https://ctan.org}
+\end{example}
+Castles in winter:
+\begin{example}
+\fancyqr[seed=2,style=castle,
+   add={snow,christmas}]{https://ctan.org}
+\end{example}
+The sections below are drawn from the styles themselves.
+In a pattern, black is a dark module the figure takes and draws over, grey a dark module it needs next to it (a hat sits on one), an outline a module that must be white, so the figure has room and does not merge into a neighbour, and a faint outline a module that may be anything.
+A code draws its figures in variants that change with their place. A small swatch in the colors of the gradient marks the figures that take their colors from the code. The others keep their own.
+\clearpage
+\subsection{halloween\since{2.5}}
+\begingroup\FancyQrLoad{halloween}
+\subsubsection*{Tiles}
+\FancyQrTileGallery
+\subsubsection*{Figures}
+\FancyQrFigureGallery
+\subsubsection*{Decorations}
+\FancyQrExtraGallery
+\endgroup
+\clearpage
+\subsection{castle\since{2.5}}
+\begingroup\FancyQrLoad{castle}
+\subsubsection*{Tiles}
+\FancyQrTileGallery
+\subsubsection*{Figures}
+\FancyQrFigureGallery
+\subsubsection*{Decorations}
+\FancyQrExtraGallery
+\endgroup
+\clearpage
+\subsection{snow\since{2.5}}
+\begingroup\FancyQrLoad{snow}
+\subsubsection*{Tiles}
+\FancyQrTileGallery
+\subsubsection*{Decorations}
+\FancyQrExtraGallery
+\endgroup
+\subsection{christmas\since{2.5}}
+\begingroup\FancyQrLoad{christmas}
+\subsubsection*{Tiles}
+\FancyQrTileGallery
+\subsubsection*{Figures}
+\FancyQrFigureGallery
+\subsubsection*{Decorations}
+\FancyQrExtraGallery
+\endgroup
 
-\section{Position and alignment patterns}\label{sec:finder}
-
-	The three big position (finder) patterns and all alignment patterns can be drawn as one shape instead of as single modules, and in a color of their own.
-	|finder| picks the shape of their ring, |finder core| the shape of their center block (|auto| follows the ring), |finder radius| and |finder thickness| its corner radius and its ring width, and |finder color| paints both.
-	\autoref{fig:finder} shows the combinations together with the keys that produced them.
-	|finder color| paints the patterns and |content color| everything else, so |content color=black| keeps the gradient on the patterns alone.
-	The modules of a pattern stay black in the matrix and only their drawing is replaced, so neighbouring tiles still merge into the shape wherever it allows it.
-	A |finder thickness| other than |1| leaves the 1:1:3:1:1 run a scanner looks for, so check that the code still reads.
-	|finder=inherit| is the default and leaves the patterns to the tiles of the loaded style, which is what fancyqr did before the shapes existed; |none| is accepted as a synonym.
-	A |finder core| set by name still applies there: the ring keeps its tiles and only the center block becomes a shape, which is often all a code needs to stop looking generic.
-	|finder core=inherit| hands the core back to the tiles, and leaves it empty when the ring is a shape and there are no tiles left to inherit from.
-	Loading a style resets |finder| and |finder core|, because a style owns its shapes.
+\section{Finder and alignment patterns}\label{sec:finder}
+Scanners find a QR code by the three big squares in its corners, the \emph{finder patterns}.
+Codes from version 2 on also have smaller squares, the \emph{alignment patterns}, which help with tilted or bent codes.
+Each pattern is a ring around a solid \emph{core}.
+Unless you set the keys below, they are drawn like the data (Figure~\ref{fig:finder-parts}).
 
 \begin{figure}[H]
-	\centering
-	\newcommand*\ShowFinder[2]{%
-		\begin{minipage}{.31\linewidth}\centering
-			\fancyqr[height=2.6cm,tight,#1]{https://github.com/EagleoutIce/fancyqr}%
-			\\[.5ex]{\scriptsize\ttfamily\textbackslash fancyqr[#2]}
-		\end{minipage}}
-	\ShowFinder{finder color=teal!60!black}{finder color=teal!60!black}\hfill
-	\ShowFinder{finder=circle}{finder=circle}\hfill
-	\ShowFinder{finder=square}{finder=square}\\[2ex]
-	\ShowFinder{finder=rounded}{finder=rounded}\hfill
-	\ShowFinder{finder=rounded,finder core=star}{finder=rounded,\\finder core=star}\hfill
-	\ShowFinder{finder=square,finder core=circle}{finder=square,\\finder core=circle}\\[2ex]
-	\ShowFinder{finder=circle,finder core=square}{finder=circle,\\finder core=square}\hfill
-	\ShowFinder{finder=rounded,finder radius=.15}{finder=rounded,\\finder radius=.15}\hfill
-	\ShowFinder{finder core=star}{finder core=star}
-	\caption{Styling the position and alignment patterns.}
-	\label{fig:finder}
+   \centering
+   \fancyqr[height=4.2cm,tight,content color=black!35,finder=rounded,
+      finder color=ocean,finder core color=amber,
+      alignment color=plum,alignment core color=rose,timing color=lagoon]{https://github.com/EagleoutIce/fancyqr}%
+   \hspace{1.5em}%
+   \begin{minipage}[b]{.42\linewidth}\small
+      \textcolor{ocean}{\rule{1em}{1em}} finder rings (\opt{finder color})\\[1ex]
+      \textcolor{amber}{\rule{1em}{1em}} finder cores (\opt{finder core color})\\[1ex]
+      \textcolor{plum}{\rule{1em}{1em}} alignment ring (\opt{alignment color})\\[1ex]
+      \textcolor{rose}{\rule{1em}{1em}} alignment core (\opt{alignment core color})\\[1ex]
+      \textcolor{lagoon}{\rule{1em}{1em}} timing patterns (\opt{timing color})\\[1ex]
+      \textcolor{black!35}{\rule{1em}{1em}} data (\opt{content color})
+   \end{minipage}
+   \caption{The parts of a QR code.}
+   \label{fig:finder-parts}
 \end{figure}
 
-\begin{savenotes}
-\begin{table}
-	\centering\begin{tabular}{>{\ttfamily}ll>{\ttfamily}cp{.5\linewidth}}
-		\toprule
-		\multicolumn{1}{l}{Option} & Type & \multicolumn{1}{c}{Default} & Explanation \\
-		\midrule
-		cache           & boolean &   true   & Keep the module matrix of a code, so that drawing it again -- in a gallery, a running header, \ldots\ -- only has to redraw it. \\
-		classic         & boolean &   false  & Use the classic qr-code style (black with flat rectangles, this loads the |flat| style).                                \\
-		color           & color   &          & Disables the |gradient| and sets the color accordingly.      \\
-		compensate      & length  &          & Overlap between neighbouring tiles as an absolute length; setting it switches off the module-relative |overlap|. \\
-		finder color    & color   &          & Color of the position and alignment patterns. Without |finder| they keep their normal tiles and are only recolored. \\
-		content color   & color   &          & Color of everything that is not a position or alignment pattern, so that the patterns can keep the gradient while the data stays flat. \\
-		finder          & shape   & inherit  & Draw the three position (finder) patterns and all alignment patterns as one shape (|square|, |rounded|, or |circle|) instead of as single modules; |inherit| (synonym |none|) leaves them to the tiles of the style (\autoref{sec:finder}). \\
-		finder core     & shape   &  auto    & Shape of the center block of every pattern (|auto|, |inherit|, |none|, |square|, |rounded|, |circle|, or |star|); |auto| follows |finder|, any other value applies even when |finder| leaves the ring to the tiles (\autoref{sec:finder}). \\
-		finder radius   & number  &  0.5     & Corner radius of the |rounded| pattern shape, relative to the pattern radius. \\
-		finder thickness& number  &  1       & Width of the pattern ring, in modules. \\
-		gradient        & boolean &   true   & Toggle the color gradient                                    \\
-		gradient angle  & angle   &  135     & Change the gradient angle, in degrees; 0 runs from left to right.\\
-		image           & \LaTeX   &          & Automatically center an image (you have to care for the size and maybe adjust the |version| and |level| to keep the qr-code readable).\footnote{The package will automatically calculate the required \ltx{\\FancyQrDoNotPrintSquare} (you have to make sure that the qr-code still has enough information to be readable). Therefore, the image will not scale with the qr-code.} \\
-		image padding   & number  &          & Additionally hide blocks (x \& y) around the image.          \\
-		image x padding & number  &   0      & Additionally hide blocks (x) around the image.               \\
-		image y padding & number  &   0      & Additionally hide blocks (y) around the image.               \\
-		inner rounding  & number  &  0.25    & Radius of the negative rounding: a corner enclosed by two black neighbours but not by the diagonal one gets a fillet of this size, |0| disables it (\autoref{sec:styles}). \\
-		overlap         & number  &  0.045   & Overlap between neighbouring tiles, as a fraction of a module. Two tile edges that cross the same pixel each cover only a part of it, and a renderer then leaves a sliver of the background showing through; what decides whether that is visible is how many device pixels the overlap is, which is why it scales with the module. \\
-		l color         & color   & \emph{see above} & Color at the left end of the gradient axis, which the default angle puts at the bottom right. \\
-		left color      & color   &          & Alias for |l color|.                                         \\
-		level 			 & L/M/Q/H &   M      & |qrcode| option affecting error correction (low, medium, quartile, high).                                     \\
-		padding         & flag    &          & |qrcode| option adding sufficient additional space around the qr-code.                                            \\
-		r color         & color   & \emph{see above} & Color at the right end of the gradient axis, which the default angle puts at the top left. \\
-		random color    & colors  &          & Allow to set a random color pool to pick from.               \\
-		right color     & color   &          & Alias for |r color|.                                         \\
-		rounding        & number  &  0.5     & Corner radius of the rounded tiles of the |default| style.    \\
-		seed            & integer &          & Fix the random seed, so that the randomized styles (|blobs|, |glitch|, |goo|) render reproducibly. \\
-		size            & length  &          & Alias for |qrcode|'s |height| option.                        \\
-		tight           & flag    &          & |qrcode| option adding no additional space around the qr-code.                                                    \\
-		version         & \([0..40] \in \mathbb{N}\) &   0      & |qrcode| option affecting the size (tries to be as small as possible).                                             \\
-		width           & length  &          & Alias for |qrcode|'s |height| option.                        \\
-		\bottomrule
-	\end{tabular}
-	\caption{Overview of special qr-options.}
-	\label{tbl:extra-keys}
-\end{table}
-\end{savenotes}
+\subsection{Shapes}
+\begin{description}
+\item[\option{finder}{\val{finder}{inherit}, \val{finder}{square}, \val{finder}{rounded} or \val{finder}{circle}}{inherit}] the shape of the rings.
+   \val{finder}{inherit} (or \val{finder}{none}) keeps the tiles of the style.
+   Data tiles next to a straight part of a ring merge into it.
+\item[\option{finder core}{\val{finder-core}{auto}, \val{finder-core}{inherit}, \val{finder-core}{square}, \val{finder-core}{rounded}, \val{finder-core}{circle}, \val{finder-core}{star} or \val{finder-core}{pumpkin}}{auto}] the shape of the cores.
+   \val{finder-core}{auto} takes the shape of the ring.
+   A core shape also works when the ring keeps its tiles.
+\item[\option{finder radius}{\T{0} to \T{0.5}}{0.5}] the corner radius of |rounded|, relative to the size of the pattern.
+\item[\option{finder thickness}{\meta{modules}}{1}] the width of the ring.
+   Other values change the proportions scanners look for.
+\end{description}
+Loading a style resets \opt{finder} and \opt{finder core}.
+
+\begin{figure}[tbp]
+   \centering
+   \ShowFinder{finder=circle}\hfill
+   \ShowFinder{finder=square}\hfill
+   \ShowFinder{finder=rounded}\\[2.5ex]
+   \ShowFinder{finder=rounded,finder core=star}\hfill
+   \ShowFinder{finder=square,finder core=circle}\hfill
+   \ShowFinder{finder=circle,finder core=pumpkin}\\[2.5ex]
+   \ShowFinder{finder=rounded,finder radius=.15}\hfill
+   \ShowFinder{finder=rounded,finder thickness=.7}\hfill
+   \ShowFinder{finder core=star}
+   \caption{Shapes of the finder and alignment patterns.}
+   \label{fig:finder}
+\end{figure}
+
+\subsection{Colors}
+\begin{description}
+\item[\option{finder color}{\meta{color}}{}] the color of the patterns.
+\item[\option{finder core color}{\meta{color}}{}\since{2.5}] the color of the cores, by default \opt{finder color}.
+\item[\option{content color}{\meta{color}}{}] the color of everything but the patterns.
+\item[\option{alignment color}{\meta{color}}{}\since{2.5}] the color of the alignment patterns, by default \opt{finder color}.
+\item[\option{alignment core color}{\meta{color}}{}\since{2.5}] the color of their cores, by default \opt{alignment color} if that is set, else \opt{finder core color}.
+\item[\option{timing color}{\meta{color}}{}\since{2.5}] the color of the timing patterns, the dotted lines between the finder patterns.
+\item[\option{background}{\meta{color}}{}\since{2.5}] a background behind the whole code, the \opt{padding} included. None by default, the \style{castle} style puts its castles on grass.
+   Keep it light, scanners read it as white.
+\item[\option{background radius}{\meta{modules}}{1}\since{2.5}] the rounding of the background's corners, \T{0} for square ones.
+\item[\option{background margin}{\meta{length}}{3.5pt}\since{2.5}] how far the background reaches beyond the code on every side. The code takes that much more room.
+\end{description}
+Without them, the patterns keep the usual colors, normally the gradient.
+They work with every shape and with the tiles of a style (Figure~\ref{fig:finder-colors}).
+Light colors may lack contrast.
+
+\begin{figure}[tbp]
+   \centering
+   \ShowFinder{finder color=ocean}\hfill
+   \ShowFinder{finder core color=amber}\hfill
+   \ShowFinder{content color=black}\\[2.5ex]
+   \ShowFinder{finder=rounded,finder color=ocean,finder core color=amber}\hfill
+   \ShowFinder{content color=black,finder=circle,finder core color=amber}\hfill
+   \ShowFinder{color=black,finder core=star,finder core color=red}\\[2.5ex]
+   \ShowFinder{alignment color=plum}\hfill
+   \ShowFinder{alignment color=plum,alignment core color=amber}\hfill
+   \ShowFinder{finder=rounded,finder color=ocean,finder core color=amber,alignment color=plum,alignment core color=rose}
+   \caption{Colors of the finder and alignment patterns.}
+   \label{fig:finder-colors}
+\end{figure}
+
+\subsection{Alignment patterns}
+\begin{description}
+\item[\option{alignment}{\val{alignment}{finder}, \val{alignment}{inherit} or \val{alignment}{hide}}{finder}\since{2.5}] how the alignment patterns are drawn.
+   \val{alignment}{finder} draws them like the finder patterns, \val{alignment}{inherit} like the data, and \val{alignment}{hide} replaces them with modules that look like the data around them (Figure~\ref{fig:alignment}).
+\end{description}
+\begin{figure}[H]
+   \centering
+   \ShowFinder[alignment=finder]{finder=rounded,finder color=ocean,finder core color=amber}\hfill
+   \ShowFinder[alignment=inherit]{finder=rounded,finder color=ocean,finder core color=amber,alignment=inherit}\hfill
+   \ShowFinder[alignment=hide]{finder=rounded,finder color=ocean,finder core color=amber,alignment=hide}
+   \caption{The settings of \opt{alignment}, with \fqkv{finder=rounded}, \fqkv{finder color=ocean} and \fqkv{finder core color=amber}.}
+   \label{fig:alignment}
+\end{figure}
+Test codes with |alignment=hide|.
+The alignment patterns are not part of the data, so error correction cannot replace them.
+Flat codes usually scan without them, but ZBar, a common scanner library, failed on most of our test codes.
+
+Put settings you want for every code into \cmd{fancyqrset}:
+\begin{example}
+\fancyqrset{content color=black,
+   finder=rounded,
+   finder color=ocean,
+   finder core color=amber,
+   alignment color=plum,
+   alignment core color=rose}
+\fancyqr{https://ctan.org}
+\end{example}
+
+\section{Images and holes}\label{sec:image}
+\begin{description}
+\item[\option{image}{\meta{content}}{}] puts the content in the center and hides the modules behind it.
+   It keeps its own size and does not scale with the code.
+\item[\option{image padding}{\meta{modules}}{0}] hides this many more modules around the image.
+\item[\option{image x padding}{\meta{modules}}{0}, \option{image y padding}{\meta{modules}}{0}] the same, left and right or above and below only.
+\item[\api{FancyQrDoNotPrintSquare}\marg{x}\marg{y}] hides a rectangle without an image, \meta{x} modules left and right of the center and \meta{y} up and down.
+\item[\api{FancyQrDoNotPrintRadius}\marg{factor}] rounds the corners of the rectangle (|0| to |1|).
+\item[\api{FancyQrHardCut}, \api{FancyQrRoundCut}] cut the modules at the edge straight, or give them round ends (the default).
+\end{description}
+Hidden modules are lost data.
+If the code no longer scans, use a higher \opt{level} or a smaller image.
+Finder and alignment shapes that reach into the hole are left out.
+\begin{example}
+\FancyQrDoNotPrintSquare{3}{3}
+\FancyQrDoNotPrintRadius{.6}
+\fancyqr[level=H]{https://ctan.org}
+\end{example}
+
+\section{Text beyond ASCII}\label{sec:unicode}
+Umlauts, accents, other scripts and emoji work with pdf\LaTeX, Lua\LaTeX\ and Xe\LaTeX.
+The text is stored as UTF-8.
+\begin{description}
+\item[\option{eci}{\T{true} or \T{false}}{true}\since{2.5}] starts such a code with a header (an \emph{ECI}) that says the text is UTF-8.
+   It costs two bytes.
+\end{description}
+\begin{example}
+\fancyqr{Grüße aus Ulm}
+\end{example}
+Without the header, scanners guess the character set.
+Most phone apps guess right. ZBar shows |Grüße| as Japanese.
+Google's ML Kit, on the other hand, reportedly ignores codes with the header.
+If an Android phone does not react to a code, try |eci=false|.
+
+\section{Faster runs}\label{sec:persist}
+Styles with figures take a while to draw.
+\begin{description}
+\item[\option{persist}{\T{true} or \T{false}}{true}\since{2.5}] records every code in a file of its own, \T{\meta{prefix}\meta{hash}.fqr}. Later runs replay the record instead of drawing the code again, so only the first run is slow. A record is read only when its code comes, so a long document needs no more memory than one code.
+   A record is used only as long as the code, its options, the style, its settings and all codes before it stay the same, and a code is drawn the same either way.
+   If you change the internal settings of a style (Section~\ref{sec:tuning}), delete the file.
+\item[\option{externalize}{\T{true} or \T{false}}{false}\since{2.5}] also turns every record into a pdf of its own, \T{\meta{prefix}\meta{hash}.pdf}, and includes that.
+   The pdf is made right away when the document is compiled with |-shell-escape|. Otherwise a warning tells you which file to compile.
+   Codes with an image are only recorded.
+   This manual is made that way.
+\item[\option{externalize prefix}{\meta{prefix}}{\meta{jobname}-fqr-}\since{2.5}] where the records and pdfs go. Old ones are never read again and can be deleted.
+\end{description}
+
+\section{Writing a style}\label{sec:own-style}
+A style is a file |fancyqr-style-<name>.code|, read by \cmd{FancyQrLoad} with |@| as a letter.
+It says how to draw a tile for each of the 16 combinations of black neighbours, with the commands of \pkg{pict2e}, in a |picture| where the module spans $(0,0)$ to $(1,1)$.
+\begin{description}
+\item[\api{newpattern}\marg{up}\marg{left}\marg{right}\marg{down}\marg{code}] sets the code for one combination. Each of the first four is |1| for a black neighbour.
+\item[\api{FancyQrRoundedPatterns}\marg{macro}] sets all 16.
+   The macro gets one flag per corner (bottom right, top right, top left, bottom left) that is |1| where the corner is free and should be round.
+\item[\api{FancyQrSidePatterns}\marg{macro}] does the same with one flag per neighbour (up, left, right, down).
+\item[\api{FancyQrPasses}\marg{n}] draws the code in \meta{n} layers, one after the other: every pass walks all modules again, and |\fancyqr@pass| tells a tile which layer it draws.
+   What a later pass draws lies on top of the earlier ones, so a tile can put a glow, a shadow or water in the first pass and its stone or body in the second, without a neighbour's glow covering it.
+   \style{glows} draws a ring of its halo per pass and the tiles in the last one, \style{snow} the tiles in the first and the snow in the second.
+   \style{glows} draws its glow in the first passes, \style{snow} its snow in the last.
+\item[\api{FancyQrInnerRoundings}] says that the style draws inner corners (\opt{inner rounding}), \api{FancyQrNoInnerRoundings} that it does not.
+\item[\api{FancyQrStyleSet}\marg{options}] sets options such as colors and finder shapes, and undoes them when the next style loads.
+\end{description}
+Inside a tile, |\@up|, |\@left|, |\@right| and |\@down| hold the neighbours as well.
+\begin{description}
+\item[\api{FancyQrDiagonals}] also gives the tiles |\@upleft|, |\@upright|, |\@downleft| and |\@downright|.
+\item[\api{FancyQrFigure}\marg{name}\marg{chance}\marg{pattern}\marg{code}] replaces blocks of dark modules with a figure.
+   The pattern lists the rows of the block and of the modules around it, separated by |/|: |x| is a dark module of the figure, |1| any dark module, |0| a white one and |.| anything.
+   Bigger figures are placed first, from the top left, wherever the pattern fits and a hash of the position is below the chance, so a code always gets the same figures.
+   Figures never cover a finder or alignment pattern, a hidden center or another figure.
+   The starred form only uses positions on a grid of the figure's size.
+\item[\api{FancyQrFigureTile}\marg{tile}] wraps the tile code of a style: it draws the figure at its first module, with the block from $(0,1-h)$ to $(w,1)$, and nothing at its other modules.
+   Tiles next to a figure see its modules as white, so they end against it like against white space.
+\item[\api{FancyQrFigureAt}\marg{row}\marg{column}] expands to the name of the figure at that module, or to nothing.
+\item[\api{FancyQrIfTiming}\marg{true}\marg{false}] tells a tile whether it belongs to a timing pattern, the dotted lines between the finder patterns, which every code has in the same place.
+\end{description}
+A candy cane on a lone vertical bar of three, in a style with rounded tiles:
+\begin{code}
+\FancyQrFigure{cane}{1}{0x0/0x0/0x0}{\linethickness{.5\unitlength}%
+   \moveto(.6,-1.8)\lineto(.6,.6)\circlearc{.35}{.6}{.25}{0}{180}\strokepath}
+\def\fancyqr@cane@tile#1#2#3#4{\FancyQrFigureTile{\fancyqr@rounded@rect#1#2#3#4}}
+\FancyQrRoundedPatterns\fancyqr@cane@tile
+\end{code}
+\begin{code}
+% fancyqr-style-flat.code
+\def\fancyqr@flat@rect{%
+   \moveto(0,0)\lineto(0,1)\lineto(1,1)\lineto(1,0)\fillpath}
+\newpattern0000{\fancyqr@flat@rect}
+\newpattern1000{\fancyqr@flat@rect}
+% ... and the other 14 combinations
+\end{code}
+
+\section{All options}\label{sec:options}
+Besides the keys of the previous sections, \cmd{fancyqr} and \cmd{fancyqrset} take these:
+\begin{description}
+\item[\option{size}{\meta{length}}{}] the size of the code, the |height| of \pkg{qrcode}. \option{width}{\meta{length}}{} is the same.
+\item[\option{level}{\val{level}{L}, \val{level}{M}, \val{level}{Q} or \val{level}{H}}{M}] the error correction.
+   Higher levels survive more damage, such as an image in the center.
+\item[\option{version}{\T{0} to \T{40}}{0}] the size of the module grid. |0| takes the smallest that fits.
+\item[\option{padding}{}{}, \option{tight}{}{}] a white border around the code, or none.
+\item[\option{color}{\meta{color}}{}] one color for the whole code, without gradient.
+\item[\option{gradient}{\T{true} or \T{false}}{true}] the color gradient.
+\item[\option{gradient angle}{\meta{degrees}}{135}] its direction. |0| runs from left to right.
+\item[\option{l color}{\meta{color}}{}, \option{r color}{\meta{color}}{}] the colors at the left and right end of the gradient. With the default angle, the bottom right and the top left.
+   \option{left color}{\meta{color}}{} and \option{right color}{\meta{color}}{} are the same.
+\item[\option{random color}{\marg{color}\marg{color}\ldots}{}] gives every module a random color from the list. Needs \pkg{pgf}.
+\item[\option{classic}{\T{true} or \T{false}}{false}] black squares, the \style{flat} style.
+\item[\option{seed}{\meta{number}}{}] fixes the random numbers of the random styles.
+\item[\option{overlap}{\meta{fraction}}{0.045}] how much neighbouring tiles overlap, against thin white lines between tiles in some PDF viewers.
+   \option{compensate}{\meta{length}}{} sets it as a length.
+\item[\option{cache}{\T{true} or \T{false}}{true}] remember computed codes, so the same code is fast the next time.
+\end{description}
 
 \section{History}
-\errorcontextlines999
-
 \long\def\ForVersion#1#2#3{%
-\subsection*{\texorpdfstring{\href{https://github.com/EagleoutIce/fancyqr/releases/tag/v#1}{Version v#1}}{Version v#1} \textmd{\small#2}}\vspace*{-\baselineskip}
-
-\textcolor{lightgray}{\hypersetup{allcolors=.}\url{https://github.com/EagleoutIce/fancyqr/releases/tag/v#1}}
-\begin{itemize}[nosep,leftmargin=*]
-	#3
+\subsection*{\texorpdfstring{\href{https://github.com/EagleoutIce/fancyqr/releases/tag/v#1}{Version v#1}}{Version v#1} \textmd{\small#2}}
+\begin{itemize}
+   #3
 \end{itemize}
 }
 
+\ForVersion{2.5}{unreleased}{
+   \item Text beyond ASCII with every engine, marked as UTF-8 (\opt{eci})
+   \item The styles \style{halloween}, \style{snow}, \style{castle} and \style{christmas}, and the core shape \val{finder-core}{pumpkin}
+   \item Figures that replace blocks of dark modules (\cmd{FancyQrFigure}, \cmd{FancyQrFigureTile}, \cmd{FancyQrFigureAt}) and diagonal neighbours (\cmd{FancyQrDiagonals})
+   \item \opt{finder core color}, \opt{alignment color}, \opt{alignment core color}, and \opt{alignment} to draw the alignment patterns like the data or to hide them
+   \item \opt{finder core} also works when the rings keep the tiles of the style
+   \item Data tiles merge into the straight sides of a finder ring
+   \item \style{frame} draws square finder patterns with round cores, so it scans as it is
+   \item Loading a style undoes the colors and finder shapes of the previous one (\cmd{FancyQrStyleSet})
+   \item Faster, especially for large codes and the \style{snow} style
+   \item Bug fixes: alignment patterns are styled on the first run, \cmd{FancyQrLoadDefault} resets the drawing passes, \cmd{FancyQrLoad} adds no spaces in running text, and a hole in the center (\cmd{FancyQrDoNotPrintSquare}) no longer breaks finder shapes or the next code with the same text
+}
 \ForVersion{2.4}{2026-08-17}{
-	\item Weakly rounded (negative) inner corners for the \texttt{default} style
-	\item New \texttt{rounded}, \texttt{glows} and \texttt{goo} styles
-	\item Style the position and alignment patterns (\texttt{finder}, \texttt{finder core}, \texttt{finder color}, \texttt{finder radius}, \texttt{finder thickness}) and color them apart from the data with \texttt{content color}
-	\item Configurable \texttt{rounding} and \texttt{inner rounding}, reproducible randomness with \texttt{seed}, a less red default gradient
-	\item Roughly five times faster (the module matrix of a code is kept, see \texttt{cache}), an \texttt{l3build} test suite
-	\item Tile overlap is relative to the module size (\texttt{overlap}), which keeps renderers from leaving seams between the tiles
-	\item Bug fixes: \texttt{frame} is readable by a scanner again, the center module is no longer dropped without a cut-out, \texttt{gradient angle} is read in degrees again, and an embedded image is centered exactly
+   \item Weakly rounded (negative) inner corners for the \style{default} style
+   \item New \style{rounded}, \style{glows} and \style{goo} styles
+   \item Style the position and alignment patterns with \opt{finder}, \opt{finder core}, \opt{finder color}, \opt{finder radius} and \opt{finder thickness}, and color them apart from the data with \opt{content color}
+   \item Configurable \opt{rounding} and \opt{inner rounding}, reproducible randomness with \opt{seed}, a less red default gradient
+   \item Roughly five times faster (the module matrix of a code is kept, see \opt{cache}), an \T{l3build} test suite
+   \item Tile overlap is relative to the module size (\opt{overlap}), which keeps renderers from leaving seams between the tiles
+   \item Bug fixes: \style{frame} is readable by a scanner again, the center module is no longer dropped without a cut-out, \opt{gradient angle} is read in degrees again, and an embedded image is centered exactly
 }
 \ForVersion{2.3}{2026-02-27}{
-	\item Relicense under the LPPL 1.3c
+   \item Relicense under the LPPL 1.3c
 }
 \ForVersion{2.2}{2024-11-27}{
-	\item Configurable tile overlap
-	\item Circular cut-out support
-	\item New \texttt{compensate} option
+   \item Configurable tile overlap
+   \item Circular cut-out support
+   \item New \opt{compensate} option
 }
 \ForVersion{2.1}{2024-10-05}{
-	\item Add \texttt{classic} option to easily typeset classic QR codes
-	\item Simplify picture usage for QR codes
-	\item More documentation and Bug-Fixes
+   \item Add \opt{classic} option to easily typeset classic QR codes
+   \item Simplify picture usage for QR codes
+   \item More documentation and Bug-Fixes
 }
 \ForVersion{2.0}{2024-04-13}{
-	\item No longer require Ti\textit{k}Z!
-	\item Random Colors
-	\item Support \texttt{width} and \texttt{height}
+   \item No longer require Ti\textit{k}Z!
+   \item Random Colors
+   \item Support \opt{width} and \T{height}
 }
 \ForVersion{1.0}{2022-08-18}{
-	\item Initial release with basic drop-in functionality
-	\item Using Ti\textit{k}Z to create the QR code
+   \item Initial release with basic drop-in functionality
+   \item Using Ti\textit{k}Z to create the QR code
 }
 
+\printindex
 \end{document}

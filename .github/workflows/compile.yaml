@@ -59,6 +59,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          submodules: true # the manual needs xlistings
 
       - name: Install TeX Live
         uses: zauguin/install-texlive@v4
@@ -66,8 +68,7 @@ jobs:
           package_file: tl_packages
       - run: pdflatex qr-example.tex
       - run: pdflatex qr-minimal.tex
-      - run: pdflatex fancyqr-doc.tex
-      - run: pdflatex fancyqr-doc.tex
+      - run: l3build doc
 
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:

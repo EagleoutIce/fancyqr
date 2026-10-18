@@ -336,3 +336,7 @@ TSWLatexianTemp*
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/vscode,linux,latex,git
+
+# fancyqr records and externalized codes
+*.fqr
+*-fqr-*

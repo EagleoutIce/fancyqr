@@ -1,0 +1,64 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+[PASS] utf8-bytes
+[PASS] utf8-eci
+<QR code requested for "^^c3^^a4^^c3^^b6^^c3^^bc^^c3^^a4^^c3^^b6^^c3^^bca" in version 0-M.>
+<Error-correction level increased from M to Q at no cost.>
+<Calculating QR code for "^^c3^^a4^^c3^^b6^^c3^^bc^^c3^^a4^^c3^^b6^^c3^^bca" in version 2-Q.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 22\ and 23:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, .> <Interleaving errorblocks of length 22:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 1039>
+<Applying Mask 1... done. Calculating penalty... penalty is 1149>
+<Applying Mask 2... done. Calculating penalty... penalty is 1170>
+<Applying Mask 3... done. Calculating penalty... penalty is 1050>
+<Applying Mask 4... done. Calculating penalty... penalty is 1146>
+<Applying Mask 5... done. Calculating penalty... penalty is 1155>
+<Applying Mask 6... done. Calculating penalty... penalty is 1120>
+<Applying Mask 7... done. Calculating penalty... penalty is 1066>
+<Selected Mask 0>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] utf8-version
+[PASS] utf8-codewords
+<QR code requested for "^^c3^^a4^^c3^^b6^^c3^^bc^^c3^^a4^^c3^^b6^^c3^^bcb" in version 0-M.>
+<Calculating QR code for "^^c3^^a4^^c3^^b6^^c3^^bc^^c3^^a4^^c3^^b6^^c3^^bcb" in version 1-M.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 16\ and 17:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, .> <Interleaving errorblocks of length 10:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 952>
+<Applying Mask 1... done. Calculating penalty... penalty is 1100>
+<Applying Mask 2... done. Calculating penalty... penalty is 973>
+<Applying Mask 3... done. Calculating penalty... penalty is 1038>
+<Applying Mask 4... done. Calculating penalty... penalty is 1058>
+<Applying Mask 5... done. Calculating penalty... penalty is 1020>
+<Applying Mask 6... done. Calculating penalty... penalty is 1042>
+<Applying Mask 7... done. Calculating penalty... penalty is 973>
+<Selected Mask 0>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] utf8-without-eci
+<QR code requested for "plain text" in version 0-M.>
+<Error-correction level increased from M to Q at no cost.>
+<Calculating QR code for "plain text" in version 1-Q.>
+<Splitting off block 1> <Making error block 1> <Interleaving datablocks of length 13\ and 14:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, .> <Interleaving errorblocks of length 13:  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, .><Interleaving complete.> <Writing data... done.>
+<Applying Mask 0... done. Calculating penalty... penalty is 1088>
+<Applying Mask 1... done. Calculating penalty... penalty is 1003>
+<Applying Mask 2... done. Calculating penalty... penalty is 1016>
+<Applying Mask 3... done. Calculating penalty... penalty is 995>
+<Applying Mask 4... done. Calculating penalty... penalty is 993>
+<Applying Mask 5... done. Calculating penalty... penalty is 1005>
+<Applying Mask 6... done. Calculating penalty... penalty is 1027>
+<Applying Mask 7... done. Calculating penalty... penalty is 1052>
+<Selected Mask 4>
+<Encoding and writing format string... done.>
+<Encoding and writing version information... done.>
+<Saving QR code to memory... done.>
+<Writing QR code to aux file... done.>
+<Printing matrix... done.>
+[PASS] ascii-without-eci
+===== fancyqr tests: 6 passed, 0 failed =====
+[1
+]
