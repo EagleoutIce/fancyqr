@@ -16,7 +16,7 @@
 \def\TestColor#1{\edef\@tempa{#1}\ifx\@tempa\Watch\global\advance\Seen\@ne\fi\TestOrigColor{#1}}
 % #1 name, #2 color, #3 expected uses, #4 code
 \newcommand\TestColorUse[4]{\def\Watch{#2}\global\Seen\z@
-  \fancyqrtest@run{#4}\TestValue{#1}{#3}{\the\Seen}}
+  \fancyqrtest@runc{#4}\TestValue{#1}{#3}{\the\Seen}}
 % \FQ[options]{text}: a version 7 code in black with further options
 \newcommand\FQ[2][]{\fancyqr[size=3cm,tight,version=7,color=black,#1]{#2}}
 % like \TestValue, but the expected value is expanded first
@@ -158,7 +158,7 @@
 \FancyQrLoadDefault
 \fancyqrtest@run{\FQ[finder=rounded]{abc}}\edef\Single{\fancyqrtest@n{P}}
 \FancyQrLoad{snow}
-\fancyqrtest@run{\FQ[seed=1]{abc}}%
+\fancyqrtest@run{\FQ[seed=1,no extras=flakes]{abc}}%
 % every tile twice, the 9 ring shapes and the one below the top edge with a cap once
 \TestValueE{snow-second-pass}{\the\numexpr2*\Single-8\relax}{\fancyqrtest@n{P}}
 % the geometry of a cap: record the points of its outline

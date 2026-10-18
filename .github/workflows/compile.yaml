@@ -42,6 +42,14 @@ jobs:
       - name: '✅ Run the test suite'
         run: l3build check
 
+      # a failing test saved into a .tlg would otherwise pass unnoticed
+      - name: '🚫 Reject failures in the saved test results'
+        run: |
+          if grep -n '\[FAIL\]' tests/*.tlg; then
+            echo "::error::a saved .tlg records a failing test"
+            exit 1
+          fi
+
       - name: '🔍 Upload the test output for inspection'
         if: failure()
         uses: actions/upload-artifact@v7

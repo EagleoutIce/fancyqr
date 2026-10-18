@@ -38,6 +38,9 @@ function update_tag(file, content, tagname, tagdate)
         -- the version sits in the title block, not in \date
         content = string.gsub(content, "Version v%d%.%d+ \\textendash{} %d%d%d%d%/%d%d%/%d%d",
             "Version " .. tagname .. " \\textendash{} " .. tagdate)
+        -- and the entry of the version history
+        content = string.gsub(content, "\\ForVersion{" .. string.gsub(tagname, "^v", "") .. "}{unreleased}",
+            "\\ForVersion{" .. string.gsub(tagname, "^v", "") .. "}{" .. packagedate .. "}")
         return content
     end
     return content
@@ -68,6 +71,11 @@ function tag_hook(tagname)
             writefile(file, content)
         end
     end
+    -- the heading of the hand-written changelog entry
+    local log = readfile("CHANGELOG.md")
+    log = string.gsub(log, "## " .. tagname .. " %(unreleased%)",
+        "## [" .. tagname .. "](https://github.com/EagleoutIce/" .. module .. "/tree/" .. tagname .. ") (" .. packagedate .. ")")
+    writefile("CHANGELOG.md", log)
     git("add", "*.sty")
     git("add", "*-doc.tex")
     -- the changelog is generated only with the token of build-private.lua

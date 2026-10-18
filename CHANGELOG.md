@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.5 (unreleased)
+## [v2.5](https://github.com/EagleoutIce/fancyqr/tree/v2.5) (2026-10-18)
 
 [Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.4...HEAD)
 

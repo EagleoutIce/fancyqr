@@ -28,12 +28,16 @@
 % bodies of \qr@for, so *every* update below has to be global or it is rolled
 % back before the test can look at it.
 \gdef\fancyqrtest@trace{}
+\hfuzz=\maxdimen\hbadness=\@M\vbadness=\@M
+% \fancyqrtest@runc runs without the trace string: for a whole code it would
+% grow long enough to exhaust the main memory of a default TeX installation
+\newif\iffancyqrtest@str \fancyqrtest@strtrue
 \def\fancyqrtest@rec#1{%
-  \gappto\fancyqrtest@trace{#1}%
+  \iffancyqrtest@str\gappto\fancyqrtest@trace{#1}\fi
   \global\advance\csname fancyqrtest@n@#1\endcsname\@ne}
 % \put separates the tiles, so it gets a visual delimiter in the trace string
 \def\fancyqrtest@recP{%
-  \gappto\fancyqrtest@trace{|P}%
+  \iffancyqrtest@str\gappto\fancyqrtest@trace{|P}\fi
   \global\advance\fancyqrtest@n@P\@ne}
 
 \def\fancyqrtest@reset{%
@@ -127,6 +131,7 @@
   \edef\fancyqrtest@got{\detokenize\expandafter{\fancyqrtest@tmp}}}
 
 \def\fancyqrtest@run#1{\fancyqrtest@reset\setbox\fancyqrtest@box\hbox{#1}}
+\def\fancyqrtest@runc#1{\global\fancyqrtest@strfalse\fancyqrtest@run{#1}\global\fancyqrtest@strtrue}
 
 % Test commands ------------------------------------------------------------
 % #1 name, #2 expected trace, #3 code
@@ -140,7 +145,7 @@
 % #1 name, #2 expected `P=n M=n ...', #3 code -- for whole codes, whose full
 % trace would be several thousand characters long
 \newcommand*\TestCounts[3]{%
-  \fancyqrtest@run{#3}%
+  \fancyqrtest@runc{#3}%
   \fancyqrtest@getcounts \fancyqrtest@setwant{#2}%
   \fancyqrtest@check{#1}%
   \box\fancyqrtest@box\par
@@ -156,12 +161,12 @@
 }
 
 % lets a test record a marker of its own; no counter, the token is arbitrary
-\def\TestRecord#1{\gappto\fancyqrtest@trace{#1}}
+\def\TestRecord#1{\iffancyqrtest@str\gappto\fancyqrtest@trace{#1}\fi}
 
 % #1 name, #2 code -- a smoke test: it only has to typeset without an error, the
 % counts are reported for information (styles using rand() cannot be pinned)
 \newcommand*\TestRuns[2]{%
-  \fancyqrtest@run{#2}%
+  \fancyqrtest@runc{#2}%
   \fancyqrtest@getcounts
   \global\advance\fancyqrtest@passed\@ne
   \typeout{[PASS] #1 (\fancyqrtest@got)}%
