@@ -2,7 +2,7 @@
 
 ## [v2.5](https://github.com/EagleoutIce/fancyqr/tree/v2.5) (2026-10-18)
 
-[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.4...HEAD)
+[Full Changelog](https://github.com/EagleoutIce/fancyqr/compare/v2.4...v2.5)
 
 **New features:**
 
@@ -30,14 +30,15 @@
 - New `figures`, `no figures`, `extras` and `no extras` options select the figures and decorations of a style by name, and `figure chance` sets how often figures are drawn. `\FancyQrListFigures`, `\FancyQrListExtras`, `\FancyQrShowFigure`, `\FancyQrShowPattern`, `\FancyQrFigureGallery`, `\FancyQrExtraGallery` and `\FancyQrTileGallery` list and draw them. The manual shows every figure, tile and decoration of each style, generated from the style files.
 - With pdfLaTeX a finished code goes straight into the pdf as a form, so a page with many styled codes no longer exceeds TeX's main memory (three castle codes on a page did).
 - New `faint` option: the code in a faint grey, but the figures put with `place` in full colors.
-- The figure galleries print the default chance of every figure and draw the module grid over it.
-- `snow` puts a small snowflake on some tiles (extra `flakes`). Added to another style, its snow lies only on flat tops such as battlements, never on spires, roofs or figures, and no icicles hang below towers.
+- The figure galleries print the default chance of every figure and draw the module grid over it. `\FancyQrShowFigure` draws a figure at the current position, also in running text, and its starred form adds the module grid.
+- `snow` scatters pale snowflakes in the white gaps between the tiles (extra `flakes`). Added to another style, its snow lies only on flat tops such as battlements, never on spires, roofs or figures, and no icicles hang below towers.
 - New `add` option and `\FancyQrAdd`: the decorations of `halloween` (webs, threads, slime), `christmas` (lights, stars, snowflakes, candles) and `snow` (snow on the tiles) on any other style, such as castle walls with spider webs. Style authors lend decorations with `\FancyQrLend`.
 - New `background margin` option (default `3.5pt`): the background reaches that far beyond the code.
 - New `place` option puts a figure at a module, or at the closest place it fits. New `style` option sets a style for one code only; the other options override it. New macros for style authors: `\FancyQrExtra`, `\FancyQrIfExtra`, `\FancyQrExtras` and `\FancyQrSince`.
 
 **Fixed bugs:**
 
+- A river fork that found no way left a short stub of water, and rivers could start under the rounded end of a wall.
 - Alignment patterns were not styled on the first LaTeX run, and could take the positions of a previous code.
 - With `\FancyQrDoNotPrintSquare` and finder shapes, the alignment shape was drawn inside the hole and damaged the cached matrix, so the next code with the same text failed with "Missing number". A shape that reaches into the hole is now left out.
 - `\FancyQrDoNotPrintRadius` hid only a few modules around the center instead of the rounded rectangle.
@@ -54,6 +55,7 @@
 - New tests for the finder colors (counted per module), the alignment modes, merging into the rings, the pumpkin, style switching, the snow and halloween styles (skull and ghost counts checked against the matrix, snow caps), the hole fix, loading a style in running text, and alignment patterns on the first run.
 - The figure API is checked against a separate Python model of the placement. Castle and christmas have smoke tests. Snow cap counts are checked against the matrix, and alignment colors have their own tests.
 - Text beyond ASCII is tested on pdfTeX, LuaTeX and XeTeX (`config-unicode.lua`).
+- The test helper keeps the full drawing trace only for the small trace tests, so whole codes stay within the main memory of a default TeX installation, and CI fails if a saved `.tlg` records a failing test.
 - `l3build scan` (tests/scan/scancheck.py) scans 1000 random codes over all styles with zxing and ZBar at 100, 150 and 300 dpi.
 
 **Documentation:**
@@ -61,6 +63,7 @@
 - Rewritten in plain language, with a single table for the finder and alignment keys, a new section on text beyond ASCII, and an option table that breaks across pages instead of running into the footer.
 - The manual is built with `l3build doc` and uses the `xlistings` package, included as a git submodule (clone with `--recurse-submodules`). It has side-by-side examples and an index of commands and keys.
 - The manual links every command and key in the text and examples to its explanation (code links from the `xlistings` submodule).
+- Galleries of the tiles, figures and decorations of every style, generated from the style files, each style on a page of its own, with the default chances and the version a figure came with where it differs from its style.
 - Even spacing in the figure captions.
 
 **Closed issues and merged pull requests:**

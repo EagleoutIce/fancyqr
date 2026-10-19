@@ -100,6 +100,8 @@ Don't change this file in any respect.
 \fancyqr@cs@tb=\count...
 \fancyqr@cs@ga=\count...
 \fancyqr@cs@gb=\count...
+\fancyqr@cs@sr=\count...
+\fancyqr@cs@sc=\count...
 \fancyqr@cs@wr=\count...
 \fancyqr@cs@wc=\count...
 \fancyqr@cs@wd=\count...
@@ -454,11 +456,11 @@ Don't change this file in any respect.
 <QR code requested for "abc" in version 7-M.>
 <Error-correction level increased from M to H at no cost.>
 <Copying the QR code for "abc" in version 7-H as previously calculated.>
-[PASS] castle-people (P=1062 M=320 L=808 A+=4 A-=0 C=139 F=4450 S=58 Z=246 O=0 o=0)
+[PASS] castle-people (P=1062 M=320 L=829 A+=4 A-=0 C=139 F=4459 S=58 Z=246 O=0 o=0)
 <QR code requested for "abc" in version 7-M.>
 <Error-correction level increased from M to H at no cost.>
 <Copying the QR code for "abc" in version 7-H as previously calculated.>
-[PASS] castle-banners (P=1062 M=296 L=770 A+=4 A-=0 C=127 F=4465 S=50 Z=230 O=0 o=0)
+[PASS] castle-banners (P=1062 M=296 L=791 A+=4 A-=0 C=127 F=4474 S=50 Z=230 O=0 o=0)
 (fancyqr-style-halloween.code) 
 <QR code requested for "abc" in version 7-M.>
 <Error-correction level increased from M to H at no cost.>
@@ -471,12 +473,12 @@ Don't change this file in any respect.
 \fancyqr@hw@WB@0/1.89684pt=\box...
 \fancyqr@hw@WB@2/1.89684pt=\box...
 \fancyqr@hw@WB@1/1.89684pt=\box...
-[PASS] castle-add-halloween (P=1115 M=499 L=929 A+=4 A-=0 C=343 F=4437 S=118 Z=247 O=0 o=0)
+[PASS] castle-add-halloween (P=1115 M=499 L=950 A+=4 A-=0 C=343 F=4446 S=118 Z=247 O=0 o=0)
 (fancyqr-style-snow.code) (fancyqr-style-christmas.code (fancyqr-style-snow.code)) 
 <QR code requested for "abc" in version 7-M.>
 <Error-correction level increased from M to H at no cost.>
 <Copying the QR code for "abc" in version 7-H as previously calculated.>
-[PASS] castle-add-snow-christmas (P=1110 M=1283 L=1613 A+=562 A-=252 C=590 F=5155 S=302 Z=472 O=0 o=0)
+[PASS] castle-add-snow-christmas (P=1110 M=1283 L=1634 A+=562 A-=252 C=590 F=5164 S=302 Z=472 O=0 o=0)
 [5] 
 <QR code requested for "abc" in version 0-H.>
 <Calculating QR code for "abc" in version 1-H.>

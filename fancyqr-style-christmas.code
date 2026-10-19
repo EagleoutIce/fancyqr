@@ -548,7 +548,7 @@
    \ifx\fancyqr@gal@e\fancyqr@xm@kF 1\else\ifx\fancyqr@gal@e\fancyqr@xm@kC 2\else\numexpr\fancyqr@xm@h-3*((\fancyqr@xm@h-1)/3)\fi\fi\fi
    \else\numexpr\fancyqr@xm@h-3*((\fancyqr@xm@h-1)/3)\fi\relax}%
 \def\fancyqr@xm@kS{stars}\def\fancyqr@xm@kF{snowflakes}\def\fancyqr@xm@kC{candles}%
-\def\fancyqr@xm@th#1{\iffancyqr@faint@101\else#1\fi}%
+\def\fancyqr@xm@th#1{#1}%
 % the white run from here to the right (at most 6), its modules free above and
 % below
 \def\fancyqr@xm@scan#1{\ifnum\fancyqr@xm@c<6 \ifnum\numexpr\@tempcntb+\fancyqr@xm@c\relax<\@max@x
