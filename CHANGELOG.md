@@ -28,6 +28,7 @@
 - `\FancyQrStyleSet` lets a style set colors and finder shapes that are undone when the next style is loaded.
 - Codes are recorded in files of their own (`<jobname>-fqr-<hash>.fqr`) and replayed in later runs (`persist`, on by default), so only the first run draws them; `externalize` also turns them into pdfs of their own. The manual is built that way.
 - New `figures`, `no figures`, `extras` and `no extras` options select the figures and decorations of a style by name, and `figure chance` sets how often figures are drawn. `\FancyQrListFigures`, `\FancyQrListExtras`, `\FancyQrShowFigure`, `\FancyQrShowPattern`, `\FancyQrFigureGallery`, `\FancyQrExtraGallery` and `\FancyQrTileGallery` list and draw them. The manual shows every figure, tile and decoration of each style, generated from the style files.
+- With pdfLaTeX a finished code goes straight into the pdf as a form, so a page with many styled codes no longer exceeds TeX's main memory (three castle codes on a page did).
 - New `faint` option: the code in a faint grey, but the figures put with `place` in full colors.
 - The figure galleries print the default chance of every figure and draw the module grid over it.
 - `snow` puts a small snowflake on some tiles (extra `flakes`). Added to another style, its snow lies only on flat tops such as battlements, never on spires, roofs or figures, and no icicles hang below towers.

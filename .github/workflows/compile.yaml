@@ -39,7 +39,12 @@ jobs:
         with:
           package_file: tl_packages
 
+      # pdfTeX keeps the format's main memory (5000000 words), whole styled codes
+      # need more; extra_mem_* are read at run time
       - name: '✅ Run the test suite'
+        env:
+          extra_mem_top: 20000000
+          extra_mem_bot: 20000000
         run: l3build check
 
       # a failing test saved into a .tlg would otherwise pass unnoticed

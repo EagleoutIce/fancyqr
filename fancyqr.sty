@@ -1256,12 +1256,19 @@
       \iffancyqr@fixed@\fancyqr@markfixed\fi
       \iffancy@qr@cutout@\iffancy@qr@roundcut@\fancyqr@cutrect\fancyqr@cutsave\fi\fi
       \edef\@tmp@tight{\ifqr@tight\z@\else-4\fi}%
-      \fancyqr@persist@draw
+      \setbox\fancyqr@xbox\hbox{\fancyqr@persist@draw}\fancyqr@xout
       \iffancy@qr@cutout@\iffancy@qr@roundcut@\fancyqr@cutrect\fancyqr@cutrestore\fi\fi
       \iffancyqr@fixed@\fancyqr@unmarkfixed\fi
    \endgroup
 }%
 
+% pdfTeX writes a finished code into the pdf at once, as a form, and keeps only
+% a reference: a code of many paths no longer stays in its fixed main memory
+% until the page is shipped out (three castle codes on a page exceeded it)
+\newbox\fancyqr@xbox
+\def\fancyqr@xout{\leavevmode\count@\z@
+   \ifdefined\pdfxform\ifdefined\directlua\else\ifnum\pdfoutput>\z@\count@\@ne\fi\fi\fi
+   \ifnum\count@=\@ne\immediate\pdfxform\fancyqr@xbox\pdfrefxform\pdflastxform\else\box\fancyqr@xbox\fi}
 \def\fancy@qr@setup#1{%
    \qr@creatematrix{#1}%
    \expandafter\gdef\csname #1@numrows\endcsname{\qr@size}%

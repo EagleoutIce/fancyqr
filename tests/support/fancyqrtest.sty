@@ -130,7 +130,8 @@
   \edef\fancyqrtest@tmp{\fancyqrtest@counts}%
   \edef\fancyqrtest@got{\detokenize\expandafter{\fancyqrtest@tmp}}}
 
-\def\fancyqrtest@run#1{\fancyqrtest@reset\setbox\fancyqrtest@box\hbox{#1}}
+% the old box is freed first: two whole codes at once can exceed the main memory
+\def\fancyqrtest@run#1{\fancyqrtest@reset\setbox\fancyqrtest@box\box\voidb@x\setbox\fancyqrtest@box\hbox{#1}}
 \def\fancyqrtest@runc#1{\global\fancyqrtest@strfalse\fancyqrtest@run{#1}\global\fancyqrtest@strtrue}
 
 % Test commands ------------------------------------------------------------
