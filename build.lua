@@ -99,7 +99,7 @@ end
 typesetfiles = { module .. "-doc.tex" }
 -- the manual externalizes its codes, see the key externalize
 typesetopts = "-interaction=nonstopmode -shell-escape"
-docfiles = { module .. "-doc.ist" }
+docfiles = { module .. "-doc.ist", "qr-example.tex", "qr-minimal.tex" }
 indexstyle = module .. "-doc.ist"
 -- the manual highlights its listings with xlistings (a git submodule)
 function docinit_hook()
@@ -109,11 +109,13 @@ function docinit_hook()
     return 0
 end
 
-textfiles = {"README.md", "LICENSE"}
+textfiles = {"README.md", "LICENSE", "CHANGELOG.md"}
 ctanreadme = "README.md"
 
-installfiles = {"*.sty", "*.tex", "*.code"}
-sourcefiles = installfiles
+-- the package is the .sty and its style files; the manual's source ships with
+-- the sources
+installfiles = {"*.sty", "*.code"}
+sourcefiles = {"*.sty", "*.code", module .. "-doc.tex"}
 unpackfiles = {}
 
 -- Release a TDS-style zip
@@ -121,6 +123,27 @@ packtdszip = false
 
 -- Preserve structure for CTAN
 flatten = true
+
+-- uploading to ctan (l3build upload <version>) =======================
+uploadconfig = {
+    pkg          = ctanpkg,
+    author       = "Florian Sihler",
+    uploader     = "Florian Sihler",
+    email        = "florian.sihler@uni-ulm.de",
+    license      = "lppl1.3c",
+    summary      = "Fancy QR-Codes with the qrcode package",
+    ctanPath     = "/macros/latex/contrib/" .. ctanpkg,
+    repository   = "https://github.com/EagleoutIce/" .. ctanpkg,
+    bugtracker   = "https://github.com/EagleoutIce/" .. ctanpkg .. "/issues",
+    support      = "https://github.com/EagleoutIce/" .. ctanpkg .. "/issues",
+    announcement = "Version 2.5 adds the styles halloween, snow, castle and christmas "
+        .. "with figures and decorations, mixes decorations of one style into another "
+        .. "(add=), places figures by hand, keeps each code in a file for faster later "
+        .. "runs and draws whole-code backgrounds. See CHANGELOG.md for all changes.",
+    note         = "Built with l3build; the manual needs the xlistings package from "
+        .. "https://github.com/EagleoutIce/xlistings to be rebuilt.",
+    update       = true,
+}
 
 -- tests =============================================================
 -- fancyqr.sty and the fancyqr-style-*.code files are part of `installfiles`,

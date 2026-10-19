@@ -530,7 +530,7 @@
    \noexpand\color{\noexpand\fancyqr@snow@color}\h@u\A(\h@r,\h@r){\h@r}{150}{30}\Z\F
    \noexpand\color{\noexpand\fancyqr@snow@line}\T{.05}\R\h@u\S}}}%
 % decorations in white modules that no figure, pattern or timing line takes: a
-% light chain sagging across a white gap of one or two modules between two
+% light chain sagging across a white gap of up to four modules between two
 % tiles, one draped over the top of a horizontal run of dark tiles, and, in open
 % white, a glowing star, a snowflake or a candle on holly; all of them stay in
 % their modules, off the module centers, in pale colors, and vary by position
@@ -568,8 +568,8 @@
    \def\fancyqr@xm@c{0}\fancyqr@xm@scan\fancyqr@xm@cw\edef\fancyqr@xm@l{\fancyqr@xm@c}%
    \def\fancyqr@xm@put{\put(\the\@tempcntb,\the\numexpr\@max@y-\@tempcnta\relax)}%
    \ifnum\numexpr\fancyqr@xm@m\@tempcnta{\@tempcntb-1}1*\fancyqr@xm@m\@tempcnta{\@tempcntb+\fancyqr@xm@l}1%
-         *\fancyqr@xm@lt{\fancyqr@xm@l}2*\fancyqr@xm@lt\count@{\fancyqr@xm@th{30}}\relax=\@ne
-      \fancyqr@xm@put{\FancyQrExtra{lights}{\fancyqr@xm@swag{\fancyqr@xm@l}{.84}{.14}20}}%
+         *\fancyqr@xm@lt{\fancyqr@xm@l}5*\fancyqr@xm@lt\count@{\fancyqr@xm@th{30}}\relax=\@ne
+      \fancyqr@xm@put{\FancyQrExtra{lights}{\fancyqr@xm@swag{\fancyqr@xm@l}{.84}{\fpeval{.1+.04*\fancyqr@xm@l}}{\the\numexpr2*\fancyqr@xm@l}0}}%
    \else\ifnum\numexpr\fancyqr@xm@m\@tempcnta\@tempcntb0*\fancyqr@xm@lt\count@{\fancyqr@xm@th{34}}%
          *\fancyqr@xm@m{\@tempcnta-1}\@tempcntb0*\fancyqr@xm@m{\@tempcnta+1}\@tempcntb0%
          *\fancyqr@xm@m\@tempcnta{\@tempcntb-1}0*\fancyqr@xm@m\@tempcnta{\@tempcntb+1}0\relax=\@ne
@@ -591,7 +591,7 @@
 % colors by the place and #5)
 \def\fancyqr@xm@swag#1#2#3#4#5{{\fancyqr@mixcolor{fancyqr@xm@wire}\linethickness{.04\unitlength}\roundcap
    \fancyqr@xm@mv0{#2}\fancyqr@xm@cu{.3*#1}{#2-#3}{.7*#1}{#2-#3}{#1}{#2}\strokepath}%
-   \@for\@tempa:=1,2,3,4\do{\ifnum\@tempa>#4 \else
+   \@for\@tempa:=1,2,3,4,5,6,7,8\do{\ifnum\@tempa>#4 \else
       \edef\@tempb{\fpeval{\@tempa/(#4+1)}}%
       \fancyqr@xm@lamp{#1*(.9*(1-\@tempb)^2*\@tempb+2.1*(1-\@tempb)*\@tempb^2+\@tempb^3)}{#2-3*#3*\@tempb*(1-\@tempb)}%
          {\numexpr\count@+#5+\@tempa\relax}\fi}}%

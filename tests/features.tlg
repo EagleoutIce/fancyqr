@@ -476,7 +476,7 @@ Don't change this file in any respect.
 <QR code requested for "abc" in version 7-M.>
 <Error-correction level increased from M to H at no cost.>
 <Copying the QR code for "abc" in version 7-H as previously calculated.>
-[PASS] castle-add-snow-christmas (P=1102 M=1071 L=1511 A+=392 A-=252 C=582 F=4951 S=294 Z=438 O=0 o=0)
+[PASS] castle-add-snow-christmas (P=1110 M=1283 L=1613 A+=562 A-=252 C=590 F=5155 S=302 Z=472 O=0 o=0)
 [5] 
 <QR code requested for "abc" in version 0-H.>
 <Calculating QR code for "abc" in version 1-H.>

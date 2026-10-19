@@ -112,7 +112,7 @@ Don't change this file in any respect.
 <QR code requested for "abc" in version 0-M.>
 <Error-correction level increased from M to H at no cost.>
 <Copying the QR code for "abc" in version 1-H as previously calculated.>
-[PASS] qr-christmas (P=323 M=786 L=1254 A+=195 A-=32 C=534 F=277 S=81 Z=256 O=0 o=0)
+[PASS] qr-christmas (P=325 M=836 L=1278 A+=235 A-=32 C=536 F=325 S=83 Z=264 O=0 o=0)
 [2] 
 <QR code requested for "abc" in version 0-M.>
 <Error-correction level increased from M to H at no cost.>
